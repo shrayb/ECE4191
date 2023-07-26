@@ -1,13 +1,6 @@
-class Pose:
-    def __init__(self, x=None, y=None, theta=None):
-        self.x = x
-        self.y = y
-        self.theta = theta
-
-
 class Robot:
-    def __init__(self):
-        self.pose = Pose()
+    def __init__(self, pose=Pose()):
+        self.pose = pose
 
     def set_pose(self, x=None, y=None, theta=None):
         if x is not None:

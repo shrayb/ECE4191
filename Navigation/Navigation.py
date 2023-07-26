@@ -12,8 +12,9 @@ class Navigation:
         :param x: x coordinate of desired location
         :param y: y coordinate of desired location
         :param angle: Angle the robot must face when the function stops running
-        :return:
+        :return: True when completed successfully or False when failed
         """
+
 
     def check_for_obstacle(self):
         pass
