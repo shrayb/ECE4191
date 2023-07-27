@@ -1,6 +1,6 @@
-import Robot.Robot as Robot
+import Robot.Robot
 
-pi = 3.14159265358979
+
 
 class Navigation:
     def __init__(self, robot=None):
@@ -14,10 +14,11 @@ class Navigation:
         :param angle: Angle the robot must face when the function stops running
         :return: True when completed successfully or False when failed
         """
-
+        pass
 
     def check_for_obstacle(self):
         pass
+
 
 def run_program():
     new_pose = Robot.Pose(1, 3, pi / 2)
@@ -26,3 +27,4 @@ def run_program():
 
 if __name__ == "__main__":
     run_program()
+
