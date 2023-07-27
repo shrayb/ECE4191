@@ -28,7 +28,13 @@ class Robot:
         #   "completed": Robot has completed the state task
         # Sub-states of "delivering"
         #   "depositing": The robot is depositing the package into the destination
-        self.rrt_
+        self.path = None
+        self.packages = None  # List of packages and their destinations in order of how they are placed. index 0 is the first package
+
+
+    def plan_path(self, arena_map=None):
+        # TODO
+        pass
 
     def set_state(self, state=None, sub_state=None):
         if state is not None:

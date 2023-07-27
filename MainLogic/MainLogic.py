@@ -5,20 +5,21 @@ from MathFunctions.MathFunctions import *
 
 def run_main_logic():
     # Creat class instances
+    arena_map = Map()
     start_pose = Pose(1, 3, pi / 2)
     robot = Robot(start_pose)
 
     # Enter logic loop
-    logic_loop(robot=robot)
+    logic_loop(robot=robot, arena_map=arena_map)
 
-def logic_loop(robot=None):
+def logic_loop(robot=None, arena_map=None):
     # Enter state selector
     robot.state = state_selector(current_state=robot.state)
 
     # Enter state handler
-    state_handler(robot=robot)
+    state_handler(robot=robot, arena_map=arena_map)
 
-def state_handler(robot=None):
+def state_handler(robot=None, arena_map=None):
     if robot.get_state() == "waiting":
         handle_waiting(robot=robot)
 
@@ -29,7 +30,7 @@ def state_handler(robot=None):
         handle_scanning(robot=robot)
 
     if robot.get_state() == "delivering":
-        handle_delivering(robot=robot)
+        handle_delivering(robot=robot, arena_map=arena_map)
 
 def handle_waiting(robot=None):
     # TODO
@@ -56,12 +57,13 @@ def handle_scanning(robot=None):
         # If scan is successful, set the sub-state to "success"
         robot.set_state(sub_state="success")
 
-def handle_delivering(robot=None):
+def handle_delivering(robot=None, arena_map=None):
     if robot.get_sub_state() is None:
         robot.set_state(sub_state="planning")
 
     if robot.get_sub_state() == "planning":
-
+        # Plan a path with the given obstacles and other parameters
+        robot.plan_path(arena_map=arena_map, end_pose=)
 
 def state_selector(current_state=None, current_sub_state=None):
     """
@@ -77,7 +79,6 @@ def state_selector(current_state=None, current_sub_state=None):
             return "planning", None
 
     # If state is finished, the robot task is complete
-
 
 def wait_for_start_button():
     # If start button is pressed, break otherwise wait.

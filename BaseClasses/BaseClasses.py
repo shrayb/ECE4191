@@ -4,7 +4,6 @@ class Pose:
         self.y = y  # y coordinate of objects pose
         self.theta = theta  # The angle the object is "facing" measured counter-clockwise from the positive x-axis.
 
-
 class Point:
     def __init__(self, x=None, y=None):
         self.x = x
@@ -27,3 +26,7 @@ class Obstacle:
     def __init__(self, boundary=None, tolerance=None):
         self.boundary = boundary  # A polygon class that makes the bounding box of the obstacle
         self.tolerance = tolerance  # The distance in metres the robot is allowed to the bounding box of the obstacle
+
+class Path:
+    def __init__(self):
+        self.waypoint_queue = None
