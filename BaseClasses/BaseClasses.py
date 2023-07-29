@@ -17,10 +17,11 @@ class Destination:
     """
     Destination might have to be more complex than id, x, and y. It might need a range where dropping the package is acceptable. It also needs an angle at which the "opening" is
     """
-    def __init__(self, uid=None, x=None, y=None):
+    def __init__(self, uid=None, x=None, y=None, deposit_pose=None):
         self.uid = uid  # A unique id number for a destination e.g: 1, 2, or 3
         self.x = x  # x coordinate of destination
         self.y = y  # y coordinate of destination
+        self.deposit_pose = deposit_pose
 
 class Obstacle:
     def __init__(self, boundary=None, tolerance=None):
@@ -30,3 +31,7 @@ class Obstacle:
 class Path:
     def __init__(self):
         self.waypoint_queue = None
+
+class Package:
+    def __init__(self, destination=None):
+        self.destination = destination

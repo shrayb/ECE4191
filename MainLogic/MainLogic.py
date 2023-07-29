@@ -3,6 +3,8 @@ from Map.Map import *
 from Robot.Robot import *
 from MathFunctions.MathFunctions import *
 
+from threading import Thread
+
 def run_main_logic():
     # Creat class instances
     arena_map = Map()
@@ -63,7 +65,19 @@ def handle_delivering(robot=None, arena_map=None):
 
     if robot.get_sub_state() == "planning":
         # Plan a path with the given obstacles and other parameters
-        robot.plan_path(arena_map=arena_map, end_pose=)
+        robot.plan_path(arena_map=arena_map, end_pose=robot.packages[0].destination.deposit_pose)
+
+        # Check if there is a valid path planned
+        if robot.path is not None:
+            # Start driving to destination
+            robot.set_state(sub_state="moving")
+
+    if robot.get_sub_state() == "moving":
+        # Tick moving flag
+        robot.is_moving = True
+
+        # Start thread to control movement
+        moving_thread = Thread(target=robot.follow_path)
 
 def state_selector(current_state=None, current_sub_state=None):
     """

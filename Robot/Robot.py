@@ -23,14 +23,23 @@ class Robot:
         # Sub-states of "delivering" and "returning":
         #   "planning": Robot is planning its route through an arena. This will happen at the beginning and anytime an obstacle interferes with the current route
         #   "moving": Robot is moving along its planned route
+        self.is_moving = False  # Boolean for if the robot is in transit
         #   "stuck": Robot is stuck and has nowhere to travel
         #   "positioned": Robot has arrived to its destination
         #   "completed": Robot has completed the state task
         # Sub-states of "delivering"
         #   "depositing": The robot is depositing the package into the destination
-        self.path = None
+        self.path = None  # Path class that holds all the information about the robots current path
         self.packages = None  # List of packages and their destinations in order of how they are placed. index 0 is the first package
 
+    def follow_path(self):
+        # As long as the is_moving flag is True
+        while self.is_moving:
+            # Make required moves to follow path
+            # TODO
+            pass
+        # When the is_moving flag is False for any reason, stop the robot's movement
+        # TODO
 
     def plan_path(self, arena_map=None):
         # TODO
