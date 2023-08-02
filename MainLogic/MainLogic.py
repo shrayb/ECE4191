@@ -28,9 +28,6 @@ def run_main_logic():
     logic_loop(robot=robot, arena_map=arena_map)
 
 def logic_loop(robot=None, arena_map=None):
-    # Enter state selector
-    robot.state = state_selector(current_state=robot.state)
-
     # Enter state handler
     state_handler(robot=robot, arena_map=arena_map)
 
