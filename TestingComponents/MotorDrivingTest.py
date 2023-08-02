@@ -19,9 +19,10 @@ def setup():
     GPIO.setup(motor_left_PWM1, GPIO.OUT)
 
 def loop():
+    PWM0 = GPIO.PWM(motor_left_enable, 50)
     while True:
         # Go forwards
-        GPIO.output(motor_left_enable, GPIO.HIGH)
+        PWM0.start(50)
         GPIO.output(motor_left_PWM0, GPIO.HIGH)
         GPIO.output(motor_left_PWM1, GPIO.LOW)
 
@@ -31,13 +32,12 @@ def loop():
         sleep(2)
 
         # Stop
-        GPIO.output(motor_left_enable, GPIO.LOW)
-
+        PWM0.stop()
         # Wait two seconds
         sleep(2)
 
         # Go backwards
-        GPIO.output(motor_left_enable, GPIO.HIGH)
+        PWM0.start(50)
         GPIO.output(motor_left_PWM0, GPIO.LOW)
         GPIO.output(motor_left_PWM1, GPIO.HIGH)
 
@@ -45,7 +45,7 @@ def loop():
         sleep(2)
 
         # Stop
-        GPIO.output(motor_left_enable, GPIO.LOW)
+        PWM0.stop()
 
         # Wait two seconds
         sleep(2)
