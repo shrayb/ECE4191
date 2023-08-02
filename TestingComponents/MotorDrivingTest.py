@@ -44,3 +44,7 @@ def loop():
 
         # Wait two seconds
         sleep(2)
+
+if "__main__" == __name__:
+    setup()
+    loop()
