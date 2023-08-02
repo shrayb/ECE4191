@@ -4,6 +4,8 @@ from time import sleep
 test_pin = 3
 
 def setup():
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BOARD)
     GPIO.setup(test_pin, GPIO.OUT)
 
 def loop():
