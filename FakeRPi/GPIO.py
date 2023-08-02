@@ -3,6 +3,7 @@ OUT = 1
 IN = 1
 HIGH = 1
 LOW = 0
+BCM = 1
 
 def setmode(a):
    print(a)

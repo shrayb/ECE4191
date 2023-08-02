@@ -27,6 +27,8 @@ def loop():
         GPIO.output(motor_left_positive, GPIO.HIGH)
         GPIO.output(motor_left_negative, GPIO.LOW)
 
+        print()
+
         # Wait two seconds
         sleep(2)
 
@@ -41,6 +43,13 @@ def loop():
         GPIO.output(motor_left_enable, GPIO.HIGH)
         GPIO.output(motor_left_positive, GPIO.LOW)
         GPIO.output(motor_left_negative, GPIO.HIGH)
+
+        # Wait two seconds
+        sleep(2)
+
+        # Stop
+        GPIO.output(motor_left_positive, GPIO.LOW)
+        GPIO.output(motor_left_negative, GPIO.LOW)
 
         # Wait two seconds
         sleep(2)
