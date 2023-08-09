@@ -1,10 +1,9 @@
 import RPi.GPIO as GPIO
 from time import sleep
 
-in1 = 24
-in2 = 23
-en = 25
-temp1 = 1
+in1 = 24  # Red
+in2 = 23  # Orange
+en = 25  # Brown
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(in1, GPIO.OUT)
