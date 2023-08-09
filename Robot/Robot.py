@@ -33,6 +33,9 @@ class Robot:
         self.path = None  # Path class that holds all the information about the robots current path
         self.packages = None  # List of packages and their destinations in order of how they are placed. index 0 is the first package
         self.depositing = False
+        self.left_motor = None  # Motor class for the left motor
+        self.right_motor = None  # Motor class for the right motor
+        self.conveyor_motor = None  # Motor class for the conveyor belt motor
 
     def get_current_goal(self, arena_map=None):
         if self.packages is not None:

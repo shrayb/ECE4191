@@ -17,3 +17,5 @@ def cleanup():
    print('a')
 def setwarnings(flag):
    print("False")
+def PWM(a, b):
+   pass
