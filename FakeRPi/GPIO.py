@@ -7,6 +7,8 @@ BCM = 1
 
 def setmode(a):
    print(a)
+def input(a):
+   pass
 def setup(a, b):
    print(a)
 def output(a, b):
