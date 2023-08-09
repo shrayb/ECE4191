@@ -24,6 +24,7 @@ class Robot:
         # Sub-states of "delivering" and "returning":
         #   "planning": Robot is planning its route through an arena. This will happen at the beginning and anytime an obstacle interferes with the current route
         #   "moving": Robot is moving along its planned route
+        self.is_close_to_crashing = False  # Goes True if the robot detects something in front while moving
         self.is_moving = False  # Boolean for if the robot is in transit
         #   "stuck": Robot is stuck and has nowhere to travel
         #   "positioned": Robot has arrived to its destination
