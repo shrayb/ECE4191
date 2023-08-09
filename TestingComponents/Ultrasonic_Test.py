@@ -1,4 +1,4 @@
-import FakeRPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 from time import time, sleep
 
 trigger_pin = 14
