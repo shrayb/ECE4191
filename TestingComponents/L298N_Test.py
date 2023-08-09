@@ -16,7 +16,7 @@ p.start(100)
 
 
 while 1:
-    p.ChangeDutyCycle(75)
+    p.ChangeDutyCycle(40)
     # Forward
     GPIO.output(in1, GPIO.HIGH)
     GPIO.output(in2, GPIO.LOW)
