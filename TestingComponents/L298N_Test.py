@@ -41,7 +41,7 @@ while 1:
 
     sleep(2)
 
-    p.ChangeDutyCycle(25)
+    p.ChangeDutyCycle(50)
 
     # Forward
     GPIO.output(in1, GPIO.HIGH)
