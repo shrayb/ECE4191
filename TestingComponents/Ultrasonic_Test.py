@@ -34,6 +34,7 @@ def main_loop():
         distance = (time_elapsed * 343000) / 2
 
         print("Distance:", distance, "mm")
+        sleep(0.1)
 
 
 if __name__ == "__main__":
