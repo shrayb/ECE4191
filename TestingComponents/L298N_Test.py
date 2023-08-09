@@ -12,10 +12,11 @@ GPIO.setup(en, GPIO.OUT)
 GPIO.output(in1, GPIO.LOW)
 GPIO.output(in2, GPIO.LOW)
 p = GPIO.PWM(en, 1000)
-p.start(50)
+p.start(100)
 
 
 while 1:
+    p.ChangeDutyCycle(100)
     # Forward
     GPIO.output(in1, GPIO.HIGH)
     GPIO.output(in2, GPIO.LOW)
@@ -39,3 +40,27 @@ while 1:
     GPIO.output(in2, GPIO.LOW)
 
     sleep(2)
+
+    p.ChangeDutyCycle(25)
+
+    # Forward
+    GPIO.output(in1, GPIO.HIGH)
+    GPIO.output(in2, GPIO.LOW)
+
+    sleep(2)
+
+    # Stop
+    GPIO.output(in1, GPIO.LOW)
+    GPIO.output(in2, GPIO.LOW)
+
+    sleep(2)
+
+    # Backwards
+    GPIO.output(in1, GPIO.LOW)
+    GPIO.output(in2, GPIO.HIGH)
+
+    sleep(2)
+
+    # Stop
+    GPIO.output(in1, GPIO.LOW)
+    GPIO.output(in2, GPIO.LOW)
