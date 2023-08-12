@@ -3,7 +3,7 @@ from time import time, sleep
 
 from threading import Thread
 
-from BaseClasses.BaseClasses import Motor
+from BaseClasses import Motor
 
 motor_left_positive = 14
 motor_left_negative = 15
@@ -11,12 +11,9 @@ motor_left_enable = 18
 motor_left_encoder_a = 17
 motor_left_encoder_b = 27
 
+GPIO.setmode(GPIO.BCM)
+
 left_motor = Motor(motor_left_enable, motor_left_positive, motor_left_negative, motor_left_encoder_a, motor_left_encoder_b)
-
-# Encoder stuff
-
-def setup():
-    GPIO.setmode(GPIO.BCM)
 
 def encoder_loop():
     while True:
@@ -31,11 +28,11 @@ def loop():
     encoder_thread.start()
 
     while True:
+        distance = 0.0035 * left_motor.ticks
         print("Ticks:", left_motor.ticks)
-        distance = 3.5 * left_motor.ticks
+        print("Distance:", distance, "m")
         sleep(0.25)
 
 
 if __name__ == "__main__":
-    setup()
     loop()

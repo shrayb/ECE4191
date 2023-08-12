@@ -1,6 +1,5 @@
-from BaseClasses.BaseClasses import *
-from Map.Map import *
-from Robot.Robot import *
+from Map import *
+from Robot import *
 from MathFunctions.MathFunctions import *
 
 from threading import Thread

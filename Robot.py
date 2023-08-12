@@ -1,4 +1,4 @@
-from BaseClasses.BaseClasses import Pose
+from BaseClasses import Pose
 
 class Robot:
     def __init__(self, pose=Pose(), state="waiting"):

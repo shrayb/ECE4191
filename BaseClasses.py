@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+from time import sleep
 
 class Pose:
     def __init__(self, x=None, y=None, theta=None):
@@ -53,11 +54,11 @@ class Motor:
         self.speed = speed  # Speed from 0 to 100
         self.pwm = GPIO.PWM(self.enable_pin, self.speed)
         self.ticks = 0
-        self.encoder_state = (0, 0)
+        self.encoder_state = self.read_encoder()
 
     def set_speed(self, speed=None):
         self.speed = speed
-        self.pwm = GPIO.PWM(self.enable_pin, self.speed)
+        self.pwm.ChangeDutyChange(speed)
 
     def forward(self):
         GPIO.output(self.input_a, GPIO.HIGH)
@@ -71,19 +72,24 @@ class Motor:
         GPIO.output(self.input_a, GPIO.LOW)
         GPIO.output(self.input_b, GPIO.LOW)
 
-    def reset_encoder(self):
-        self.ticks = 0
+    def read_encoder(self):
         encoder_a_reading = GPIO.input(self.encoder_a)
         encoder_b_reading = GPIO.input(self.encoder_b)
         new_state = (encoder_a_reading, encoder_b_reading)
+        return new_state
+
+    def reset_encoder(self):
+        self.ticks = 0
+        new_state = self.read_encoder()
         self.encoder_state = new_state
 
     def update_encoder(self):
-        encoder_a_reading = GPIO.input(self.encoder_a)
-        encoder_b_reading = GPIO.input(self.encoder_b)
-        new_state = (encoder_a_reading, encoder_b_reading)
+        new_state = self.read_encoder()
 
         # Compare states
         if new_state != self.encoder_state:
             self.encoder_state = new_state
             self.ticks += 1
+            print("Tick state:", new_state)
+
+        sleep(0.001)
