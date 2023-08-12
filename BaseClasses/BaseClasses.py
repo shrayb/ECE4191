@@ -1,4 +1,4 @@
-import FakeRPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 class Pose:
     def __init__(self, x=None, y=None, theta=None):
@@ -39,12 +39,21 @@ class Package:
         self.destination = destination
 
 class Motor:
-    def __init__(self, enable_pin=None, input_a=None, input_b=None, speed=100):
+    def __init__(self, enable_pin=None, input_a=None, input_b=None, encoder_a=None, encoder_b=None, speed=100):
         self.enable_pin = enable_pin
         self.input_a = input_a
         self.input_b = input_b
+        self.encoder_a = encoder_a
+        self.encoder_b = encoder_b
+        GPIO.setup(self.enable_pin, GPIO.OUT)
+        GPIO.setup(self.input_a, GPIO.OUT)
+        GPIO.setup(self.input_b, GPIO.OUT)
+        GPIO.setup(self.encoder_a, GPIO.IN)
+        GPIO.setup(self.encoder_b, GPIO.IN)
         self.speed = speed  # Speed from 0 to 100
         self.pwm = GPIO.PWM(self.enable_pin, self.speed)
+        self.ticks = 0
+        self.encoder_state = (0, 0)
 
     def set_speed(self, speed=None):
         self.speed = speed
@@ -61,3 +70,20 @@ class Motor:
     def stop(self):
         GPIO.output(self.input_a, GPIO.LOW)
         GPIO.output(self.input_b, GPIO.LOW)
+
+    def reset_encoder(self):
+        self.ticks = 0
+        encoder_a_reading = GPIO.input(self.encoder_a)
+        encoder_b_reading = GPIO.input(self.encoder_b)
+        new_state = (encoder_a_reading, encoder_b_reading)
+        self.encoder_state = new_state
+
+    def update_encoder(self):
+        encoder_a_reading = GPIO.input(self.encoder_a)
+        encoder_b_reading = GPIO.input(self.encoder_b)
+        new_state = (encoder_a_reading, encoder_b_reading)
+
+        # Compare states
+        if new_state != self.encoder_state:
+            self.encoder_state = new_state
+            self.ticks += 1
