@@ -58,7 +58,7 @@ class Motor:
 
     def set_speed(self, speed=None):
         self.speed = speed
-        self.pwm.ChangeDutyChange(speed)
+        self.pwm.ChangeDutyCycle(speed)
 
     def forward(self):
         GPIO.output(self.input_a, GPIO.HIGH)
