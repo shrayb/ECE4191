@@ -91,5 +91,3 @@ class Motor:
         if new_state != self.encoder_state:
             self.encoder_state = new_state
             self.ticks += 1
-
-        sleep(0.001)
