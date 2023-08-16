@@ -31,8 +31,8 @@ def encoder_loop():
 
 def loop():
     # Turn wheels forward at 50 percent speed
-    left_motor.set_speed(50)
-    right_motor.set_speed(50)
+    left_motor.set_speed(100)
+    right_motor.set_speed(100)
     left_motor.forward()
     right_motor.forward()
 
