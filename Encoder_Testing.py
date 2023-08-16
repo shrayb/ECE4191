@@ -45,7 +45,7 @@ def loop():
         tick_dist = circum / cpr
         left_distance = tick_dist * left_motor.ticks
         right_distance = tick_dist * right_motor.ticks
-        # print("Ticks:", left_motor.ticks)
+        print("Ticks:", left_motor.ticks)
         print("Left distance:", left_distance, "mm")
         print("Right distance:", right_distance, "mm")
         sleep(0.25)
