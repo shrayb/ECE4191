@@ -91,6 +91,5 @@ class Motor:
         if new_state != self.encoder_state:
             self.encoder_state = new_state
             self.ticks += 1
-            print("Motor:", self.input_a, "| Tick state:", new_state)
 
         sleep(0.001)
