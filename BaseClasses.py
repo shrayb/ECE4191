@@ -52,7 +52,8 @@ class Motor:
         GPIO.setup(self.encoder_a, GPIO.IN)
         GPIO.setup(self.encoder_b, GPIO.IN)
         self.speed = speed  # Speed from 0 to 100
-        self.pwm = GPIO.PWM(self.enable_pin, self.speed)
+        self.pwm = GPIO.PWM(self.enable_pin, 1000)
+        self.pwm.start(self.speed)
         self.ticks = 0
         self.encoder_state = self.read_encoder()
 
