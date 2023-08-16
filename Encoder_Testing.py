@@ -48,7 +48,7 @@ def loop():
         print("Ticks:", left_motor.ticks)
         print("Left distance:", left_distance, "mm")
         print("Right distance:", right_distance, "mm")
-        sleep(0.25)
+        sleep(0.5)
 
 
 if __name__ == "__main__":
