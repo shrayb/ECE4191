@@ -1,5 +1,4 @@
-import Robot.Robot
-
+import Robot
 
 
 class Navigation:
@@ -22,7 +21,7 @@ class Navigation:
 
 def run_program():
     new_pose = Robot.Pose(1, 3, pi / 2)
-    new_robot = Robot.Robot(new_pose)
+    new_robot = Robot(new_pose)
     navigation = Navigation(new_robot)
 
 if __name__ == "__main__":

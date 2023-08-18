@@ -1,42 +1,32 @@
 import RPi.GPIO as GPIO
-from time import time, sleep
+import time
 
-trigger_pin = 14
-echo_pin = 15
+GPIO.setmode(GPIO.BCM)
 
-def setup():
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(trigger_pin, GPIO.OUT)
-    GPIO.setup(echo_pin, GPIO.IN)
+TRIG_PIN = 3
+ECHO_PIN = 2
 
-def main_loop():
+GPIO.setup(TRIG_PIN, GPIO.OUT)
+GPIO.setup(ECHO_PIN, GPIO.IN)
+
+try:
     while True:
-        # Trigger the ultrasonic sensor
-        GPIO.output(trigger_pin, GPIO.HIGH)
+        GPIO.output(TRIG_PIN, True)
+        time.sleep(0.00001)
+        GPIO.output(TRIG_PIN, False)
 
-        # Wait 0.00001
-        sleep(0.00001)
+        while GPIO.input(ECHO_PIN) == 0:
+            pulse_start = time.time()
 
-        # Stop the trigger
-        GPIO.output(trigger_pin, GPIO.LOW)
-        start_time = time()
-        stop_time = time()
+        while GPIO.input(ECHO_PIN) == 1:
+            pulse_end = time.time()
 
-        # Save start time
-        while GPIO.input(echo_pin) == 0:
-            start_time = time()
+        pulse_duration = pulse_end - pulse_start
+        distance = pulse_duration * 17150  # Speed of sound in cm/s
 
-        # Save time echo arrives
-        while GPIO.input(echo_pin) == 1:
-            stop_time = time()
+        print(f"Distance: {distance:.2f} cm")
 
-        time_elapsed = stop_time - start_time
-        distance = (time_elapsed * 343000) / 2
+        time.sleep(1)
 
-        print("Distance:", distance, "mm")
-        sleep(0.1)
-
-
-if __name__ == "__main__":
-    setup()
-    main_loop()
+except KeyboardInterrupt:
+    GPIO.cleanup()
