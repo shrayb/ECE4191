@@ -1,5 +1,8 @@
+import math
 from BaseClasses import Pose
+from threading import Thread
 
+from Encoder_Testing import encoder_loop
 class Robot:
     def __init__(self, pose=Pose(), state="waiting"):
         self.pose = pose
@@ -37,7 +40,8 @@ class Robot:
         self.left_motor = None  # Motor class for the left motor
         self.right_motor = None  # Motor class for the right motor
         self.conveyor_motor = None  # Motor class for the conveyor belt motor
-
+        self.turningRadius = 140
+    
     def get_current_goal(self, arena_map=None):
         if self.packages is not None:
             return self.packages[0].destination.deposit_pose
@@ -117,3 +121,21 @@ class Robot:
 
     def get_pose(self):
         return self.pose
+
+    def turn_right(self,angle):
+        
+        self.left_motor.set_speed(100)
+        self.right_motor.set_speed(100)
+        self.left_motor.forward()
+        self.right_motor.backward()
+
+        encoder_thread = Thread(target=encoder_loop)
+        encoder_thread.start()
+
+        currentAngle = 0
+        circum = math.pi * 55
+        cpr = 48 * 75
+        tick_dist = circum / cpr
+        while currentAngle != angle:
+            left_distance = tick_dist * self.left_motor.ticks
+            currentAngle = left_distance/self.turningRadius
