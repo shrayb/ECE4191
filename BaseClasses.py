@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from time import sleep
+from time import sleep, time
 
 class Pose:
     def __init__(self, x=None, y=None, theta=None):
@@ -91,3 +91,67 @@ class Motor:
         if new_state != self.encoder_state:
             self.encoder_state = new_state
             self.ticks += 1
+
+class ColourSensor:
+    def __init__(self, s0, s1, s2, s3, signal):
+        self.s0 = s0
+        self.s1 = s1
+        self.s2 = s2
+        self.s3 = s3
+        self.signal = signal
+        self.num_of_cycles = 10
+
+    def read_colour(self):
+        red_count = 0
+        green_count = 0
+        blue_count = 0
+        for index in range(5):
+            # Read each colour sensor
+            self.read_red()
+            red_reading = self.get_reading()
+
+            self.read_green()
+            green_reading = self.get_reading()
+
+            self.read_blue()
+            blue_reading = self.get_reading()
+
+            if red_reading > 20000 or green_reading > 20000 or blue_reading > 20000:
+                # Find the largest
+                if red_reading > green_reading and red_reading > blue_reading:
+                    red_count += 1
+                if green_reading > red_reading and green_reading > blue_reading:
+                    green_count += 1
+                if blue_reading > green_reading and blue_reading > red_reading:
+                    blue_count += 1
+
+        if red_count == 0 and blue_count == 0 and green_count == 0:
+            return None
+
+        # Find which colour shows up most
+        if red_count > green_count and red_count > blue_count:
+            return "red"
+        elif green_count > blue_count and green_count > red_count:
+            return "green"
+        else:
+            return "blue"
+
+    def read_red(self):
+        GPIO.output(self.s2, GPIO.LOW)
+        GPIO.output(self.s3, GPIO.LOW)
+
+    def read_green(self):
+        GPIO.output(self.s2, GPIO.HIGH)
+        GPIO.output(self.s3, GPIO.HIGH)
+
+    def read_blue(self):
+        GPIO.output(self.s2, GPIO.LOW)
+        GPIO.output(self.s3, GPIO.HIGH)
+
+    def get_reading(self):
+        start_time = time()
+        for impulse_count in range(self.num_of_cycles):
+            GPIO.wait_for_edge(self.signal, GPIO.FALLING)
+        signal_duration = time() - start_time
+        reading_value = self.num_of_cycles / signal_duration
+        return reading_value
