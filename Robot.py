@@ -1,8 +1,6 @@
 import math
 from BaseClasses import Pose
-from threading import Thread
 
-from Encoder_Testing import encoder_loop
 class Robot:
     def __init__(self, pose=Pose(), state="waiting"):
         self.pose = pose
