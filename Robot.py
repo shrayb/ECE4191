@@ -162,12 +162,55 @@ class Robot:
             # Calculate how many ticks have been seen
             current_ticks = self.left_motor.ticks + self.right_motor.ticks
 
-        # Slow down the motors
+        # Slow down the motors to 50 percent for the remaining 10 degrees of the turn. This is to reduce overshoot
         self.left_motor.set_speed(50)
         self.right_motor.set_speed(50)
 
         # Continuously check if the turn is completed
         while current_ticks < turn_ticks:
+            # Calculate how many ticks have been seen
+            current_ticks = self.left_motor.ticks + self.right_motor.ticks
+
+        # Stop the motors
+        self.left_motor.stop()
+        self.right_motor.stop()
+
+    def do_drive(self, distance):
+        # Reset encoders
+        self.left_motor.reset_encoder()
+        self.right_motor.reset_encoder()
+
+        # Set motor speeds to 100
+        self.left_motor.set_speed(100)
+        self.right_motor.set_speed(100)
+
+        if distance > 0:  # Drive forward
+            self.left_motor.forward()
+            self.right_motor.forward()
+        elif distance < 0:  # Drive backward
+            self.left_motor.backward()
+            self.right_motor.backward()
+        else:  # Distance of zero given
+            return None
+
+        # Calculate how many ticks to do for the given distance
+        drive_ticks = (abs(distance) / self.distance_per_tick) * 2
+
+        # Calculate how many ticks to do for the given distance minus 5 centimetres
+        drive_minus_5_ticks = ((abs(distance) - 5) / self.distance_per_tick) * 2
+
+        # Continuously check if the robot has driven most of the way
+        current_ticks = 0
+        while current_ticks < drive_minus_5_ticks:
+            # Calculate how many ticks have been seen
+            current_ticks = self.left_motor.ticks + self.right_motor.ticks
+
+        # Slow down the motors to 50 percent for the remaining 5 cm of the drive
+        self.left_motor.set_speed(50)
+        self.right_motor.set_speed(50)
+
+        # Continuously check if the drive is completed
+        while current_ticks < drive_ticks:
             # Calculate how many ticks have been seen
             current_ticks = self.left_motor.ticks + self.right_motor.ticks
 
