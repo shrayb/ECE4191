@@ -151,7 +151,7 @@ class Robot:
         turn_ticks = (turn_distance / self.distance_per_tick) * 2
 
         # Calculate how many ticks to do for the given angle minus 10 degrees
-        turn_distance = (angle - 0.174533) * self.turn_radius
+        turn_distance = (angle - 10 * (math.pi / 180)) * self.turn_radius
         turn_minus_10_ticks = (turn_distance / self.distance_per_tick) * 2
 
         # Continuously check if the turn has less than 10 degrees of the turn remaining
