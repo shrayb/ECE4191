@@ -1,8 +1,6 @@
 import math
 from BaseClasses import Pose
-from threading import Thread
 
-from Encoder_Testing import encoder_loop
 class Robot:
     def __init__(self, pose=Pose(), state="waiting"):
         self.pose = pose
@@ -40,7 +38,10 @@ class Robot:
         self.left_motor = None  # Motor class for the left motor
         self.right_motor = None  # Motor class for the right motor
         self.conveyor_motor = None  # Motor class for the conveyor belt motor
-        self.turningRadius = 140
+        self.turn_radius = 0.14  # Metres
+        self.wheel_radius = 0.055  # Metres
+        self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
+
     
     def get_current_goal(self, arena_map=None):
         if self.packages is not None:
@@ -122,20 +123,95 @@ class Robot:
     def get_pose(self):
         return self.pose
 
-    def turn_right(self,angle):
-        
+    def encoder_update_loop(self):
+        while True:
+            self.left_motor.update_encoder()
+            self.right_motor.update_encoder()
+
+    def do_turn(self, angle):
+        # Reset encoders
+        self.left_motor.reset_encoder()
+        self.right_motor.reset_encoder()
+
+        # Set motor speeds to 100
         self.left_motor.set_speed(100)
         self.right_motor.set_speed(100)
-        self.left_motor.forward()
-        self.right_motor.backward()
 
-        encoder_thread = Thread(target=encoder_loop)
-        encoder_thread.start()
+        if angle > 0:  # Turn counterclockwise
+            self.left_motor.backward()
+            self.right_motor.forward()
+        elif angle < 0:  # Turn clockwise
+            self.left_motor.forward()
+            self.right_motor.backward()
+        else:  # Angle of zero given
+            return None
 
-        currentAngle = 0
-        circum = math.pi * 55
-        cpr = 48 * 75
-        tick_dist = circum / cpr
-        while currentAngle != angle:
-            left_distance = tick_dist * self.left_motor.ticks
-            currentAngle = left_distance/self.turningRadius
+        # Calculate how many ticks to do for the given angle
+        turn_distance = angle * self.turn_radius
+        turn_ticks = (turn_distance / self.distance_per_tick) * 2
+
+        # Calculate how many ticks to do for the given angle minus 10 degrees
+        turn_distance = (angle - 0.174533) * self.turn_radius
+        turn_minus_10_ticks = (turn_distance / self.distance_per_tick) * 2
+
+        # Continuously check if the turn has less than 10 degrees of the turn remaining
+        current_ticks = 0
+        while current_ticks < turn_minus_10_ticks:
+            # Calculate how many ticks have been seen
+            current_ticks = self.left_motor.ticks + self.right_motor.ticks
+
+        # Slow down the motors to 50 percent for the remaining 10 degrees of the turn. This is to reduce overshoot
+        self.left_motor.set_speed(50)
+        self.right_motor.set_speed(50)
+
+        # Continuously check if the turn is completed
+        while current_ticks < turn_ticks:
+            # Calculate how many ticks have been seen
+            current_ticks = self.left_motor.ticks + self.right_motor.ticks
+
+        # Stop the motors
+        self.left_motor.stop()
+        self.right_motor.stop()
+
+    def do_drive(self, distance):
+        # Reset encoders
+        self.left_motor.reset_encoder()
+        self.right_motor.reset_encoder()
+
+        # Set motor speeds to 100
+        self.left_motor.set_speed(100)
+        self.right_motor.set_speed(100)
+
+        if distance > 0:  # Drive forward
+            self.left_motor.forward()
+            self.right_motor.forward()
+        elif distance < 0:  # Drive backward
+            self.left_motor.backward()
+            self.right_motor.backward()
+        else:  # Distance of zero given
+            return None
+
+        # Calculate how many ticks to do for the given distance
+        drive_ticks = (abs(distance) / self.distance_per_tick) * 2
+
+        # Calculate how many ticks to do for the given distance minus 5 centimetres
+        drive_minus_5_ticks = ((abs(distance) - 5) / self.distance_per_tick) * 2
+
+        # Continuously check if the robot has driven most of the way
+        current_ticks = 0
+        while current_ticks < drive_minus_5_ticks:
+            # Calculate how many ticks have been seen
+            current_ticks = self.left_motor.ticks + self.right_motor.ticks
+
+        # Slow down the motors to 50 percent for the remaining 5 cm of the drive
+        self.left_motor.set_speed(50)
+        self.right_motor.set_speed(50)
+
+        # Continuously check if the drive is completed
+        while current_ticks < drive_ticks:
+            # Calculate how many ticks have been seen
+            current_ticks = self.left_motor.ticks + self.right_motor.ticks
+
+        # Stop the motors
+        self.left_motor.stop()
+        self.right_motor.stop()
