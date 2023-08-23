@@ -27,6 +27,8 @@ right_motor = Motor(motor_right_enable, motor_right_positive, motor_right_negati
 
 pose = Pose(0, 0,math.pi / 2)
 robot = Robot(pose)
+robot.left_motor = left_motor
+robot.right_motor = right_motor
 
 def loop():
     # Drive to (0.5, 0)
