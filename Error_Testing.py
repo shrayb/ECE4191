@@ -43,6 +43,7 @@ def loop():
 
     for coord in coords:
         # Drive to each coord
+        robot.pose = Pose(0.3, 0.2, 0)
         x = input("Press 1 to go again")
         if x == "1":
             robot.drive_to_coordinate(coord)
