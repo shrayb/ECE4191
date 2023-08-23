@@ -145,7 +145,7 @@ class Robot:
             if 3 * self.tick_check_interval < left_tick_advantage <= 4 * self.tick_check_interval:
                 self.left_motor.set_speed(max_speed - 15)
                 self.right_motor.set_speed(max_speed)
-            if 4 * self.tick_check_interval < left_tick_advantage <= 5 * self.tick_check_interval:
+            if 4 * self.tick_check_interval < left_tick_advantage:
                 self.left_motor.set_speed(max_speed - 20)
                 self.right_motor.set_speed(max_speed)
 
@@ -159,7 +159,7 @@ class Robot:
             if -3 * self.tick_check_interval > left_tick_advantage >= -4 * self.tick_check_interval:
                 self.left_motor.set_speed(max_speed)
                 self.right_motor.set_speed(max_speed - 15)
-            if -4 * self.tick_check_interval > left_tick_advantage >= -5 * self.tick_check_interval:
+            if -4 * self.tick_check_interval > left_tick_advantage:
                 self.left_motor.set_speed(max_speed)
                 self.right_motor.set_speed(max_speed - 20)
 
