@@ -44,7 +44,7 @@ class Robot:
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
         self.max_speed = 100
         self.slow_speed = 75
-        self.tick_check_interval = 100
+        self.tick_check_interval = 10
 
     def get_current_goal(self, arena_map=None):
         if self.packages is not None:
