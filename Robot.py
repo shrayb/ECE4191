@@ -158,6 +158,7 @@ class Robot:
         # Continuously check if the turn has less than 10 degrees of the turn remaining
         current_ticks = 0
         while current_ticks < turn_minus_10_ticks:
+            print(current_ticks, "/", turn_minus_10_ticks)
             # Calculate how many ticks have been seen
             current_ticks = self.left_motor.ticks + self.right_motor.ticks
 
@@ -167,6 +168,7 @@ class Robot:
 
         # Continuously check if the turn is completed
         while current_ticks < turn_ticks:
+            print(current_ticks, "/", turn_ticks)
             # Calculate how many ticks have been seen
             current_ticks = self.left_motor.ticks + self.right_motor.ticks
 
