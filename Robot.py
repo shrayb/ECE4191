@@ -228,13 +228,15 @@ class Robot:
 
     def drive_to_coordinate(self, coordinate):
         print("Driving to: (", coordinate.x, ",", coordinate.y, ")")
-        # Find angle to turn
-        goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
 
-        angle_difference = goal_angle - self.pose.theta
-        print("\tTurning by:", angle_difference, "rad")
-        self.do_turn(angle_difference)
-        sleep(1)
+        if coordinate.x != self.pose.x or coordinate.y != self.pose.y:
+            # Find angle to turn
+            goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
+
+            angle_difference = goal_angle - self.pose.theta
+            print("\tTurning by:", angle_difference, "rad")
+            self.do_turn(angle_difference)
+            sleep(1)
 
         # Find distance to drive
         distance = math.sqrt((coordinate.x - self.pose.x)**2 + (coordinate.y - self.pose.y)**2)
@@ -244,7 +246,7 @@ class Robot:
         sleep(1)
 
         # If there is an end orientation face it
-        if coordinate.end_orientation is not None:
+        if coordinate.end_orientation is not None and self.pose.theta != coordinate.end_orientation:
             print("\tAdjusting orientation...")
             angle_difference = coordinate.end_orientation - self.pose.theta
             self.do_turn(angle_difference)
