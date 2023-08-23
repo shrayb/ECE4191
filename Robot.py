@@ -229,7 +229,7 @@ class Robot:
         goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
 
         angle_difference = goal_angle - self.pose.theta
-
+        print("Goal angle", goal_angle, " ANgle diff:", angle_difference)
         self.do_turn(angle_difference)
         sleep(1)
 
