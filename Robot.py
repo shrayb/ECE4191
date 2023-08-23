@@ -148,11 +148,12 @@ class Robot:
             return None
 
         # Calculate how many ticks to do for the given angle
-        turn_distance = angle * self.turn_radius
+        turn_distance = abs(angle) * self.turn_radius
         turn_ticks = (turn_distance / self.distance_per_tick) * 2
 
         # Calculate how many ticks to do for the given angle minus 10 degrees
-        turn_distance = (angle - 10 * (math.pi / 180)) * self.turn_radius
+        turn_distance = (abs(angle) - 10 * (math.pi / 180)) * self.turn_radius
+        turn_distance = max(turn_distance, 0)
         turn_minus_10_ticks = (turn_distance / self.distance_per_tick) * 2
 
         # Continuously check if the turn has less than 10 degrees of the turn remaining
@@ -165,8 +166,8 @@ class Robot:
             current_ticks = self.left_motor.ticks + self.right_motor.ticks
 
         # Slow down the motors to 50 percent for the remaining 10 degrees of the turn. This is to reduce overshoot
-        self.left_motor.set_speed(50)
-        self.right_motor.set_speed(50)
+        self.left_motor.set_speed(80)
+        self.right_motor.set_speed(80)
 
         # Continuously check if the turn is completed
         while current_ticks < turn_ticks:
