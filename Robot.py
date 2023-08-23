@@ -39,8 +39,8 @@ class Robot:
         self.left_motor = None  # Motor class for the left motor
         self.right_motor = None  # Motor class for the right motor
         self.conveyor_motor = None  # Motor class for the conveyor belt motor
-        self.turn_radius = 0.14  # Metres
-        self.wheel_radius = 0.055  # Metres
+        self.turn_radius = 0.137795  # Metres
+        self.wheel_radius = 0.05451  # Metres
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
 
     
