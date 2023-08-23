@@ -132,9 +132,10 @@ class Robot:
             self.right_motor.update_encoder()
 
     def tick_check_and_speed_control(self, max_ticks, max_speed):
+        left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
+        print("Left tick advantage:", left_tick_advantage)
         while self.left_motor.ticks + self.right_motor.ticks < max_ticks:
             left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
-            print("Left tick advantage:", left_tick_advantage)
             # Handle if the left motor is leading
             if self.tick_check_interval < left_tick_advantage <= 2 * self.tick_check_interval:
                 self.left_motor.set_speed(max_speed - 5)
