@@ -202,7 +202,7 @@ class Robot:
         drive_ticks = (abs(distance) / self.distance_per_tick) * 2
 
         # Calculate how many ticks to do for the given distance minus 5 centimetres
-        drive_minus_5_ticks = ((abs(distance) - 5) / self.distance_per_tick) * 2
+        drive_minus_5_ticks = ((abs(distance) - 0.05) / self.distance_per_tick) * 2
 
         # Continuously check if the robot has driven most of the way
         current_ticks = 0
@@ -211,8 +211,8 @@ class Robot:
             current_ticks = self.left_motor.ticks + self.right_motor.ticks
 
         # Slow down the motors to 50 percent for the remaining 5 cm of the drive
-        self.left_motor.set_speed(50)
-        self.right_motor.set_speed(50)
+        self.left_motor.set_speed(80)
+        self.right_motor.set_speed(80)
 
         # Continuously check if the drive is completed
         while current_ticks < drive_ticks:
