@@ -42,10 +42,9 @@ class Robot:
         self.turn_radius = 0.137795  # Metres
         self.wheel_radius = 0.05451  # Metres
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
-        self.max_speed = 70
-        self.slow_speed = 50
+        self.max_speed = 100
+        self.slow_speed = 75
 
-    
     def get_current_goal(self, arena_map=None):
         if self.packages is not None:
             return self.packages[0].destination.deposit_pose
@@ -131,8 +130,39 @@ class Robot:
             self.left_motor.update_encoder()
             self.right_motor.update_encoder()
 
+    def tick_check_and_speed_control(self, max_ticks, max_speed):
+        while self.left_motor.ticks + self.right_motor.ticks < max_ticks:
+            left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
+
+            # Handle if the left motor is leading
+            if 500 < left_tick_advantage <= 1000:
+                self.left_motor.set_speed(max_speed - 5)
+                self.right_motor.set_speed(max_speed)
+            if 1000 < left_tick_advantage <= 1500:
+                self.left_motor.set_speed(max_speed - 10)
+                self.right_motor.set_speed(max_speed)
+            if 1500 < left_tick_advantage <= 2000:
+                self.left_motor.set_speed(max_speed - 15)
+                self.right_motor.set_speed(max_speed)
+            if 2000 < left_tick_advantage <= 2500:
+                self.left_motor.set_speed(max_speed - 20)
+                self.right_motor.set_speed(max_speed)
+
+            # Handle if the right motor is leading
+            if -500 > left_tick_advantage >= -1000:
+                self.left_motor.set_speed(max_speed)
+                self.right_motor.set_speed(max_speed - 5)
+            if -1000 > left_tick_advantage >= -1500:
+                self.left_motor.set_speed(max_speed)
+                self.right_motor.set_speed(max_speed - 10)
+            if -1500 > left_tick_advantage >= -2000:
+                self.left_motor.set_speed(max_speed)
+                self.right_motor.set_speed(max_speed - 15)
+            if -2000 > left_tick_advantage >= -2500:
+                self.left_motor.set_speed(max_speed)
+                self.right_motor.set_speed(max_speed - 20)
+
     def do_turn(self, angle):
-        angle -= 5 * (math.pi / 180)
         # Reset encoders
         self.left_motor.reset_encoder()
         self.right_motor.reset_encoder()
@@ -162,18 +192,14 @@ class Robot:
         # Continuously check if the turn has less than 10 degrees of the turn remaining
         current_ticks = 0
 
-        while current_ticks < turn_minus_10_ticks:
-            # Calculate how many ticks have been seen
-            current_ticks = self.left_motor.ticks + self.right_motor.ticks
+        self.tick_check_and_speed_control(turn_minus_10_ticks, self.max_speed)
 
         # Slow down the motors to 50 percent for the remaining 10 degrees of the turn. This is to reduce overshoot
         self.left_motor.set_speed(self.slow_speed)
         self.right_motor.set_speed(self.slow_speed)
 
         # Continuously check if the turn is completed
-        while current_ticks < turn_ticks:
-            # Calculate how many ticks have been seen
-            current_ticks = self.left_motor.ticks + self.right_motor.ticks
+        self.tick_check_and_speed_control(turn_ticks, self.slow_speed)
 
         # Stop the motors
         self.left_motor.stop()
@@ -208,19 +234,14 @@ class Robot:
 
 
         # Continuously check if the robot has driven most of the way
-        current_ticks = 0
-        while current_ticks < drive_minus_5_ticks:
-            # Calculate how many ticks have been seen
-            current_ticks = self.left_motor.ticks + self.right_motor.ticks
+        self.tick_check_and_speed_control(drive_minus_5_ticks, self.max_speed)
 
         # Slow down the motors to 50 percent for the remaining 5 cm of the drive
         self.left_motor.set_speed(self.slow_speed)
         self.right_motor.set_speed(self.slow_speed)
 
         # Continuously check if the drive is completed
-        while current_ticks < drive_ticks:
-            # Calculate how many ticks have been seen
-            current_ticks = self.left_motor.ticks + self.right_motor.ticks
+        self.tick_check_and_speed_control(drive_ticks, self.slow_speed)
 
         # Stop the motors
         self.left_motor.stop()
