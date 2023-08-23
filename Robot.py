@@ -174,7 +174,7 @@ class Robot:
         self.left_motor.stop()
         self.right_motor.stop()
 
-        self.pose[2] += angle
+        self.pose.theta += angle
 
     def do_drive(self, distance):
         # Reset encoders
