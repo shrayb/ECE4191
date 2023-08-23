@@ -132,6 +132,7 @@ class Robot:
             self.right_motor.update_encoder()
 
     def do_turn(self, angle):
+        angle -= 5 * (math.pi / 180)
         # Reset encoders
         self.left_motor.reset_encoder()
         self.right_motor.reset_encoder()
