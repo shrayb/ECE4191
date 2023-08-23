@@ -158,7 +158,6 @@ class Robot:
 
         # Continuously check if the turn has less than 10 degrees of the turn remaining
         current_ticks = 0
-        print(current_ticks, "/", turn_minus_10_ticks)
 
         while current_ticks < turn_minus_10_ticks:
             print(current_ticks, "/", turn_minus_10_ticks)

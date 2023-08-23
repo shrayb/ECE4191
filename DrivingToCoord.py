@@ -30,6 +30,9 @@ robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
 
+encoder_thread = Thread(target=robot.encoder_update_loop)
+encoder_thread.start()
+
 def loop():
     # Drive to (0.5, 0)
     coordinate1 = Point(0.5, 0)
