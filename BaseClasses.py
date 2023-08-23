@@ -8,9 +8,10 @@ class Pose:
         self.theta = theta  # The angle the object is "facing" measured counter-clockwise from the positive x-axis.
 
 class Point:
-    def __init__(self, x=None, y=None):
+    def __init__(self, x=None, y=None, end_orientation=None):
         self.x = x
         self.y = y
+        self.end_orientation = end_orientation
 
 class Polygon:
     def __init__(self, vertices=None):

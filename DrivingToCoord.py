@@ -34,21 +34,14 @@ encoder_thread = Thread(target=robot.encoder_update_loop)
 encoder_thread.start()
 
 def loop():
-    # Drive to (0.5, 0)
-    coordinate1 = Point(0.5, 0)
-    robot.drive_to_coordinate(coordinate1)
+    coords = [Point(0.3, 0),
+              Point(0, 0.3),
+              Point(0.3, 0.3),
+              Point(0, 0, math.pi / 2)]
 
-    # Drive to (0, 0.5)
-    coordinate2 = Point(0, 0.5)
-    robot.drive_to_coordinate(coordinate2)
-
-    # Drive to (0.5, 0.5)
-    coordinate3 = Point(0.5, 0.5)
-    robot.drive_to_coordinate(coordinate3)
-
-    # Drive to (0, 0)
-    coordinate4 = Point(0, 0)
-    robot.drive_to_coordinate(coordinate4, end_orientation=math.pi/2)
+    for coord in coords:
+        # Drive to each coord
+        robot.drive_to_coordinate(coord)
 
 if __name__ == "__main__":
     loop()
