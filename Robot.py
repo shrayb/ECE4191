@@ -160,7 +160,6 @@ class Robot:
         current_ticks = 0
 
         while current_ticks < turn_minus_10_ticks:
-            print(current_ticks, "/", turn_minus_10_ticks)
             # Calculate how many ticks have been seen
             current_ticks = self.left_motor.ticks + self.right_motor.ticks
 
@@ -170,7 +169,6 @@ class Robot:
 
         # Continuously check if the turn is completed
         while current_ticks < turn_ticks:
-            print(current_ticks, "/", turn_ticks)
             # Calculate how many ticks have been seen
             current_ticks = self.left_motor.ticks + self.right_motor.ticks
 
@@ -203,6 +201,8 @@ class Robot:
 
         # Calculate how many ticks to do for the given distance minus 5 centimetres
         drive_minus_5_ticks = ((abs(distance) - 0.05) / self.distance_per_tick) * 2
+        drive_minus_5_ticks = max(drive_minus_5_ticks, 0)
+
 
         # Continuously check if the robot has driven most of the way
         current_ticks = 0
