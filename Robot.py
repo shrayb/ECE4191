@@ -42,6 +42,8 @@ class Robot:
         self.turn_radius = 0.137795  # Metres
         self.wheel_radius = 0.05451  # Metres
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
+        self.max_speed = 80
+        self.slow_speed = 60
 
     
     def get_current_goal(self, arena_map=None):
@@ -135,8 +137,8 @@ class Robot:
         self.right_motor.reset_encoder()
 
         # Set motor speeds to 100
-        self.left_motor.set_speed(100)
-        self.right_motor.set_speed(100)
+        self.left_motor.set_speed(self.max_speed)
+        self.right_motor.set_speed(self.max_speed)
 
         if angle > 0:  # Turn counterclockwise
             self.left_motor.backward()
@@ -152,7 +154,7 @@ class Robot:
         turn_ticks = (turn_distance / self.distance_per_tick) * 2
 
         # Calculate how many ticks to do for the given angle minus 10 degrees
-        turn_distance = (abs(angle) - 10 * (math.pi / 180)) * self.turn_radius
+        turn_distance = (abs(angle) - 20 * (math.pi / 180)) * self.turn_radius
         turn_distance = max(turn_distance, 0)
         turn_minus_10_ticks = (turn_distance / self.distance_per_tick) * 2
 
@@ -164,8 +166,8 @@ class Robot:
             current_ticks = self.left_motor.ticks + self.right_motor.ticks
 
         # Slow down the motors to 50 percent for the remaining 10 degrees of the turn. This is to reduce overshoot
-        self.left_motor.set_speed(80)
-        self.right_motor.set_speed(80)
+        self.left_motor.set_speed(self.slow_speed)
+        self.right_motor.set_speed(self.slow_speed)
 
         # Continuously check if the turn is completed
         while current_ticks < turn_ticks:
@@ -184,8 +186,8 @@ class Robot:
         self.right_motor.reset_encoder()
 
         # Set motor speeds to 100
-        self.left_motor.set_speed(100)
-        self.right_motor.set_speed(100)
+        self.left_motor.set_speed(self.max_speed)
+        self.right_motor.set_speed(self.max_speed)
 
         if distance > 0:  # Drive forward
             self.left_motor.forward()
@@ -199,8 +201,8 @@ class Robot:
         # Calculate how many ticks to do for the given distance
         drive_ticks = (abs(distance) / self.distance_per_tick) * 2
 
-        # Calculate how many ticks to do for the given distance minus 5 centimetres
-        drive_minus_5_ticks = ((abs(distance) - 0.05) / self.distance_per_tick) * 2
+        # Calculate how many ticks to do for the given distance minus 10 centimetres
+        drive_minus_5_ticks = ((abs(distance) - 0.1) / self.distance_per_tick) * 2
         drive_minus_5_ticks = max(drive_minus_5_ticks, 0)
 
 
@@ -211,8 +213,8 @@ class Robot:
             current_ticks = self.left_motor.ticks + self.right_motor.ticks
 
         # Slow down the motors to 50 percent for the remaining 5 cm of the drive
-        self.left_motor.set_speed(80)
-        self.right_motor.set_speed(80)
+        self.left_motor.set_speed(self.slow_speed)
+        self.right_motor.set_speed(self.slow_speed)
 
         # Continuously check if the drive is completed
         while current_ticks < drive_ticks:
