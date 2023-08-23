@@ -42,8 +42,8 @@ class Robot:
         self.turn_radius = 0.137795  # Metres
         self.wheel_radius = 0.05451  # Metres
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
-        self.max_speed = 80
-        self.slow_speed = 60
+        self.max_speed = 70
+        self.slow_speed = 50
 
     
     def get_current_goal(self, arena_map=None):
