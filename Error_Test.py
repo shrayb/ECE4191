@@ -25,7 +25,7 @@ GPIO.setmode(GPIO.BCM)
 left_motor = Motor(motor_left_enable, motor_left_positive, motor_left_negative, motor_left_encoder_a, motor_left_encoder_b)
 right_motor = Motor(motor_right_enable, motor_right_positive, motor_right_negative, motor_right_encoder_a, motor_right_encoder_b)
 
-pose = Pose(0.3, 0.2, 0)
+pose = Pose(0, 0,math.pi / 2)
 robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
@@ -34,27 +34,14 @@ encoder_thread = Thread(target=robot.encoder_update_loop)
 encoder_thread.start()
 
 def loop():
-    coords = [Point(0.3, 0.2, math.pi / 6),
-              Point(0.3, 0.2, 2 * math.pi / 6),
-              Point(0.3, 0.2, 3 * math.pi / 6),
-              Point(0.3, 0.2, 4 * math.pi / 6),
-              Point(0.3, 0.2, 5 * math.pi / 6),
-              Point(0.3, 0.2, 6 * math.pi / 6)]
-
-    for coord in coords:
-        # Drive to each coord
-        x = input("Press 1 to go again")
-        if x == "1":
-            robot.drive_to_coordinate(coord)
-
-    sleep(10)
-    x = input("hello")
-    coords = [Point(0.3, 0.2, math.pi)]
+    coords = [Point(0.3, 0.2),
+              Point(0.9, 0.8),
+              Point(0.3, 0.8),
+              Point(0.3, 0.2, math.pi / 2)]
 
     for coord in coords:
         # Drive to each coord
         robot.drive_to_coordinate(coord)
-        sleep(2)
 
 if __name__ == "__main__":
     loop()
