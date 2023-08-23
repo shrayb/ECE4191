@@ -44,6 +44,7 @@ class Robot:
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
         self.max_speed = 100
         self.slow_speed = 75
+        self.tick_check_interval = 100
 
     def get_current_goal(self, arena_map=None):
         if self.packages is not None:
@@ -133,32 +134,32 @@ class Robot:
     def tick_check_and_speed_control(self, max_ticks, max_speed):
         while self.left_motor.ticks + self.right_motor.ticks < max_ticks:
             left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
-
+            print("Left tick advantage:", left_tick_advantage)
             # Handle if the left motor is leading
-            if 500 < left_tick_advantage <= 1000:
+            if self.tick_check_interval < left_tick_advantage <= 2 * self.tick_check_interval:
                 self.left_motor.set_speed(max_speed - 5)
                 self.right_motor.set_speed(max_speed)
-            if 1000 < left_tick_advantage <= 1500:
+            if 2 * self.tick_check_interval < left_tick_advantage <= 3 * self.tick_check_interval:
                 self.left_motor.set_speed(max_speed - 10)
                 self.right_motor.set_speed(max_speed)
-            if 1500 < left_tick_advantage <= 2000:
+            if 3 * self.tick_check_interval < left_tick_advantage <= 4 * self.tick_check_interval:
                 self.left_motor.set_speed(max_speed - 15)
                 self.right_motor.set_speed(max_speed)
-            if 2000 < left_tick_advantage <= 2500:
+            if 4 * self.tick_check_interval < left_tick_advantage <= 5 * self.tick_check_interval:
                 self.left_motor.set_speed(max_speed - 20)
                 self.right_motor.set_speed(max_speed)
 
             # Handle if the right motor is leading
-            if -500 > left_tick_advantage >= -1000:
+            if -self.tick_check_interval > left_tick_advantage >= -2 * self.tick_check_interval:
                 self.left_motor.set_speed(max_speed)
                 self.right_motor.set_speed(max_speed - 5)
-            if -1000 > left_tick_advantage >= -1500:
+            if -2 * self.tick_check_interval > left_tick_advantage >= -3 * self.tick_check_interval:
                 self.left_motor.set_speed(max_speed)
                 self.right_motor.set_speed(max_speed - 10)
-            if -1500 > left_tick_advantage >= -2000:
+            if -3 * self.tick_check_interval > left_tick_advantage >= -4 * self.tick_check_interval:
                 self.left_motor.set_speed(max_speed)
                 self.right_motor.set_speed(max_speed - 15)
-            if -2000 > left_tick_advantage >= -2500:
+            if -4 * self.tick_check_interval > left_tick_advantage >= -5 * self.tick_check_interval:
                 self.left_motor.set_speed(max_speed)
                 self.right_motor.set_speed(max_speed - 20)
 
