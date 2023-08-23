@@ -1,5 +1,6 @@
 import math
 from BaseClasses import Pose
+from time import sleep, time
 
 class Robot:
     def __init__(self, pose=Pose(), state="waiting"):
@@ -228,13 +229,17 @@ class Robot:
         angle_difference = goal_angle - self.pose[2]
 
         self.do_turn(angle_difference)
+        sleep(1)
 
         # Find distance to drive
         distance = math.sqrt((coordinate.x - self.pose[0])**2 + (coordinate.y - self.pose[1])**2)
 
         self.do_drive(distance)
+        sleep(1)
 
         # If there is an end orientation face it
         if end_orientation is not None:
             angle_difference = end_orientation - self.pose[2]
             self.do_turn(angle_difference)
+
+        sleep(1)
