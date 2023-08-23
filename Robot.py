@@ -219,27 +219,27 @@ class Robot:
         self.left_motor.stop()
         self.right_motor.stop()
 
-        self.pose[0] += distance * math.cos(self.pose[2])
-        self.pose[1] += distance * math.sin(self.pose[2])
+        self.pose.x += distance * math.cos(self.pose.theta)
+        self.pose.y += distance * math.sin(self.pose.theta)
 
     def drive_to_coordinate(self, coordinate, end_orientation=None):
         # Find angle to turn
-        goal_angle = math.atan2(coordinate.y - self.pose[1], coordinate.x - self.pose[0])
+        goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
 
-        angle_difference = goal_angle - self.pose[2]
+        angle_difference = goal_angle - self.pose.theta
 
         self.do_turn(angle_difference)
         sleep(1)
 
         # Find distance to drive
-        distance = math.sqrt((coordinate.x - self.pose[0])**2 + (coordinate.y - self.pose[1])**2)
+        distance = math.sqrt((coordinate.x - self.pose.x)**2 + (coordinate.y - self.pose.y)**2)
 
         self.do_drive(distance)
         sleep(1)
 
         # If there is an end orientation face it
         if end_orientation is not None:
-            angle_difference = end_orientation - self.pose[2]
+            angle_difference = end_orientation - self.pose.theta
             self.do_turn(angle_difference)
 
         sleep(1)
