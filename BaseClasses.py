@@ -8,9 +8,10 @@ class Pose:
         self.theta = theta  # The angle the object is "facing" measured counter-clockwise from the positive x-axis.
 
 class Point:
-    def __init__(self, x=None, y=None):
+    def __init__(self, x=None, y=None, end_orientation=None):
         self.x = x
         self.y = y
+        self.end_orientation = end_orientation
 
 class Polygon:
     def __init__(self, vertices=None):
@@ -108,13 +109,13 @@ class ColourSensor:
         for index in range(5):
             # Read each colour sensor
             self.read_red()
-            red_reading = self.get_reading()
+            red_reading = self.single_reading()
 
             self.read_green()
-            green_reading = self.get_reading()
+            green_reading = self.single_reading()
 
             self.read_blue()
-            blue_reading = self.get_reading()
+            blue_reading = self.single_reading()
 
             if red_reading > 20000 or green_reading > 20000 or blue_reading > 20000:
                 # Find the largest
@@ -148,7 +149,7 @@ class ColourSensor:
         GPIO.output(self.s2, GPIO.LOW)
         GPIO.output(self.s3, GPIO.HIGH)
 
-    def get_reading(self):
+    def single_reading(self):
         start_time = time()
         for impulse_count in range(self.num_of_cycles):
             GPIO.wait_for_edge(self.signal, GPIO.FALLING)
