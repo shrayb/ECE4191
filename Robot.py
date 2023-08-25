@@ -26,7 +26,7 @@ class Robot:
         # Sub-states of "delivering" and "returning":
         #   "planning": Robot is planning its route through an arena. This will happen at the beginning and anytime an obstacle interferes with the current route
         #   "moving": Robot is moving along its planned route
-        self.is_close_to_crashing = False  # Goes True if the robot detects something in front while moving
+        self.is_close_to_crashing = False  # Goes True if the robot detects something in front of it whilst moving
         self.is_moving = False  # Boolean for if the robot is in transit
         #   "stuck": Robot is stuck and has nowhere to travel
         #   "positioned": Robot has arrived to its destination
@@ -86,18 +86,7 @@ class Robot:
         # TODO
         pass
 
-    def sound(self, sound=None):
-        if sound == "beep":
-            # Play beep sound
-            # TODO
-            pass
-
     def plan_path(self, arena_map=None):
-        # TODO
-        pass
-
-    def handle_txrx(self):
-        # Transmits and receives data to and from other robots
         # TODO
         pass
 
@@ -133,45 +122,30 @@ class Robot:
 
     def tick_check_and_speed_control(self, max_ticks, max_speed):
         left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
-        print("Left tick advantage:", left_tick_advantage)
-        while self.left_motor.ticks + self.right_motor.ticks < max_ticks:
-            left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
-            # Handle if the left motor is leading
-            if self.tick_check_interval < left_tick_advantage <= 2 * self.tick_check_interval:
-                self.left_motor.set_speed(max_speed - 5)
-                self.right_motor.set_speed(max_speed)
-            if 2 * self.tick_check_interval < left_tick_advantage <= 3 * self.tick_check_interval:
-                self.left_motor.set_speed(max_speed - 10)
-                self.right_motor.set_speed(max_speed)
-            if 3 * self.tick_check_interval < left_tick_advantage <= 4 * self.tick_check_interval:
-                self.left_motor.set_speed(max_speed - 15)
-                self.right_motor.set_speed(max_speed)
-            if 4 * self.tick_check_interval < left_tick_advantage:
-                self.left_motor.set_speed(max_speed - 20)
-                self.right_motor.set_speed(max_speed)
 
-            # Handle if the right motor is leading
-            if -self.tick_check_interval > left_tick_advantage >= -2 * self.tick_check_interval:
-                self.left_motor.set_speed(max_speed)
-                self.right_motor.set_speed(max_speed - 5)
-            if -2 * self.tick_check_interval > left_tick_advantage >= -3 * self.tick_check_interval:
-                self.left_motor.set_speed(max_speed)
-                self.right_motor.set_speed(max_speed - 10)
-            if -3 * self.tick_check_interval > left_tick_advantage >= -4 * self.tick_check_interval:
-                self.left_motor.set_speed(max_speed)
-                self.right_motor.set_speed(max_speed - 15)
-            if -4 * self.tick_check_interval > left_tick_advantage:
-                self.left_motor.set_speed(max_speed)
-                self.right_motor.set_speed(max_speed - 20)
+        while self.left_motor.ticks + self.right_motor.ticks < max_ticks:
+            # Every two ticks slow down the leading motor by 1 speed
+            if left_tick_advantage > 0:
+                left_motor_speed = max(max_speed - math.floor(left_tick_advantage / 2), 0)
+                right_motor_speed = max_speed
+            elif left_tick_advantage < 0:
+                left_motor_speed = max_speed
+                right_motor_speed = max(max_speed + math.ceil(left_tick_advantage / 2), 0)
+            else:
+                left_motor_speed = max_speed
+                right_motor_speed = max_speed
+
+            self.left_motor.set_speed(left_motor_speed)
+            self.right_motor.set_speed(right_motor_speed)
 
     def do_turn(self, angle):
         # Reset encoders
         self.left_motor.reset_encoder()
         self.right_motor.reset_encoder()
 
-        # Set motor speeds to 100
-        self.left_motor.set_speed(self.max_speed)
-        self.right_motor.set_speed(self.max_speed)
+        # Set motor speeds to 0
+        self.left_motor.set_speed(0)
+        self.right_motor.set_speed(0)
 
         if angle > 0:  # Turn counterclockwise
             self.left_motor.backward()
@@ -186,14 +160,12 @@ class Robot:
         turn_distance = abs(angle) * self.turn_radius
         turn_ticks = (turn_distance / self.distance_per_tick) * 2
 
-        # Calculate how many ticks to do for the given angle minus 10 degrees
+        # Calculate how many ticks to do for the given angle minus 20 degrees
         turn_distance = (abs(angle) - 20 * (math.pi / 180)) * self.turn_radius
         turn_distance = max(turn_distance, 0)
         turn_minus_10_ticks = (turn_distance / self.distance_per_tick) * 2
 
         # Continuously check if the turn has less than 10 degrees of the turn remaining
-        current_ticks = 0
-
         self.tick_check_and_speed_control(turn_minus_10_ticks, self.max_speed)
 
         # Slow down the motors to 50 percent for the remaining 10 degrees of the turn. This is to reduce overshoot
@@ -207,16 +179,23 @@ class Robot:
         self.left_motor.stop()
         self.right_motor.stop()
 
-        self.pose.theta += angle
+        tick_sum = self.left_motor.ticks + self.right_motor.ticks
+        distance_turned = (tick_sum / 2) * self.distance_per_tick
+        measured_angle = distance_turned / self.turn_radius
+
+        if angle > 0:
+            self.pose.theta += measured_angle
+        else:
+            self.pose.theta -= measured_angle
 
     def do_drive(self, distance):
         # Reset encoders
         self.left_motor.reset_encoder()
         self.right_motor.reset_encoder()
 
-        # Set motor speeds to 100
-        self.left_motor.set_speed(self.max_speed)
-        self.right_motor.set_speed(self.max_speed)
+        # Set motor speeds to 0
+        self.left_motor.set_speed(0)
+        self.right_motor.set_speed(0)
 
         if distance > 0:  # Drive forward
             self.left_motor.forward()
@@ -234,7 +213,6 @@ class Robot:
         drive_minus_5_ticks = ((abs(distance) - 0.1) / self.distance_per_tick) * 2
         drive_minus_5_ticks = max(drive_minus_5_ticks, 0)
 
-
         # Continuously check if the robot has driven most of the way
         self.tick_check_and_speed_control(drive_minus_5_ticks, self.max_speed)
 
@@ -249,32 +227,41 @@ class Robot:
         self.left_motor.stop()
         self.right_motor.stop()
 
-        self.pose.x += distance * math.cos(self.pose.theta)
-        self.pose.y += distance * math.sin(self.pose.theta)
+        # Use the tick count to estimate where the robot is
+        tick_sum = self.left_motor.ticks + self.right_motor.ticks
+        measure_distance = (tick_sum / 2) * self.distance_per_tick
+
+        self.pose.x += measure_distance * math.cos(self.pose.theta)
+        self.pose.y += measure_distance * math.sin(self.pose.theta)
 
     def drive_to_coordinate(self, coordinate):
-        print("Driving to: (", coordinate.x, ",", coordinate.y, ")")
+        print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
 
+        # Check if the robot is already there
         if coordinate.x != self.pose.x or coordinate.y != self.pose.y:
             # Find angle to turn
             goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
-
             angle_difference = goal_angle - self.pose.theta
-            print("\tTurning by:", angle_difference, "rad")
+            print("\tTurning from:", self.pose.theta * 180 / math.pi, "degrees by", angle_difference * 180 / math.pi, "degrees")
+            print("\t\tStarting turn")
             self.do_turn(angle_difference)
-            sleep(1)
+            print("\t\tTurn complete")
+            sleep(0.25)
 
         # Find distance to drive
-        distance = math.sqrt((coordinate.x - self.pose.x)**2 + (coordinate.y - self.pose.y)**2)
-        print("Driving:", distance, "metres")
-
+        distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
+        print("\tDriving:", distance, "metres")
+        print("\t\tStarting drive")
         self.do_drive(distance)
-        sleep(1)
+        print("\t\tDrive complete")
+        sleep(0.25)
 
         # If there is an end orientation face it
         if coordinate.end_orientation is not None and self.pose.theta != coordinate.end_orientation:
-            print("\tAdjusting orientation...")
             angle_difference = coordinate.end_orientation - self.pose.theta
+            print("\tAdjusting orientation by", angle_difference * 180 / math.pi, "degrees to face", coordinate.end_orientation * 180 / math.pi, "degrees")
+            print("\t\tStarting turn")
             self.do_turn(angle_difference)
+            print("\t\tTurn complete")
 
-        sleep(1)
+        sleep(0.25)
