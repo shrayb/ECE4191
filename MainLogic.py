@@ -9,7 +9,7 @@ from threading import Thread
 # Store threads like this: <name, thread>
 #   .append(["movement", Thread(target=robot.do_something)])
 # Current thread types:
-#   "movement", "scanning", "txrx"
+#   "encoders", "scanning"
 global_thread_list = {}
 
 def run_main_logic():
@@ -105,9 +105,6 @@ def handle_delivering_and_returning(robot=None, arena_map=None):
             robot.set_state(sub_state="positioned")
 
     if robot.get_sub_state() == "stuck":
-        # Make a beep sound
-        robot.sound(sound="beep")
-
         # Set robot sub-state to planning once again
         robot.set_state(sub_state="planning")
 
