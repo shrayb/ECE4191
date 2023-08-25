@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 from time import sleep, time
+import math
 
 class Pose:
     def __init__(self, x=None, y=None, theta=None):
@@ -7,25 +8,9 @@ class Pose:
         self.y = y  # y coordinate of objects pose
         self.theta = theta  # The angle the object is "facing" measured counter-clockwise from the positive x-axis.
 
-class Point:
-    def __init__(self, x=None, y=None, end_orientation=None):
-        self.x = x
-        self.y = y
-        self.end_orientation = end_orientation
-
 class Polygon:
     def __init__(self, vertices=None):
         self.vertices = vertices  # List of Point classes that define the bounding box of the Polygon
-
-class Destination:
-    """
-    Destination might have to be more complex than id, x, and y. It might need a range where dropping the package is acceptable. It also needs an angle at which the "opening" is
-    """
-    def __init__(self, uid=None, x=None, y=None, deposit_pose=None):
-        self.uid = uid  # A unique id number for a destination e.g: "red", "green", "blue"
-        self.x = x  # x coordinate of destination
-        self.y = y  # y coordinate of destination
-        self.deposit_pose = deposit_pose
 
 class Obstacle:
     def __init__(self, boundary=None, tolerance=None):
@@ -37,8 +22,18 @@ class Path:
         self.waypoint_queue = None
 
 class Package:
-    def __init__(self, destination=None):
-        self.destination = destination
+    def __init__(self, colour=None):
+        self.colour = colour  # A unique id number for a destination e.g: "red", "green", "blue"
+        self.destination_pose = None
+        self.identify_destination()
+
+    def identify_destination(self):
+        if self.colour == "red":
+            self.destination_pose = Pose(x=0.25, y=1.3, theta=math.pi/2)
+        if self.colour == "green":
+            self.destination_pose = Pose(x=0.75, y=1.3, theta=math.pi/2)
+        if self.colour == "blue":
+            self.destination_pose = Pose(x=1.25, y=1.3, theta=math.pi/2)
 
 class Motor:
     def __init__(self, enable_pin=None, input_a=None, input_b=None, encoder_a=None, encoder_b=None, speed=100):

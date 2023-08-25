@@ -5,7 +5,7 @@ from time import time, sleep
 
 from threading import Thread
 
-from BaseClasses import Motor, Pose, Point
+from BaseClasses import Motor, Pose, Pose
 from Robot import Robot
 
 motor_left_positive = 15
@@ -34,12 +34,12 @@ encoder_thread = Thread(target=robot.encoder_update_loop)
 encoder_thread.start()
 
 def loop():
-    coords = [Point(0.3, 0.2, math.pi / 6),
-              Point(0.3, 0.2, 2 * math.pi / 6),
-              Point(0.3, 0.2, 3 * math.pi / 6),
-              Point(0.3, 0.2, 4 * math.pi / 6),
-              Point(0.3, 0.2, 5 * math.pi / 6),
-              Point(0.3, 0.2, 6 * math.pi / 6)]
+    coords = [Pose(0.3, 0.2, math.pi / 6),
+              Pose(0.3, 0.2, 2 * math.pi / 6),
+              Pose(0.3, 0.2, 3 * math.pi / 6),
+              Pose(0.3, 0.2, 4 * math.pi / 6),
+              Pose(0.3, 0.2, 5 * math.pi / 6),
+              Pose(0.3, 0.2, 6 * math.pi / 6)]
 
     for coord in coords:
         # Drive to each coord
@@ -50,7 +50,7 @@ def loop():
 
     sleep(10)
     x = input("hello")
-    coords = [Point(0.3, 0.2, math.pi)]
+    coords = [Pose(0.3, 0.2, math.pi)]
 
     for coord in coords:
         # Drive to each coord

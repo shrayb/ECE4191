@@ -1,12 +1,11 @@
 import math
 
 import RPi.GPIO as GPIO
-from time import time, sleep
-
 from threading import Thread
 
-from BaseClasses import Motor, Pose, Point
+from BaseClasses import Motor, Pose
 from Robot import Robot
+import math
 
 motor_left_positive = 15
 motor_left_negative = 18
@@ -44,7 +43,12 @@ def loop():
         y_coord = input("Pick new y coordinate")
         if y_coord == "":
             y_coord = robot.pose.y
-        coord = Point(int(x_coord), int(y_coord))
+        theta_coord = input("Pick new end angle in degrees")
+        if theta_coord == "":
+            theta_coord = None
+        else:
+            theta_coord = float(theta_coord) * math.pi / 180
+        coord = Pose(int(x_coord), int(y_coord), theta_coord)
 
         robot.drive_to_coordinate(coord)
 

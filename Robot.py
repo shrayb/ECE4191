@@ -1,10 +1,10 @@
 import math
-from BaseClasses import Pose
 from time import sleep, time
+from BaseClasses import *
 
 class Robot:
-    def __init__(self, pose=Pose(), state="waiting"):
-        self.pose = pose
+    def __init__(self, pose=None, state="waiting"):
+        self.pose = None
         self.state = state  # Current state of robot:
         # "waiting": Robot is waiting for the start button to be pressed
         # "idle": Robot is stationary, waiting for package to be placed on top of it
@@ -27,50 +27,58 @@ class Robot:
         #   "planning": Robot is planning its route through an arena. This will happen at the beginning and anytime an obstacle interferes with the current route
         #   "moving": Robot is moving along its planned route
         self.is_close_to_crashing = False  # Goes True if the robot detects something in front of it whilst moving
-        self.is_moving = False  # Boolean for if the robot is in transit
+        self.is_moving = False  # Boolean for if the robot is moving
         #   "stuck": Robot is stuck and has nowhere to travel
         #   "positioned": Robot has arrived to its destination
         #   "completed": Robot has completed the state task
         # Sub-states of "delivering"
         #   "depositing": The robot is depositing the package into the destination
         self.path = None  # Path class that holds all the information about the robots current path
-        self.packages = None  # List of packages and their destinations in order of how they are placed. index 0 is the first package
-        self.depositing = False
+        self.package = None  # Package class that was currently scanned
+        self.depositing = False  # Flag for when the conveyor motor is depositing a package
         self.left_motor = None  # Motor class for the left motor
         self.right_motor = None  # Motor class for the right motor
         self.conveyor_motor = None  # Motor class for the conveyor belt motor
+        self.colour_sensor = None  # ColourSensor class for the colour sensor
         self.turn_radius = 0.137795  # Metres
         self.wheel_radius = 0.05451  # Metres
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
-        self.max_speed = 100
-        self.slow_speed = 75
-        self.tick_check_interval = 10
+        self.max_speed = 100  # Upper percentage for maximum speed
+        self.slow_speed = 75  # Upper percentage for slower speed
+        self.PID_gain = 1  # Raise to make the PID more sensitive, lower to make the PID less sensitive
 
     def get_current_goal(self, arena_map=None):
-        if self.packages is not None:
-            return self.packages[0].destination.deposit_pose
+        if self.package is not None:
+            return self.package.destination_pose
         else:
             return arena_map.pickup_location
 
     def continuous_scan(self):
-        # As long as state is returning, attempt scanning
-        while self.state == "returning" and self.scanning_flag:
-            # Do scan attempt
+        """
+        Run this in a thread I reckon. Rotates the conveyor belt and scans constantly until a colour is returned then stops the thread.
+        """
+        # Turn motor on
+        self.conveyor_motor.set_speed(75)
+        self.conveyor_motor.forward()
+
+        while True:
+            # Do a scan attempt
             scan_result = self.scan_attempt()
 
-            # If scan result is False scan again
-            if not scan_result:
-                continue
+            if scan_result is not None:
+                # Add this package to the packages variable
+                self.package = Package(scan_result)
+                break
 
-            # If scan is successful,
+        # Turn motor off
+        self.conveyor_motor.stop()
 
     def scan_attempt(self):
         """
-        Makes a scan attempt using the RF scanner, if a package is detected return True, otherwise return False
+        Makes a scan attempt using the colour sensor. If a colour is detected return the colour, otherwise return None
         """
-        # Do one attempt to scan the RF tag of a potential package
-        # TODO
-        pass
+        colour_reading = self.colour_sensor.read_colour()
+        return colour_reading
 
     def follow_path(self):
         # As long as the is_moving flag is True
@@ -104,33 +112,25 @@ class Robot:
     def get_sub_state(self):
         return self.sub_state
 
-    def set_pose(self, x=None, y=None, theta=None):
-        if x is not None:
-            self.pose.x = x
-        if y is not None:
-            self.pose.y = y
-        if theta is not None:
-            self.pose.theta = theta
-
-    def get_pose(self):
-        return self.pose
-
     def encoder_update_loop(self):
         while True:
             self.left_motor.update_encoder()
             self.right_motor.update_encoder()
 
     def tick_check_and_speed_control(self, max_ticks, max_speed):
+        """
+        Runs the motors until max ticks are reached, also applies PID control to match speed
+        """
         left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
 
         while self.left_motor.ticks + self.right_motor.ticks < max_ticks:
             # Every two ticks slow down the leading motor by 1 speed
             if left_tick_advantage > 0:
-                left_motor_speed = max(max_speed - math.floor(left_tick_advantage / 2), 0)
+                left_motor_speed = max(max_speed - math.floor(left_tick_advantage / (2 / self.PID_gain)), 0)
                 right_motor_speed = max_speed
             elif left_tick_advantage < 0:
                 left_motor_speed = max_speed
-                right_motor_speed = max(max_speed + math.ceil(left_tick_advantage / 2), 0)
+                right_motor_speed = max(max_speed + math.ceil(left_tick_advantage / (2 / self.PID_gain)), 0)
             else:
                 left_motor_speed = max_speed
                 right_motor_speed = max_speed
@@ -257,9 +257,9 @@ class Robot:
         sleep(0.25)
 
         # If there is an end orientation face it
-        if coordinate.end_orientation is not None and self.pose.theta != coordinate.end_orientation:
-            angle_difference = coordinate.end_orientation - self.pose.theta
-            print("\tAdjusting orientation by", angle_difference * 180 / math.pi, "degrees to face", coordinate.end_orientation * 180 / math.pi, "degrees")
+        if coordinate.theta is not None and self.pose.theta != coordinate.theta:
+            angle_difference = coordinate.theta - self.pose.theta
+            print("\tAdjusting orientation by", angle_difference * 180 / math.pi, "degrees to face", coordinate.theta * 180 / math.pi, "degrees")
             print("\t\tStarting turn")
             self.do_turn(angle_difference)
             print("\t\tTurn complete")
