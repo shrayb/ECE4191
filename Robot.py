@@ -4,7 +4,7 @@ from BaseClasses import *
 
 class Robot:
     def __init__(self, pose=None, state="waiting"):
-        self.pose = None
+        self.pose = pose
         self.state = state  # Current state of robot:
         # "waiting": Robot is waiting for the start button to be pressed
         # "idle": Robot is stationary, waiting for package to be placed on top of it
