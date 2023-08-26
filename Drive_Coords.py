@@ -25,7 +25,7 @@ GPIO.setmode(GPIO.BCM)
 left_motor = Motor(motor_left_enable, motor_left_positive, motor_left_negative, motor_left_encoder_a, motor_left_encoder_b)
 right_motor = Motor(motor_right_enable, motor_right_positive, motor_right_negative, motor_right_encoder_a, motor_right_encoder_b)
 
-pose = Pose(0.3, 0.2, math.pi / 2)
+pose = Pose(0.3, 0.2, 0)
 robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
@@ -35,10 +35,12 @@ encoder_thread.start()
 
 
 def loop():
-    coords = [Pose(0.3, 0.2),
-              Pose(0.9, 0.8),
+    coords = [Pose(0.9, 0.8),
+              Pose(0.4, 0.3, math.pi),
               Pose(0.3, 0.8),
-              Pose(0.3, 0.2, math.pi / 2)]
+              Pose(0.3, 0.1, math.pi / 6),
+              Pose(0.7, 0.9, (3* math.pi) / 4),
+              Pose(0.3, 0.2, 0)]
 
     for coord in coords:
         # Drive to each coord

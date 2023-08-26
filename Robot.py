@@ -4,7 +4,7 @@ from BaseClasses import *
 
 class Robot:
     def __init__(self, pose=None, state="waiting"):
-        self.pose = None
+        self.pose = pose
         self.state = state  # Current state of robot:
         # "waiting": Robot is waiting for the start button to be pressed
         # "idle": Robot is stationary, waiting for package to be placed on top of it
@@ -40,12 +40,12 @@ class Robot:
         self.right_motor = None  # Motor class for the right motor
         self.conveyor_motor = None  # Motor class for the conveyor belt motor
         self.colour_sensor = None  # ColourSensor class for the colour sensor
-        self.turn_radius = 0.137795  # Metres
-        self.wheel_radius = 0.05451  # Metres
+        self.turn_radius = 0.1257  # Metres
+        self.wheel_radius = 0.0524  # Metres
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
         self.max_speed = 100  # Upper percentage for maximum speed
-        self.slow_speed = 75  # Upper percentage for slower speed
-        self.PID_gain = 1  # Raise to make the PID more sensitive, lower to make the PID less sensitive
+        self.slow_speed = 100  # Upper percentage for slower speed
+        self.PID_gain = 2  # Raise to make the PID more sensitive, lower to make the PID less sensitive
 
     def get_current_goal(self, arena_map=None):
         if self.package is not None:
@@ -166,27 +166,29 @@ class Robot:
         turn_minus_10_ticks = (turn_distance / self.distance_per_tick) * 2
 
         # Continuously check if the turn has less than 10 degrees of the turn remaining
-        self.tick_check_and_speed_control(turn_minus_10_ticks, self.max_speed)
+        self.tick_check_and_speed_control(turn_ticks, self.max_speed)
 
-        # Slow down the motors to 50 percent for the remaining 10 degrees of the turn. This is to reduce overshoot
-        self.left_motor.set_speed(self.slow_speed)
-        self.right_motor.set_speed(self.slow_speed)
-
-        # Continuously check if the turn is completed
-        self.tick_check_and_speed_control(turn_ticks, self.slow_speed)
+        # # Slow down the motors to 50 percent for the remaining 10 degrees of the turn. This is to reduce overshoot
+        # self.left_motor.set_speed(self.slow_speed)
+        # self.right_motor.set_speed(self.slow_speed)
+        #
+        # # Continuously check if the turn is completed
+        # self.tick_check_and_speed_control(turn_ticks, self.slow_speed)
 
         # Stop the motors
         self.left_motor.stop()
         self.right_motor.stop()
 
-        tick_sum = self.left_motor.ticks + self.right_motor.ticks
-        distance_turned = (tick_sum / 2) * self.distance_per_tick
-        measured_angle = distance_turned / self.turn_radius
+        # tick_sum = self.left_motor.ticks + self.right_motor.ticks
+        # distance_turned = (tick_sum / 2) * self.distance_per_tick
+        # measured_angle = distance_turned / self.turn_radius
+        #
+        # if angle > 0:
+        #     self.pose.theta += measured_angle
+        # else:
+        #     self.pose.theta -= measured_angle
 
-        if angle > 0:
-            self.pose.theta += measured_angle
-        else:
-            self.pose.theta -= measured_angle
+        self.pose.theta += angle
 
     def do_drive(self, distance):
         # Reset encoders
@@ -214,14 +216,14 @@ class Robot:
         drive_minus_5_ticks = max(drive_minus_5_ticks, 0)
 
         # Continuously check if the robot has driven most of the way
-        self.tick_check_and_speed_control(drive_minus_5_ticks, self.max_speed)
+        self.tick_check_and_speed_control(drive_ticks, self.max_speed)
 
-        # Slow down the motors to 50 percent for the remaining 5 cm of the drive
-        self.left_motor.set_speed(self.slow_speed)
-        self.right_motor.set_speed(self.slow_speed)
-
-        # Continuously check if the drive is completed
-        self.tick_check_and_speed_control(drive_ticks, self.slow_speed)
+        # # Slow down the motors to slow speed percent for the remaining 5 cm of the drive
+        # self.left_motor.set_speed(self.slow_speed)
+        # self.right_motor.set_speed(self.slow_speed)
+        #
+        # # Continuously check if the drive is completed
+        # self.tick_check_and_speed_control(drive_ticks, self.slow_speed)
 
         # Stop the motors
         self.left_motor.stop()
@@ -242,6 +244,10 @@ class Robot:
             # Find angle to turn
             goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
             angle_difference = goal_angle - self.pose.theta
+            if angle_difference > math.pi:
+                angle_difference = angle_difference - 2 * math.pi
+            elif angle_difference < -math.pi:
+                angle_difference = angle_difference + 2 * math.pi
             print("\tTurning from:", self.pose.theta * 180 / math.pi, "degrees by", angle_difference * 180 / math.pi, "degrees")
             print("\t\tStarting turn")
             self.do_turn(angle_difference)
@@ -259,6 +265,10 @@ class Robot:
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta:
             angle_difference = coordinate.theta - self.pose.theta
+            if angle_difference > math.pi:
+                angle_difference = angle_difference - 2 * math.pi
+            elif angle_difference < -math.pi:
+                angle_difference = angle_difference + 2 * math.pi
             print("\tAdjusting orientation by", angle_difference * 180 / math.pi, "degrees to face", coordinate.theta * 180 / math.pi, "degrees")
             print("\t\tStarting turn")
             self.do_turn(angle_difference)
