@@ -242,6 +242,10 @@ class Robot:
             # Find angle to turn
             goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
             angle_difference = goal_angle - self.pose.theta
+            if angle_difference > math.pi:
+                angle_difference = angle_difference - 2 * math.pi
+            elif angle_difference < -math.pi:
+                angle_difference = angle_difference + 2 * math.pi
             print("\tTurning from:", self.pose.theta * 180 / math.pi, "degrees by", angle_difference * 180 / math.pi, "degrees")
             print("\t\tStarting turn")
             self.do_turn(angle_difference)

@@ -35,7 +35,7 @@ encoder_thread.start()
 def loop():
     while True:
         print("==================================")
-        print("Currently at (", robot.pose.x, robot.pose.y, ")")
+        print("Currently at (", robot.pose.x, ",", robot.pose.y, ",", robot.pose.theta, ")")
         print("==================================")
         x_coord = input("Pick new x coordinate")
         if x_coord == "":
