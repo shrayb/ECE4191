@@ -265,6 +265,10 @@ class Robot:
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta:
             angle_difference = coordinate.theta - self.pose.theta
+            if angle_difference > math.pi:
+                angle_difference = angle_difference - 2 * math.pi
+            elif angle_difference < -math.pi:
+                angle_difference = angle_difference + 2 * math.pi
             print("\tAdjusting orientation by", angle_difference * 180 / math.pi, "degrees to face", coordinate.theta * 180 / math.pi, "degrees")
             print("\t\tStarting turn")
             self.do_turn(angle_difference)
