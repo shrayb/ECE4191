@@ -35,7 +35,10 @@ encoder_thread.start()
 
 def loop():
     coords = [Pose(0.9, 0.8),
+              Pose(0.4, 0.3, math.pi),
               Pose(0.3, 0.8),
+              Pose(0.3, 0.1, math.pi / 6),
+              Pose(0.7, 0.9, (3* math.pi) / 4),
               Pose(0.3, 0.2, 0)]
 
     for coord in coords:
