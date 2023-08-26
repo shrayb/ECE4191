@@ -36,7 +36,7 @@ encoder_thread.start()
 def loop():
     coords = [Pose(0.9, 0.8),
               Pose(0.3, 0.8),
-              Pose(0.3, 0.2, math.pi / 2)]
+              Pose(0.3, 0.2, 0)]
 
     for coord in coords:
         # Drive to each coord
