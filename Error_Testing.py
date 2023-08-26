@@ -68,6 +68,27 @@ def validate_measurements(front_left_dist = None, front_right_dist = None, rear_
     ## TODO
     return None
 
+# True means worry about it
+def check_intercept_pos(robot_pose):
+    x, y, th = robot_pose
+    x_int = (y - np.tan(th)*x)/(1-np.tan(th))
+    
+    if x_int>MAP_SIZE - ROBOT_SIZE or x_int<0:
+        return False
+    else:
+        return True
+    
+def check_intercept_neg(robot_pose):
+    x, y, th = robot_pose
+    x = x - E_MAP_SIZE
+    
+    x_int = (-y + np.tan(th)*x)/(1+np.tan(th))
+    
+    if x_int<-E_MAP_SIZE or x_int>0:
+        return False
+    else:
+        return True
+
 def detect_obstacle(front_left_dist = None, front_right_dist = None, rear_left_dist = None, rear_right_dist = None, robot_pose = None):
     front_left_dist, front_right_dist, rear_left_dist, rear_right_dist = 0
     counter = 0
@@ -87,15 +108,76 @@ def detect_obstacle(front_left_dist = None, front_right_dist = None, rear_left_d
 
     ## Need to find effective map size based on the robot coordinates
     x, y, th = robot_pose
+    h1, h2 = 0
 
-    if 0 <= th < np.pi/2:
-        '''TO DO'''
-        th_hor = th
+    if np.tan(th)>=0:
+        if check_intercept_pos(robot_pose=robot_pose):
+            if th % np.pi/2 >= np.pi/4:
+                if np.sin(th)>0:
+                    h1 = (E_MAP_SIZE-y)/np.sin(th)
+                    h2 = y/np.sin(th)
+                else:
+                    h1 = (E_MAP_SIZE-y)/np.sin(th-np.pi)
+                    h2 = y/(np.sin(th-np.pi))
+            else: 
+                if np.sin(th)>0:
+                    h1 = (E_MAP_SIZE-x)/np.cos(th)
+                    h2 = x/np.cos(th)
+                else:
+                    h1 = (E_MAP_SIZE-x)/np.cos(th-np.pi)
+                    h2 = x/np.cos(th-np.pi)
+        else:
+            if x<y:
+                if np.sin(th)>0:
+                    h1 = (E_MAP_SIZE-y)/np.sin(th)
+                    h2 = x/np.cos(th)
+                else:
+                    h1 = (E_MAP_SIZE-y)/np.sin(th-np.pi)
+                    h2 = x/np.cos(th-np.pi)
+            else:
+                if np.sin(th)>0:
+                    h1 = (E_MAP_SIZE-x)/np.cos(th)
+                    h2 = y/np.sin(th)
+                else:
+                    h1 = (E_MAP_SIZE-x)/np.cos(th-np.pi)
+                    h2 = y/np.sin(th-np.pi)
     else:
-        '''TO DO'''
+        if check_intercept_neg(robot_pose=robot_pose):
+            if th % np.pi > 3*np.pi/2:
+                if np.sin(th)>0:
+                    h1 = x/np.cos(np.pi-th)
+                    h2 = (E_MAP_SIZE-x)/np.cos(np.pi-th)
+                else:
+                    h1 = x/np.cos(2*np.pi-th)
+                    h2 = (E_MAP_SIZE-x)/np.cos(2*np.pi-th)
+            else:
+                if np.sin(th)>0:
+                    h1 = (E_MAP_SIZE-y)/np.sin(np.pi-th)
+                    h2 = y/np.sin(np.pi-th)
+                else:
+                    h1 = (E_MAP_SIZE-y)/np.sin(2*np.pi-th)
+                    h2 = y/np.sin(2*np.pi-th)
+        else:
+            if (x-E_MAP_SIZE)<-y:
+                if np.sin(th)>0:
+                    h1 = x/np.cos(np.pi-th)
+                    h2 = y/np.sin(np.pi-th)
+                else:
+                    h1 = x/np.cos(2*np.pi-th)
+                    h2 = y/np.sin(2*np.pi-th)
+            else:
+                if np.sin(th)>0:
+                    h1 = (E_MAP_SIZE-y)/np.sin(np.pi-th)
+                    h2 = (E_MAP_SIZE-x)/np.sin(np.pi-th)
+                else:
+                    h1 = (E_MAP_SIZE-y)/np.sin(2*np.pi-th)
+                    h2 = (E_MAP_SIZE-x)/np.sin(2*np.pi-th)
+                    
 
-    coords_x = E_MAP_SIZE - (front_left_dist*np.sin(robot_pose[2])+ROBOT_SIZE/2)
-    coords_y = E_MAP_SIZE - (front_right_dist*np.cos(robot_pose[2]+ROBOT_SIZE/2))
+    diag = h1 + h2
+
+    coords_x = diag - (front_left_dist*np.sin(robot_pose[2])+ROBOT_SIZE/2)
+    coords_y = diag - (front_right_dist*np.cos(robot_pose[2]+ROBOT_SIZE/2))
 
     uncertainty_meas = 15
     if np.abs(coords_x-robot_pose[0])<uncertainty_meas and np.abs(coords_y-robot_pose[1])<uncertainty_meas:
