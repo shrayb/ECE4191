@@ -45,7 +45,7 @@ class Robot:
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
         self.max_speed = 100  # Upper percentage for maximum speed
         self.slow_speed = 85  # Upper percentage for slower speed
-        self.PID_gain = 1  # Raise to make the PID more sensitive, lower to make the PID less sensitive
+        self.PID_gain = 2  # Raise to make the PID more sensitive, lower to make the PID less sensitive
 
     def get_current_goal(self, arena_map=None):
         if self.package is not None:
