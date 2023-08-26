@@ -8,8 +8,8 @@ from Robot import Robot
 import math
 
 motor_left_enable = 14
-motor_left_positive = 18
-motor_left_negative = 15
+motor_left_positive = 15
+motor_left_negative = 18
 motor_left_encoder_a = 3
 motor_left_encoder_b = 4
 
