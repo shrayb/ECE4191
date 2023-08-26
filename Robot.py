@@ -44,7 +44,7 @@ class Robot:
         self.wheel_radius = 0.05451  # Metres
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
         self.max_speed = 100  # Upper percentage for maximum speed
-        self.slow_speed = 100  # Upper percentage for slower speed
+        self.slow_speed = 85  # Upper percentage for slower speed
         self.PID_gain = 2  # Raise to make the PID more sensitive, lower to make the PID less sensitive
 
     def get_current_goal(self, arena_map=None):
@@ -216,7 +216,7 @@ class Robot:
         # Continuously check if the robot has driven most of the way
         self.tick_check_and_speed_control(drive_minus_5_ticks, self.max_speed)
 
-        # Slow down the motors to 50 percent for the remaining 5 cm of the drive
+        # Slow down the motors to slow speed percent for the remaining 5 cm of the drive
         self.left_motor.set_speed(self.slow_speed)
         self.right_motor.set_speed(self.slow_speed)
 
