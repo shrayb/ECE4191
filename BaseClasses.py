@@ -151,3 +151,28 @@ class ColourSensor:
         signal_duration = time() - start_time
         reading_value = self.num_of_cycles / signal_duration
         return reading_value
+
+# Measure distance
+class Ultrasonic:
+    
+    def __init__(self, trig_pin = None, echo_pin = None):
+        self.trig_pin = trig_pin
+        self.echo_pin = echo_pin
+        GPIO.setup(self.trig_pin, GPIO.OUT)
+        GPIO.setup(self.echo_pin, GPIO.IN)
+
+    def measure_dist(self):
+        GPIO.output(self.trig_pin, True)
+        sleep(0.00001)
+        GPIO.output(self.trig_pin, False)
+
+        while GPIO.input(self.echo_pin) == 0:
+            pulse_start = time.time()
+
+        while GPIO.input(self.echo_pin) == 1:
+            pulse_end = time.time()
+
+        pulse_duration = pulse_end - pulse_start
+        distance = pulse_duration * 17150  # Speed of sound in cm/s
+
+        return distance

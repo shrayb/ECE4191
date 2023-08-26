@@ -5,7 +5,7 @@ from time import time, sleep
 
 from threading import Thread
 
-from BaseClasses import Motor, Pose, Pose
+from BaseClasses import Motor, Pose, Pose, Ultrasonic
 from Robot import Robot
 
 motor_left_positive = 15
@@ -32,6 +32,7 @@ robot.right_motor = right_motor
 
 encoder_thread = Thread(target=robot.encoder_update_loop)
 encoder_thread.start()
+
 
 def loop():
     coords = [Pose(0.3, 0.2),
