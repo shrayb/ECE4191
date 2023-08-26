@@ -48,7 +48,7 @@ def loop():
             theta_coord = None
         else:
             theta_coord = float(theta_coord) * math.pi / 180
-        coord = Pose(int(x_coord), int(y_coord), theta_coord)
+        coord = Pose(float(x_coord), float(y_coord), theta_coord)
 
         robot.drive_to_coordinate(coord)
 
