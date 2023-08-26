@@ -40,7 +40,7 @@ class Robot:
         self.right_motor = None  # Motor class for the right motor
         self.conveyor_motor = None  # Motor class for the conveyor belt motor
         self.colour_sensor = None  # ColourSensor class for the colour sensor
-        self.turn_radius = 0.127  # Metres
+        self.turn_radius = 0.126  # Metres
         self.wheel_radius = 0.0524  # Metres
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
         self.max_speed = 100  # Upper percentage for maximum speed
