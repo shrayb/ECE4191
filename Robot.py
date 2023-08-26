@@ -179,14 +179,16 @@ class Robot:
         self.left_motor.stop()
         self.right_motor.stop()
 
-        tick_sum = self.left_motor.ticks + self.right_motor.ticks
-        distance_turned = (tick_sum / 2) * self.distance_per_tick
-        measured_angle = distance_turned / self.turn_radius
+        # tick_sum = self.left_motor.ticks + self.right_motor.ticks
+        # distance_turned = (tick_sum / 2) * self.distance_per_tick
+        # measured_angle = distance_turned / self.turn_radius
+        #
+        # if angle > 0:
+        #     self.pose.theta += measured_angle
+        # else:
+        #     self.pose.theta -= measured_angle
 
-        if angle > 0:
-            self.pose.theta += measured_angle
-        else:
-            self.pose.theta -= measured_angle
+        self.pose.theta += angle
 
     def do_drive(self, distance):
         # Reset encoders
