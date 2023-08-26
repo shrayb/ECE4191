@@ -166,14 +166,14 @@ class Robot:
         turn_minus_10_ticks = (turn_distance / self.distance_per_tick) * 2
 
         # Continuously check if the turn has less than 10 degrees of the turn remaining
-        self.tick_check_and_speed_control(turn_minus_10_ticks, self.max_speed)
+        self.tick_check_and_speed_control(turn_ticks, self.max_speed)
 
-        # Slow down the motors to 50 percent for the remaining 10 degrees of the turn. This is to reduce overshoot
-        self.left_motor.set_speed(self.slow_speed)
-        self.right_motor.set_speed(self.slow_speed)
-
-        # Continuously check if the turn is completed
-        self.tick_check_and_speed_control(turn_ticks, self.slow_speed)
+        # # Slow down the motors to 50 percent for the remaining 10 degrees of the turn. This is to reduce overshoot
+        # self.left_motor.set_speed(self.slow_speed)
+        # self.right_motor.set_speed(self.slow_speed)
+        #
+        # # Continuously check if the turn is completed
+        # self.tick_check_and_speed_control(turn_ticks, self.slow_speed)
 
         # Stop the motors
         self.left_motor.stop()
@@ -214,14 +214,14 @@ class Robot:
         drive_minus_5_ticks = max(drive_minus_5_ticks, 0)
 
         # Continuously check if the robot has driven most of the way
-        self.tick_check_and_speed_control(drive_minus_5_ticks, self.max_speed)
+        self.tick_check_and_speed_control(drive_ticks, self.max_speed)
 
-        # Slow down the motors to slow speed percent for the remaining 5 cm of the drive
-        self.left_motor.set_speed(self.slow_speed)
-        self.right_motor.set_speed(self.slow_speed)
-
-        # Continuously check if the drive is completed
-        self.tick_check_and_speed_control(drive_ticks, self.slow_speed)
+        # # Slow down the motors to slow speed percent for the remaining 5 cm of the drive
+        # self.left_motor.set_speed(self.slow_speed)
+        # self.right_motor.set_speed(self.slow_speed)
+        #
+        # # Continuously check if the drive is completed
+        # self.tick_check_and_speed_control(drive_ticks, self.slow_speed)
 
         # Stop the motors
         self.left_motor.stop()
