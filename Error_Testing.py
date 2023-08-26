@@ -113,14 +113,14 @@ def detect_obstacle(front_left_dist = None, front_right_dist = None, rear_left_d
     if np.tan(th)>=0:
         if check_intercept_pos(robot_pose=robot_pose):
             if th % np.pi/2 >= np.pi/4:
-                if np.sin(th)>0:
+                if np.sin(th)>=0:
                     h1 = (E_MAP_SIZE-y)/np.sin(th)
                     h2 = y/np.sin(th)
                 else:
                     h1 = (E_MAP_SIZE-y)/np.sin(th-np.pi)
                     h2 = y/(np.sin(th-np.pi))
             else: 
-                if np.sin(th)>0:
+                if np.sin(th)>=0:
                     h1 = (E_MAP_SIZE-x)/np.cos(th)
                     h2 = x/np.cos(th)
                 else:
@@ -128,14 +128,14 @@ def detect_obstacle(front_left_dist = None, front_right_dist = None, rear_left_d
                     h2 = x/np.cos(th-np.pi)
         else:
             if x<y:
-                if np.sin(th)>0:
+                if np.sin(th)>=0:
                     h1 = (E_MAP_SIZE-y)/np.sin(th)
                     h2 = x/np.cos(th)
                 else:
                     h1 = (E_MAP_SIZE-y)/np.sin(th-np.pi)
                     h2 = x/np.cos(th-np.pi)
             else:
-                if np.sin(th)>0:
+                if np.sin(th)>=0:
                     h1 = (E_MAP_SIZE-x)/np.cos(th)
                     h2 = y/np.sin(th)
                 else:
@@ -144,14 +144,14 @@ def detect_obstacle(front_left_dist = None, front_right_dist = None, rear_left_d
     else:
         if check_intercept_neg(robot_pose=robot_pose):
             if th % np.pi > 3*np.pi/2:
-                if np.sin(th)>0:
+                if np.sin(th)>=0:
                     h1 = x/np.cos(np.pi-th)
                     h2 = (E_MAP_SIZE-x)/np.cos(np.pi-th)
                 else:
                     h1 = x/np.cos(2*np.pi-th)
                     h2 = (E_MAP_SIZE-x)/np.cos(2*np.pi-th)
             else:
-                if np.sin(th)>0:
+                if np.sin(th)>=0:
                     h1 = (E_MAP_SIZE-y)/np.sin(np.pi-th)
                     h2 = y/np.sin(np.pi-th)
                 else:
@@ -159,14 +159,14 @@ def detect_obstacle(front_left_dist = None, front_right_dist = None, rear_left_d
                     h2 = y/np.sin(2*np.pi-th)
         else:
             if (x-E_MAP_SIZE)<-y:
-                if np.sin(th)>0:
+                if np.sin(th)>=0:
                     h1 = x/np.cos(np.pi-th)
                     h2 = y/np.sin(np.pi-th)
                 else:
                     h1 = x/np.cos(2*np.pi-th)
                     h2 = y/np.sin(2*np.pi-th)
             else:
-                if np.sin(th)>0:
+                if np.sin(th)>=0:
                     h1 = (E_MAP_SIZE-y)/np.sin(np.pi-th)
                     h2 = (E_MAP_SIZE-x)/np.sin(np.pi-th)
                 else:
@@ -176,11 +176,11 @@ def detect_obstacle(front_left_dist = None, front_right_dist = None, rear_left_d
 
     diag = h1 + h2
 
-    coords_x = diag - (front_left_dist*np.sin(robot_pose[2])+ROBOT_SIZE/2)
-    coords_y = diag - (front_right_dist*np.cos(robot_pose[2]+ROBOT_SIZE/2))
+    line_left = front_left_dist+rear_left_dist+ROBOT_SIZE
+    line_right = front_right_dist+rear_right_dist+ROBOT_SIZE
 
     uncertainty_meas = 15
-    if np.abs(coords_x-robot_pose[0])<uncertainty_meas and np.abs(coords_y-robot_pose[1])<uncertainty_meas:
+    if np.abs((line_right+line_left)/2-diag)<uncertainty_meas:
         flag = False
     else:
         flag = True
