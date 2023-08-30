@@ -13,7 +13,7 @@ class Map:
         self.y_count = int(math.ceil(self.map_size[1] / self.node_gap))
         self.map_grid = np.zeros((self.x_count, self.y_count))
         self.obstacle_polygon = None
-        self.path = None
+        self.path = []
 
     # def plot_grid(self):
     #     for x_index in range(self.x_count):
