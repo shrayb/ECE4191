@@ -112,15 +112,12 @@ class Robot:
         # TODO
         pass
 
-    def plan_path(self, arena_map=None):
-        # Implement search algorithm
-        goal_node = self.map_class.G.get_nearest_node((self.current_goal.x * 1000, self.current_goal.y * 1000))
-        # self.map_class.add_obstacle(Pose(750, 750), 300)
-        self.map_class.update_path(goal_node)
-        self.map_class.draw_arena(draw_path=True)
-        pose_waypoints = convert_tuple_to_pose(self.map_class.path)
-        # Return list of waypoints to drive to
-        self.path_queue = pose_waypoints
+    def plan_path(self):
+        # Plan a path
+        self.map_class.plan_path()
+
+        # Pass coordinates to the queue
+        self.path_queue = self.map_class.path
         self.is_impending_collision = False
 
     def set_state(self, state=None, sub_state=None):
@@ -154,6 +151,7 @@ class Robot:
 
                 # If collision, re plan path
                 if is_collision:
+                    self.is_impending_collision = True
                     self.map_class.plan_path(self.pose, self.current_goal)
 
             sleep(0.5)  # Sleep for a bit because we don't need to run this so much
