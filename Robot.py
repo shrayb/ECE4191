@@ -145,6 +145,7 @@ class Robot:
         while True:
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
             if flag:
+                print("Obstacle Found at:", coords_x / 1000, coords_y / 1000)
                 # Add the new found obstacle
                 self.map_class.add_obstacle_to_grid(th, Pose(coords_x / 1000, coords_y / 1000))
 
@@ -333,19 +334,19 @@ class Robot:
             flag = True
             coords_x = x + 0.5 * (left_dist + right_dist) * np.cos(th)
             coords_y = y + 0.5 * (left_dist + right_dist) * np.sin(th)
-            print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from both US")
+            #print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from both US")
 
         elif left_dist < 150:
             flag = True
             coords_x = x + left_dist * np.cos(th)
             coords_y = y + left_dist * np.sin(th)
-            print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from left US")
+            #print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from left US")
 
         elif right_dist <150:
             flag = True
             coords_x = x + right_dist * np.cos(th)
             coords_y = y + right_dist * np.sin(th)
-            print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from right US")
+            #print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from right US")
 
         else:
             flag = False
