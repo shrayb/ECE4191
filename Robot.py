@@ -322,7 +322,7 @@ class Robot:
     def detect_obstacle(self, front_left_ultrasonic=None, front_right_ultrasonic=None):
         left_dist = front_left_ultrasonic.measure_dist()*10
         right_dist = front_right_ultrasonic.measure_dist()*10
-        x, y, th = self.pose
+        x, y, th = self.pose.x, self.pose.y, self.pose.theta
         
         if left_dist < 150 and right_dist < 150:
             flag = True
