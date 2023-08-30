@@ -75,7 +75,8 @@ class Map:
 
         if not will_collide:
             print("Doesn't collide")
-            return [path_start, path_end]
+            self.path = [path_start, path_end]
+            return self.path
 
         # Create intermediate points and move them around
         is_solution_found = False
@@ -124,7 +125,7 @@ class Map:
         print("Waypoints:")
         for point in self.path:
             print("Point:", point.x, point.y)
-        return waypoints
+        return self.path
 
     def check_for_collision(self, waypoints: list):
         # Check if the given waypoints will collide with any of the 1s in the map grid.
