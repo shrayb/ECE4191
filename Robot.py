@@ -114,7 +114,7 @@ class Robot:
 
     def plan_path(self):
         # Plan a path
-        self.map_class.plan_path()
+        self.map_class.plan_path(self.pose, self.current_goal)
 
         # Pass coordinates to the queue
         self.path_queue = self.map_class.path
