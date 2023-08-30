@@ -104,7 +104,7 @@ class Segment:
 class Polygon:
     def __init__(self, vertices=None):
         self.vertices = vertices  # List of Point instances
-        self.maximum = self.calculate_maximum_length()
+        self.maximum = 2  # metres
         self.segments = self.calculate_segments()
         self.count = self.calculate_count()
         self.centroid = self.calculate_centroid()

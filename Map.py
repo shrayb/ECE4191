@@ -5,21 +5,42 @@ import matplotlib.pyplot as plt
 from BaseClasses import *
 class Map:
     def __init__(self):
-        self.obstacle_guess_width = 0.09  # Create an obstacle of 9 cm
-        self.obstacle_guess_depth = 0.09  # Create an obstacle of 9 cm
-        self.node_gap = 0.010  # 1 cm between each node
+        self.obstacle_guess_width = 0.15  # Create an obstacle of 9 cm
+        self.obstacle_guess_depth = 0.15  # Create an obstacle of 9 cm
+        self.node_gap = 0.050  # 1 cm between each node
         self.map_size = (1.5, 1.5)
-        self.x_count = int(self.map_size[0] / self.node_gap)
-        self.y_count = int(self.map_size[1] / self.node_gap)
+        self.x_count = int(math.ceil(self.map_size[0] / self.node_gap))
+        self.y_count = int(math.ceil(self.map_size[1] / self.node_gap))
         self.map_grid = np.zeros((self.x_count, self.y_count))
+        self.obstacle_polygon = None
 
     def plot_grid(self):
-        x_vals = [x_index * self.node_gap for x_index in range(self.x_count)]
-        y_vals = [y_index * self.node_gap for y_index in range(self.y_count)]
-
         for x_index in range(self.x_count):
             for y_index in range(self.y_count):
+                world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
+                value_at_point = self.map_grid[x_index, y_index]
+                if value_at_point == 0:
+                    plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="skyblue")
+                elif value_at_point == 1:
+                    plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="purple")
+                elif value_at_point == 2:
+                    plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="red")
+                else:
+                    plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="green")
 
+        x_boundary = []
+        y_boundary = []
+
+        if self.obstacle_polygon is not None:
+            for point in self.obstacle_polygon.vertices:
+                x_boundary.append(point.x)
+                y_boundary.append(point.y)
+            x_boundary.append(self.obstacle_polygon.vertices[0].x)
+            y_boundary.append(self.obstacle_polygon.vertices[0].y)
+            plt.plot(x_boundary, y_boundary, color="black")
+
+        plt.axis('equal')
+        plt.show()
 
     def add_obstacle_to_grid(self, robot_angle=None, collision_point=None):
         perpendicular_angle = robot_angle + np.pi / 2
@@ -30,14 +51,16 @@ class Map:
         top_left = Pose(bottom_left.x + self.obstacle_guess_depth * np.cos(robot_angle), bottom_left.y + self.obstacle_guess_depth * np.sin(robot_angle))
         top_right = Pose(bottom_right.x + self.obstacle_guess_depth * np.cos(robot_angle), bottom_right.y + self.obstacle_guess_depth * np.sin(robot_angle))
 
-        vertices = [bottom_left, bottom_right, top_left, top_right]
+        vertices = [bottom_left, top_left, top_right, bottom_right]
         bounding_box = Polygon(vertices)
+        self.obstacle_polygon = bounding_box
 
         # Check if any point in the map grid overlap with the bounding box
         for x_index in range(self.x_count):
             for y_index in range(self.y_count):
                 world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
                 if bounding_box.contains(world_point):
+                    print("Contained:", world_point.x, world_point.y)
                     self.map_grid[x_index, y_index] = 1
 
     def plan_path(self, robot_pose: Pose, goal_coordinate: Pose):
@@ -55,9 +78,11 @@ class Map:
         is_solution_found = False
         intermediate_point_count = 1
         updated_points = []
+        waypoints = []
         while not is_solution_found:
             intermediate_points, position_array, distance_array = create_intermediate_points(path_start, path_end, intermediate_point_count)
             perpendicular_angle = math.atan2(goal_coordinate.y - robot_pose.y, goal_coordinate.x - robot_pose.x) + math.pi / 2
+            print(intermediate_points)
             while will_collide:
                 updated_points = []
                 for index in range(intermediate_point_count):
@@ -70,7 +95,10 @@ class Map:
                     updated_points.append(new_point)
 
                 # Check if new points collide
-                if self.check_for_collision([path_start, updated_points, path_end]):
+                waypoints = [path_start]
+                waypoints.extend(updated_points)
+                waypoints.append(path_end)
+                if self.check_for_collision(waypoints):
                     position_array = increment_base_3_number(position_array)
                     # Check if it has done all permutations
                     is_complete = True
@@ -90,7 +118,7 @@ class Map:
                 is_solution_found = True
                 break
 
-        return [path_start, updated_points, path_end]
+        return waypoints
 
     def check_for_collision(self, waypoints: list):
         # Check if the given waypoints will collide with any of the 1s in the map grid.
@@ -100,25 +128,29 @@ class Map:
             point_2 = waypoints[index + 1]
             angle_to_point_2 = math.atan2(point_2.y - point_1.y, point_2.x- point_1.x)
             distance_between = calculate_distance_between_points(point_1, point_2)
-            number_of_checks = math.ceil(distance_between * 1.3)
+            number_of_checks = math.ceil((distance_between / self.node_gap) * 1.3)
             distance_per_check = distance_between / number_of_checks
             for check in range(number_of_checks):
                 point_to_check = create_point(point_1, distance_per_check * check, angle_to_point_2)
                 node_x, node_y = self.find_closest_node(point_to_check)
-                self.map_grid[node_x, node_y] += 1
+                grid_value = self.map_grid[node_x, node_y]
+                if grid_value == 0:
+                    self.map_grid[node_x, node_y] = 1
+                elif grid_value == 1:
+                    self.map_grid[node_x, node_y] = 3
 
         # Check every value, if any are greater than 1, then there is a collision
-        for x_index in range(self.map_grid.shape[0]):
-            for y_index in range(self.map_grid.shape[1]):
-                if self.map_grid[x_index, y_index] > 1:
+        for x_index in range(self.x_count):
+            for y_index in range(self.y_count):
+                if self.map_grid[x_index, y_index] > 2:
                     return True
 
         # If not then there is no collision
         return False
 
     def find_closest_node(self, point: Pose):
-        x_coord = int(round(point.x / self.node_gap))
-        y_coord = int(round(point.y / self.node_gap))
+        x_coord = int(min(math.floor(point.x / self.node_gap), self.x_count - 1))
+        y_coord = int(min(math.floor(point.y / self.node_gap), self.y_count - 1))
         return x_coord, y_coord
 
 def increment_base_3_number(input_list: list):
@@ -154,7 +186,7 @@ def create_intermediate_points(start: Pose, end: Pose, number_of_points: int):
         current_angled_distance = each_point_distance * (index + 1)
         new_point = create_point(start, current_angled_distance, start_end_angle)
         intermediate_points.append(new_point)
-        position_array.append([0])
+        position_array.append(0)
         distance_array.append(current_angled_distance)
 
     return intermediate_points, position_array, distance_array
@@ -162,7 +194,8 @@ def create_intermediate_points(start: Pose, end: Pose, number_of_points: int):
 
 if __name__ == "__main__":
     the_map = Map()
-    the_map.add_obstacle_to_grid(math.pi / 4, Pose(0.75, 0.75))
-    path = the_map.plan_path(Pose(0.010, 0.010, math.pi / 2), Pose(1.25, 1.25))
+    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(0.8, 0.6))
+    path = the_map.plan_path(Pose(0.010, 0.010, math.pi / 2), Pose(1.4, 1.25))
+    the_map.plot_grid()
 
     print(path)
