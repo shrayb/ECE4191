@@ -56,6 +56,20 @@ class Robot:
         self.map_class = None
         self.create_map_class()
 
+        # TODO
+        # TODO# TODO
+        #         # TODO# TODO
+        #         # TODO# TODO
+        #         # TODO# TODO
+        #         # TODO# TODO
+        # dONT FORGET TO POP THE START POINT FOR PATH QUEUE
+        #         # TODO# TODO
+        #         # TODO# TODO
+        #         # TODO# TODO
+        #         # TODO# TODO
+        #         # TODO
+
+
     def create_map_class(self):
         map_class = Map()
         self.map_class = map_class
