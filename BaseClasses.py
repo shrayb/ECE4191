@@ -339,10 +339,10 @@ class Ultrasonic:
         return distance
     
     def localise(self, front_left_us, front_right_us, rear_left_us, rear_right_us):
-        front_left_dist = front_left_us.measure_dist()
-        front_right_dist = front_right_us.measure_dist()
-        rear_left_dist = rear_left_us.measure_dist()
-        rear_right_dist = rear_right_us.measure_dist()
+        front_left_dist = front_left_us.measure_dist()*10
+        front_right_dist = front_right_us.measure_dist()*10
+        rear_left_dist = rear_left_us.measure_dist()*10
+        rear_right_dist = rear_right_us.measure_dist()*10
 
         return front_left_dist, front_right_dist, rear_left_dist, rear_right_dist
     
@@ -449,15 +449,19 @@ class Ultrasonic:
                     else:
                         h1 = (1460-y)/np.sin(2*np.pi-th)
                         h2 = (1460-x)/np.sin(2*np.pi-th)
+        
                         
-
+        uncertainty_meas = 15
         diag = h1 + h2
 
         line_left = front_left_dist+rear_left_dist+40
         line_right = front_right_dist+rear_right_dist+40
-        line_front = (front_left_dist+front_right_dist)/2
 
-        uncertainty_meas = 15
+        if front_left_dist-front_right_dist>uncertainty_meas:
+            line_front = front_left_dist
+        else:
+            line_front = front_right_dist
+
         if np.abs((line_right+line_left)/2-diag)<uncertainty_meas:
             flag = False
             
@@ -468,4 +472,6 @@ class Ultrasonic:
             obstacle_y = y + np.cos(line_front)
             obstacle_th = th
             obstacle_coords = np.array([obstacle_x, obstacle_y, obstacle_th])
+        
+        time.sleep(0.1)
         return flag, obstacle_coords
