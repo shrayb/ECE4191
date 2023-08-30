@@ -67,7 +67,6 @@ class Map:
         """
         self.location = encoder_readout
 
-
     def add_obstacle(self, obstacle_location, object_size):
         """
         Re calibrates map with object blocked out on nodes.
@@ -203,4 +202,4 @@ if __name__ == '__main__':
     map_test.add_obstacle(Pose(750, 750), 150)
     map_test.update_path(end_node)
     map_test.draw_arena(draw_path=True)
-    print(map_test.path)
+    print(map_test.get_path_xy())

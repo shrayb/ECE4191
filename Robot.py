@@ -42,6 +42,10 @@ class Robot:
         self.left_motor = None  # Motor class for the left motor
         self.right_motor = None  # Motor class for the right motor
         self.conveyor_motor = None  # Motor class for the conveyor belt motor
+        self.front_left_ultrasonic = None  # Front left ultrasonic sensor class
+        self.front_right_ultrasonic = None  # Front right ultrasonic sensor class
+        self.rear_left_ultrasonic = None  # Rear left ultrasonic sensor class
+        self.rear_right_ultrasonic = None  # Rear right ultrasonic sensor class
         self.colour_sensor = None  # ColourSensor class for the colour sensor
         self.turn_radius = 0.1257  # Metres
         self.wheel_radius = 0.0524  # Metres
@@ -116,7 +120,6 @@ class Robot:
         # self.map_class.add_obstacle(Pose(750, 750), 300)
         self.map_class.update_path(goal_node)
         self.map_class.draw_arena(draw_path=True)
-        print(self.map_class.path)
         pose_waypoints = convert_tuple_to_pose(self.map_class.path)
         # Return list of waypoints to drive to
         self.path_queue = pose_waypoints
@@ -140,6 +143,20 @@ class Robot:
         while True:
             self.left_motor.update_encoder()
             self.right_motor.update_encoder()
+
+    def ultrasonic_update_loop(self):
+        while True:
+            # Loop through each of the ultrasonic sensors
+            front_left_detection, obstacle_coords = self.front_left_ultrasonic.detect_obstacle_coords(self.front_left_ultrasonic,
+                                                                                                      self.front_right_ultrasonic,
+                                                                                                      self.rear_left_ultrasonic,
+                                                                                                      self.rear_right_ultrasonic,
+                                                                                                      self.pose)
+            if front_left_detection:
+                self.map_class.add_obstacle(obstacle_coords, 300)
+
+
+            sleep(0.5)  # Sleep for a bit because we don't need to run this so much
 
     def tick_check_and_speed_control(self, max_ticks, max_speed):
         """

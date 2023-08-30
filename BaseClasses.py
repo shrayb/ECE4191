@@ -87,6 +87,12 @@ class Pose:
         self.y = y  # y coordinate of objects pose
         self.theta = theta  # The angle the object is "facing" measured counter-clockwise from the positive x-axis.
 
+    def equals(self, point):
+        if round(point.x, 10) == round(self.x, 10) and round(point.y, 10) == round(self.y, 10):
+            return True
+        else:
+            return False
+
 class Segment:
     def __init__(self, start_point=None, end_point=None):
         self.start = start_point
@@ -327,11 +333,14 @@ class Ultrasonic:
         sleep(0.00001)
         GPIO.output(self.trig_pin, False)
 
+        pulse_start = time()
+        pulse_end = time()
+
         while GPIO.input(self.echo_pin) == 0:
-            pulse_start = time.time()
+            pulse_start = time()
 
         while GPIO.input(self.echo_pin) == 1:
-            pulse_end = time.time()
+            pulse_end = time()
 
         pulse_duration = pulse_end - pulse_start
         distance = pulse_duration * 17150  # Speed of sound in cm/s
@@ -347,7 +356,7 @@ class Ultrasonic:
         return front_left_dist, front_right_dist, rear_left_dist, rear_right_dist
     
     def check_intercept_pos(self, robot_pose):
-        x, y, th = robot_pose
+        x, y, th = robot_pose.x, robot_pose.y, robot_pose.theta
         x_int = (y - np.tan(th)*x)/(1-np.tan(th))
         
         if x_int>1500 - 40 or x_int<0:
@@ -356,7 +365,7 @@ class Ultrasonic:
             return True
         
     def check_intercept_neg(self, robot_pose):
-        x, y, th = robot_pose
+        x, y, th = robot_pose.x, robot_pose.y, robot_pose.theta
         x = x - 1460
         
         x_int = (-y + np.tan(th)*x)/(1+np.tan(th))
@@ -367,7 +376,7 @@ class Ultrasonic:
             return True
         
     def detect_obstacle_coords(self, front_left_us = None, front_right_us = None, rear_left_us = None, rear_right_us = None, robot_pose = None):
-        front_left_dist, front_right_dist, rear_left_dist, rear_right_dist = 0
+        front_left_dist, front_right_dist, rear_left_dist, rear_right_dist = 0, 0, 0, 0
         counter = 0
         while counter<3:
             # front_left_dist_check, front_right_dist_check, rear_left_dist_check, rear_right_dist_check = localise()
@@ -375,7 +384,11 @@ class Ultrasonic:
             # while not valid_check:
             #     front_left_dist_check, front_right_dist_check, rear_left_dist_check, rear_right_dist_check = localise()
             # front_left_dist, front_right_dist, rear_left_dist, rear_right_dist += front_left_dist_check, front_right_dist_check, rear_left_dist_check, rear_right_dist_check
-            front_left_dist, front_right_dist, rear_left_dist, rear_right_dist += self.localise(front_left_us, front_right_us, rear_left_us, rear_right_us)
+            front_left_read, front_right_read, rear_left_read, rear_right_read = self.localise(front_left_us, front_right_us, rear_left_us, rear_right_us)
+            front_left_dist += front_left_read
+            front_right_dist += front_right_read
+            rear_left_dist += rear_left_read
+            rear_right_dist += rear_right_read
             counter += 1
 
         front_left_dist = front_left_dist/counter
@@ -383,7 +396,7 @@ class Ultrasonic:
         rear_left_dist = rear_left_dist/counter
         rear_right_dist = rear_right_dist/counter
 
-        ## Need to find effective map size based on the robot coordinates
+        # Need to find effective map size based on the robot coordinates
         x, y, th = robot_pose
         h1, h2 = 0
 
@@ -449,8 +462,7 @@ class Ultrasonic:
                     else:
                         h1 = (1460-y)/np.sin(2*np.pi-th)
                         h2 = (1460-x)/np.sin(2*np.pi-th)
-        
-                        
+
         uncertainty_meas = 15
         diag = h1 + h2
 
@@ -462,6 +474,7 @@ class Ultrasonic:
         else:
             line_front = front_right_dist
 
+        obstacle_coords = None
         if np.abs((line_right+line_left)/2-diag)<uncertainty_meas:
             flag = False
             
@@ -471,7 +484,7 @@ class Ultrasonic:
             obstacle_x = x + np.sin(line_front)
             obstacle_y = y + np.cos(line_front)
             obstacle_th = th
-            obstacle_coords = np.array([obstacle_x, obstacle_y, obstacle_th])
+            obstacle_coords = Pose(obstacle_x, obstacle_y, obstacle_th)
         
-        time.sleep(0.1)
+        sleep(0.1)
         return flag, obstacle_coords

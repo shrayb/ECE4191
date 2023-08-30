@@ -17,16 +17,11 @@ class Node:
         self.xy = [float('inf'), float('inf')]
         self.is_obstacle = False
 
-
     def add_neighbour(self, neighbour, weight):
         self.neighbours.append((neighbour, weight))
 
-
     def __lt__(self, other_node):
         return self.distance < other_node.distance
-
-
-
 
 
 class Graph:
@@ -35,7 +30,6 @@ class Graph:
     """
     def __init__(self):
         self.nodes = {}
-
 
     def add_node(self, node: Node):
         self.nodes[node.name] = node
@@ -87,8 +81,6 @@ class Graph:
             neighbour.neighbours = [x for x in neighbour.neighbours if x[0] != node]
         node.neighbours = []
 
-    
-
     def get_adjacent_nodes(self, xy_position: tuple, radius: float) -> list:
         """get_adjacent_nodes: returns nodes around a given position within radius."""
         pass
@@ -96,9 +88,6 @@ class Graph:
     def remove_nodes(self, node_list: list) -> None:
         """remove_nodes: given list of nodes, removes all nodes from graph"""
         pass
-
-
-
 
     def djikstras(self, start_node, target_node):
         start_node.distance = 0
@@ -124,8 +113,6 @@ class Graph:
                         neighbour.prev_node = current_node
                         heapq.heappush(heap, (new_distance, neighbour))
 
-
-
     def get_shortest_distance(self, target: Node):
         path = []
         current_node = target
@@ -135,7 +122,6 @@ class Graph:
             current_node = current_node.prev_node
         path.insert(0,current_node.name)
         return target.distance, path
-
 
 
 if __name__ == '__main__':
