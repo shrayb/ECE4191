@@ -178,13 +178,21 @@ def detect_obstacle(front_left_dist = None, front_right_dist = None, rear_left_d
 
     line_left = front_left_dist+rear_left_dist+ROBOT_SIZE
     line_right = front_right_dist+rear_right_dist+ROBOT_SIZE
+    line_front = (front_left_dist+front_right_dist)/2
 
     uncertainty_meas = 15
     if np.abs((line_right+line_left)/2-diag)<uncertainty_meas:
         flag = False
+        
     else:
         flag = True
-    return flag
+        print("Obstacle detected")
+        obstacle_x = x + np.sin(line_front)
+        obstacle_y = y + np.cos(line_front)
+        obstacle_th = th
+        obstacle_coords = np.array([obstacle_x, obstacle_y, obstacle_th])
+    return flag, obstacle_coords
+    
 
 
 scanner_thread = Thread(target=detect_obstacle)
