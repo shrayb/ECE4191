@@ -3,8 +3,8 @@ import time
 
 GPIO.setmode(GPIO.BCM)
 
-TRIG_PIN = 3
-ECHO_PIN = 2
+TRIG_PIN = 19
+ECHO_PIN = 26
 
 GPIO.setup(TRIG_PIN, GPIO.OUT)
 GPIO.setup(ECHO_PIN, GPIO.IN)

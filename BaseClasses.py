@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+import FakeRPi.GPIO as GPIO
 from time import sleep, time
 import math
 import numpy as np
@@ -87,6 +87,12 @@ class Pose:
         self.y = y  # y coordinate of objects pose
         self.theta = theta  # The angle the object is "facing" measured counter-clockwise from the positive x-axis.
 
+    def equals(self, point):
+        if round(point.x, 10) == round(self.x, 10) and round(point.y, 10) == round(self.y, 10):
+            return True
+        else:
+            return False
+
 class Segment:
     def __init__(self, start_point=None, end_point=None):
         self.start = start_point
@@ -98,7 +104,7 @@ class Segment:
 class Polygon:
     def __init__(self, vertices=None):
         self.vertices = vertices  # List of Point instances
-        self.maximum = self.calculate_maximum_length()
+        self.maximum = 2  # metres
         self.segments = self.calculate_segments()
         self.count = self.calculate_count()
         self.centroid = self.calculate_centroid()
@@ -327,11 +333,14 @@ class Ultrasonic:
         sleep(0.00001)
         GPIO.output(self.trig_pin, False)
 
+        pulse_start = time()
+        pulse_end = time()
+
         while GPIO.input(self.echo_pin) == 0:
-            pulse_start = time.time()
+            pulse_start = time()
 
         while GPIO.input(self.echo_pin) == 1:
-            pulse_end = time.time()
+            pulse_end = time()
 
         pulse_duration = pulse_end - pulse_start
         distance = pulse_duration * 17150  # Speed of sound in cm/s

@@ -1,6 +1,7 @@
 import math
 from time import sleep, time
 from BaseClasses import *
+from mapping import *
 
 class Robot:
     def __init__(self, pose=None, state="waiting"):
@@ -33,12 +34,18 @@ class Robot:
         #   "completed": Robot has completed the state task
         # Sub-states of "delivering"
         #   "depositing": The robot is depositing the package into the destination
+        self.current_goal = None  # Current coordinate the robot wants to end at
+        self.node_radius = 0.05  # metres
         self.path_queue = []  # List of coordinates that the robot will go to in order
         self.package = None  # Package class that was currently scanned
         self.depositing = False  # Flag for when the conveyor motor is depositing a package
         self.left_motor = None  # Motor class for the left motor
         self.right_motor = None  # Motor class for the right motor
         self.conveyor_motor = None  # Motor class for the conveyor belt motor
+        self.front_left_ultrasonic = None  # Front left ultrasonic sensor class
+        self.front_right_ultrasonic = None  # Front right ultrasonic sensor class
+        self.rear_left_ultrasonic = None  # Rear left ultrasonic sensor class
+        self.rear_right_ultrasonic = None  # Rear right ultrasonic sensor class
         self.colour_sensor = None  # ColourSensor class for the colour sensor
         self.turn_radius = 0.1257  # Metres
         self.wheel_radius = 0.0524  # Metres
@@ -46,6 +53,13 @@ class Robot:
         self.max_speed = 100  # Upper percentage for maximum speed
         self.slow_speed = 100  # Upper percentage for slower speed
         self.PID_gain = 2  # Raise to make the PID more sensitive, lower to make the PID less sensitive
+        self.map_class = None
+        self.create_map_class()
+
+    def create_map_class(self):
+        map_class = Map((1500, 1500), self.node_radius * 1000, loc=(self.pose.x * 1000, self.pose.y * 1000, self.pose.theta))
+        map_class.generate_map()
+        self.map_class = map_class
 
     def get_current_goal(self, arena_map=None):
         if self.package is not None:
@@ -101,10 +115,14 @@ class Robot:
 
     def plan_path(self, arena_map=None):
         # TODO
-        # Implement A* search algorithm
+        # Implement search algorithm
+        goal_node = self.map_class.G.get_nearest_node((self.current_goal.x * 1000, self.current_goal.y * 1000))
+        # self.map_class.add_obstacle(Pose(750, 750), 300)
+        self.map_class.update_path(goal_node)
+        self.map_class.draw_arena(draw_path=True)
+        pose_waypoints = convert_tuple_to_pose(self.map_class.path)
         # Return list of waypoints to drive to
-        path_waypoints = []
-        self.path_queue = path_waypoints
+        self.path_queue = pose_waypoints
         self.is_impending_collision = False
 
     def set_state(self, state=None, sub_state=None):
@@ -125,6 +143,20 @@ class Robot:
         while True:
             self.left_motor.update_encoder()
             self.right_motor.update_encoder()
+
+    def ultrasonic_update_loop(self):
+        while True:
+            # Loop through each of the ultrasonic sensors
+            front_left_detection, obstacle_coords = self.front_left_ultrasonic.detect_obstacle_coords(self.front_left_ultrasonic,
+                                                                                                      self.front_right_ultrasonic,
+                                                                                                      self.rear_left_ultrasonic,
+                                                                                                      self.rear_right_ultrasonic,
+                                                                                                      self.pose)
+            if front_left_detection:
+                self.map_class.add_obstacle(obstacle_coords, 300)
+
+
+            sleep(0.5)  # Sleep for a bit because we don't need to run this so much
 
     def tick_check_and_speed_control(self, max_ticks, max_speed):
         """
@@ -288,3 +320,12 @@ class Robot:
             print("\t\tTurn complete")
 
         sleep(0.25)
+
+
+def convert_tuple_to_pose(tuples=None):
+    poses = []
+    for tuple in tuples:
+        new_pose = Pose(tuple[0] / 1000, tuple[1] / 1000)
+        poses.append(new_pose)
+
+    return poses
