@@ -69,7 +69,7 @@ def loop():
         coord = Pose(float(x_coord), float(y_coord), theta_coord)
 
         robot.current_goal = coord
-        robot.plan_path()
+        robot.create_path()
 
 if __name__ == "__main__":
     loop()

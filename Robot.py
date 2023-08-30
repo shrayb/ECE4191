@@ -112,7 +112,7 @@ class Robot:
         # TODO
         pass
 
-    def plan_path(self):
+    def create_path(self):
         # Plan a path
         self.map_class.plan_path(self.pose, self.current_goal)
 

@@ -81,7 +81,7 @@ def handle_delivering_and_returning(robot=None, arena_map=None):
 
     if robot.get_sub_state() == "planning":
         # Plan a path with the given obstacles and other parameters
-        robot.plan_path(arena_map=arena_map, end_pose=robot.get_current_goal(arena_map=arena_map))
+        robot.create_path(arena_map=arena_map, end_pose=robot.get_current_goal(arena_map=arena_map))
 
         # Check if there is a valid path planned
         if robot.path is not None:
