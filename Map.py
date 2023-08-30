@@ -64,6 +64,8 @@ class Map:
                     self.map_grid[x_index, y_index] = 1
 
     def plan_path(self, robot_pose: Pose, goal_coordinate: Pose):
+        print("Robot pose:", robot_pose.x, robot_pose.y, robot_pose.theta)
+        print("Goal:", goal_coordinate.x, goal_coordinate.y)
         # Create straight line from start to goal
         path_start = robot_pose
         path_end = goal_coordinate
