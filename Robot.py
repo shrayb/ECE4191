@@ -113,6 +113,7 @@ class Robot:
         pass
 
     def create_path(self):
+        print("Creating a path")
         # Plan a path
         self.map_class.plan_path(self.pose, self.current_goal)
 
