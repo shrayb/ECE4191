@@ -222,6 +222,9 @@ class Robot:
         self.left_motor.stop()
         self.right_motor.stop()
 
+        # Wait for stabilisation
+        sleep(0.2)
+
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         distance_turned = (tick_sum / 2) * self.distance_per_tick
         measured_angle = distance_turned / self.turn_radius
@@ -230,8 +233,6 @@ class Robot:
             self.pose.theta += measured_angle
         else:
             self.pose.theta -= measured_angle
-
-        # self.pose.theta += angle
 
     def do_drive(self, distance):
         # Reset encoders
@@ -272,6 +273,9 @@ class Robot:
         self.left_motor.stop()
         self.right_motor.stop()
 
+        # Wait for stabilisation
+        sleep(0.2)
+
         # Use the tick count to estimate where the robot is
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         measure_distance = (tick_sum / 2) * self.distance_per_tick
@@ -295,7 +299,6 @@ class Robot:
             print("\t\tStarting turn")
             self.do_turn(angle_difference)
             print("\t\tTurn complete")
-            sleep(0.25)
 
         # Find distance to drive
         distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
@@ -303,7 +306,6 @@ class Robot:
         print("\t\tStarting drive")
         self.do_drive(distance)
         print("\t\tDrive complete")
-        sleep(0.25)
 
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta:
@@ -347,12 +349,3 @@ class Robot:
             coords_x, coords_y = None
 
         return flag, coords_x, coords_y, th
-
-
-def convert_tuple_to_pose(tuples=None):
-    poses = []
-    for tuple in tuples:
-        new_pose = Pose(tuple[0] / 1000, tuple[1] / 1000)
-        poses.append(new_pose)
-
-    return poses
