@@ -337,141 +337,169 @@ class Ultrasonic:
         distance = pulse_duration * 17150  # Speed of sound in cm/s
 
         return distance
+    def detect_obstacle(self, front_left_us, front_right_us, robot_pose):
+        left_dist = front_left_us.measure_dist()*10
+        right_dist = front_right_us.measure_dist()*10
+        x, y, th = robot_pose
+        
+        if left_dist < 150 and right_dist < 150:
+            flag = True
+            coords_x = x + 0.5 * (left_dist + right_dist) * np.cos(th)
+            coords_y = y + 0.5 * (left_dist + right_dist) * np.sin(th)
+            print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from both US")
+
+        
+        elif left_dist < 150:
+            flag = True
+            coords_x = x + left_dist * np.cos(th)
+            coords_y = y + left_dist * np.sin(th)
+            print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from left US")
+
+        elif right_dist <150:
+            flag = True
+            coords_x = x + right_dist * np.cos(th)
+            coords_y = y + right_dist * np.sin(th)
+            print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from right US")
+
+        else:
+            flag = False
+            coords_x, coords_y = None
+
+        return flag, coords_x, coords_y
+    # def localise(self, front_left_us, front_right_us, rear_left_us, rear_right_us):
+    #     front_left_dist = front_left_us.measure_dist()*10
+    #     front_right_dist = front_right_us.measure_dist()*10
+    #     rear_left_dist = rear_left_us.measure_dist()*10
+    #     rear_right_dist = rear_right_us.measure_dist()*10
+
+    #     return front_left_dist, front_right_dist, rear_left_dist, rear_right_dist
     
-    def localise(self, front_left_us, front_right_us, rear_left_us, rear_right_us):
-        front_left_dist = front_left_us.measure_dist()*10
-        front_right_dist = front_right_us.measure_dist()*10
-        rear_left_dist = rear_left_us.measure_dist()*10
-        rear_right_dist = rear_right_us.measure_dist()*10
+    # def check_intercept_pos(self, robot_pose):
+    #     x, y, th = robot_pose
+    #     x_int = (y - np.tan(th)*x)/(1-np.tan(th))
+        
+    #     if x_int>1500 - 40 or x_int<0:
+    #         return False
+    #     else:
+    #         return True
+        
+    # def check_intercept_neg(self, robot_pose):
+    #     x, y, th = robot_pose
+    #     x = x - 1460
+        
+    #     x_int = (-y + np.tan(th)*x)/(1+np.tan(th))
+        
+    #     if x_int<-1460 or x_int>0:
+    #         return False
+    #     else:
+    #         return True
+        
+    # def detect_obstacle_coords(self, front_left_us = None, front_right_us = None, rear_left_us = None, rear_right_us = None, robot_pose = None):
+    #     front_left_dist, front_right_dist, rear_left_dist, rear_right_dist = 0
+    #     counter = 0
+    #     while counter<3:
+    #         # front_left_dist_check, front_right_dist_check, rear_left_dist_check, rear_right_dist_check = localise()
+    #         # valid_check = validate_measurements()
+    #         # while not valid_check:
+    #         #     front_left_dist_check, front_right_dist_check, rear_left_dist_check, rear_right_dist_check = localise()
+    #         # front_left_dist, front_right_dist, rear_left_dist, rear_right_dist += front_left_dist_check, front_right_dist_check, rear_left_dist_check, rear_right_dist_check
+    #         front_left_dist, front_right_dist, rear_left_dist, rear_right_dist += self.localise(front_left_us, front_right_us, rear_left_us, rear_right_us)
+    #         counter += 1
 
-        return front_left_dist, front_right_dist, rear_left_dist, rear_right_dist
-    
-    def check_intercept_pos(self, robot_pose):
-        x, y, th = robot_pose
-        x_int = (y - np.tan(th)*x)/(1-np.tan(th))
-        
-        if x_int>1500 - 40 or x_int<0:
-            return False
-        else:
-            return True
-        
-    def check_intercept_neg(self, robot_pose):
-        x, y, th = robot_pose
-        x = x - 1460
-        
-        x_int = (-y + np.tan(th)*x)/(1+np.tan(th))
-        
-        if x_int<-1460 or x_int>0:
-            return False
-        else:
-            return True
-        
-    def detect_obstacle_coords(self, front_left_us = None, front_right_us = None, rear_left_us = None, rear_right_us = None, robot_pose = None):
-        front_left_dist, front_right_dist, rear_left_dist, rear_right_dist = 0
-        counter = 0
-        while counter<3:
-            # front_left_dist_check, front_right_dist_check, rear_left_dist_check, rear_right_dist_check = localise()
-            # valid_check = validate_measurements()
-            # while not valid_check:
-            #     front_left_dist_check, front_right_dist_check, rear_left_dist_check, rear_right_dist_check = localise()
-            # front_left_dist, front_right_dist, rear_left_dist, rear_right_dist += front_left_dist_check, front_right_dist_check, rear_left_dist_check, rear_right_dist_check
-            front_left_dist, front_right_dist, rear_left_dist, rear_right_dist += self.localise(front_left_us, front_right_us, rear_left_us, rear_right_us)
-            counter += 1
+    #     front_left_dist = front_left_dist/counter
+    #     front_right_dist = front_right_dist/counter
+    #     rear_left_dist = rear_left_dist/counter
+    #     rear_right_dist = rear_right_dist/counter
 
-        front_left_dist = front_left_dist/counter
-        front_right_dist = front_right_dist/counter
-        rear_left_dist = rear_left_dist/counter
-        rear_right_dist = rear_right_dist/counter
+    #     ## Need to find effective map size based on the robot coordinates
+    #     x, y, th = robot_pose
+    #     h1, h2 = 0
 
-        ## Need to find effective map size based on the robot coordinates
-        x, y, th = robot_pose
-        h1, h2 = 0
-
-        if np.tan(th)>=0:
-            if self.check_intercept_pos(robot_pose=robot_pose):
-                if th % np.pi/2 >= np.pi/4:
-                    if np.sin(th)>=0:
-                        h1 = (1460-y)/np.sin(th)
-                        h2 = y/np.sin(th)
-                    else:
-                        h1 = (1460-y)/np.sin(th-np.pi)
-                        h2 = y/(np.sin(th-np.pi))
-                else: 
-                    if np.sin(th)>=0:
-                        h1 = (1460-x)/np.cos(th)
-                        h2 = x/np.cos(th)
-                    else:
-                        h1 = (1460-x)/np.cos(th-np.pi)
-                        h2 = x/np.cos(th-np.pi)
-            else:
-                if x<y:
-                    if np.sin(th)>=0:
-                        h1 = (1460-y)/np.sin(th)
-                        h2 = x/np.cos(th)
-                    else:
-                        h1 = (1460-y)/np.sin(th-np.pi)
-                        h2 = x/np.cos(th-np.pi)
-                else:
-                    if np.sin(th)>=0:
-                        h1 = (1460-x)/np.cos(th)
-                        h2 = y/np.sin(th)
-                    else:
-                        h1 = (1460-x)/np.cos(th-np.pi)
-                        h2 = y/np.sin(th-np.pi)
-        else:
-            if self.check_intercept_neg(robot_pose=robot_pose):
-                if th % np.pi > 3*np.pi/2:
-                    if np.sin(th)>=0:
-                        h1 = x/np.cos(np.pi-th)
-                        h2 = (1460-x)/np.cos(np.pi-th)
-                    else:
-                        h1 = x/np.cos(2*np.pi-th)
-                        h2 = (1460-x)/np.cos(2*np.pi-th)
-                else:
-                    if np.sin(th)>=0:
-                        h1 = (1460-y)/np.sin(np.pi-th)
-                        h2 = y/np.sin(np.pi-th)
-                    else:
-                        h1 = (1460-y)/np.sin(2*np.pi-th)
-                        h2 = y/np.sin(2*np.pi-th)
-            else:
-                if (x-1460)<-y:
-                    if np.sin(th)>=0:
-                        h1 = x/np.cos(np.pi-th)
-                        h2 = y/np.sin(np.pi-th)
-                    else:
-                        h1 = x/np.cos(2*np.pi-th)
-                        h2 = y/np.sin(2*np.pi-th)
-                else:
-                    if np.sin(th)>=0:
-                        h1 = (1460-y)/np.sin(np.pi-th)
-                        h2 = (1460-x)/np.sin(np.pi-th)
-                    else:
-                        h1 = (1460-y)/np.sin(2*np.pi-th)
-                        h2 = (1460-x)/np.sin(2*np.pi-th)
+    #     if np.tan(th)>=0:
+    #         if self.check_intercept_pos(robot_pose=robot_pose):
+    #             if th % np.pi/2 >= np.pi/4:
+    #                 if np.sin(th)>=0:
+    #                     h1 = (1460-y)/np.sin(th)
+    #                     h2 = y/np.sin(th)
+    #                 else:
+    #                     h1 = (1460-y)/np.sin(th-np.pi)
+    #                     h2 = y/(np.sin(th-np.pi))
+    #             else: 
+    #                 if np.sin(th)>=0:
+    #                     h1 = (1460-x)/np.cos(th)
+    #                     h2 = x/np.cos(th)
+    #                 else:
+    #                     h1 = (1460-x)/np.cos(th-np.pi)
+    #                     h2 = x/np.cos(th-np.pi)
+    #         else:
+    #             if x<y:
+    #                 if np.sin(th)>=0:
+    #                     h1 = (1460-y)/np.sin(th)
+    #                     h2 = x/np.cos(th)
+    #                 else:
+    #                     h1 = (1460-y)/np.sin(th-np.pi)
+    #                     h2 = x/np.cos(th-np.pi)
+    #             else:
+    #                 if np.sin(th)>=0:
+    #                     h1 = (1460-x)/np.cos(th)
+    #                     h2 = y/np.sin(th)
+    #                 else:
+    #                     h1 = (1460-x)/np.cos(th-np.pi)
+    #                     h2 = y/np.sin(th-np.pi)
+    #     else:
+    #         if self.check_intercept_neg(robot_pose=robot_pose):
+    #             if th % np.pi > 3*np.pi/2:
+    #                 if np.sin(th)>=0:
+    #                     h1 = x/np.cos(np.pi-th)
+    #                     h2 = (1460-x)/np.cos(np.pi-th)
+    #                 else:
+    #                     h1 = x/np.cos(2*np.pi-th)
+    #                     h2 = (1460-x)/np.cos(2*np.pi-th)
+    #             else:
+    #                 if np.sin(th)>=0:
+    #                     h1 = (1460-y)/np.sin(np.pi-th)
+    #                     h2 = y/np.sin(np.pi-th)
+    #                 else:
+    #                     h1 = (1460-y)/np.sin(2*np.pi-th)
+    #                     h2 = y/np.sin(2*np.pi-th)
+    #         else:
+    #             if (x-1460)<-y:
+    #                 if np.sin(th)>=0:
+    #                     h1 = x/np.cos(np.pi-th)
+    #                     h2 = y/np.sin(np.pi-th)
+    #                 else:
+    #                     h1 = x/np.cos(2*np.pi-th)
+    #                     h2 = y/np.sin(2*np.pi-th)
+    #             else:
+    #                 if np.sin(th)>=0:
+    #                     h1 = (1460-y)/np.sin(np.pi-th)
+    #                     h2 = (1460-x)/np.sin(np.pi-th)
+    #                 else:
+    #                     h1 = (1460-y)/np.sin(2*np.pi-th)
+    #                     h2 = (1460-x)/np.sin(2*np.pi-th)
         
                         
-        uncertainty_meas = 15
-        diag = h1 + h2
+    #     uncertainty_meas = 15
+    #     diag = h1 + h2
 
-        line_left = front_left_dist+rear_left_dist+40
-        line_right = front_right_dist+rear_right_dist+40
+    #     line_left = front_left_dist+rear_left_dist+40
+    #     line_right = front_right_dist+rear_right_dist+40
 
-        if front_left_dist-front_right_dist>uncertainty_meas:
-            line_front = front_left_dist
-        else:
-            line_front = front_right_dist
+    #     if front_left_dist-front_right_dist>uncertainty_meas:
+    #         line_front = front_left_dist
+    #     else:
+    #         line_front = front_right_dist
 
-        if np.abs((line_right+line_left)/2-diag)<uncertainty_meas:
-            flag = False
+    #     if np.abs((line_right+line_left)/2-diag)<uncertainty_meas:
+    #         flag = False
             
-        else:
-            flag = True
-            print("Obstacle detected")
-            obstacle_x = x + np.sin(line_front)
-            obstacle_y = y + np.cos(line_front)
-            obstacle_th = th
-            obstacle_coords = np.array([obstacle_x, obstacle_y, obstacle_th])
+    #     else:
+    #         flag = True
+    #         print("Obstacle detected")
+    #         obstacle_x = x + np.sin(line_front)
+    #         obstacle_y = y + np.cos(line_front)
+    #         obstacle_th = th
+    #         obstacle_coords = np.array([obstacle_x, obstacle_y, obstacle_th])
         
-        time.sleep(0.1)
-        return flag, obstacle_coords
+    #     time.sleep(0.1)
+    #     return flag, obstacle_coords
