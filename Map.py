@@ -33,3 +33,8 @@ class Map:
         # TODO
         # Check if the given waypoints will collide with any of the 1s in the map grid.
         # If so return True, otherwise return False
+
+        # Create list of segments of the obstacles from the grid
+
+        # Loop over each segment to see if it intersects with any segments created from the waypoint list
+        # If any segment intersects then it does collide
