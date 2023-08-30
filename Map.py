@@ -120,6 +120,9 @@ class Map:
                 break
 
         self.path = waypoints
+        print("Waypoints:")
+        for point in self.path:
+            print("Point:", point.x, point.y)
         return waypoints
 
     def check_for_collision(self, waypoints: list):
