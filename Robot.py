@@ -26,14 +26,14 @@ class Robot:
         # Sub-states of "delivering" and "returning":
         #   "planning": Robot is planning its route through an arena. This will happen at the beginning and anytime an obstacle interferes with the current route
         #   "moving": Robot is moving along its planned route
-        self.is_close_to_crashing = False  # Goes True if the robot detects something in front of it whilst moving
+        self.is_impending_collision = False  # Goes True if the robot detects something in front of it whilst moving
         self.is_moving = False  # Boolean for if the robot is moving
         #   "stuck": Robot is stuck and has nowhere to travel
         #   "positioned": Robot has arrived to its destination
         #   "completed": Robot has completed the state task
         # Sub-states of "delivering"
         #   "depositing": The robot is depositing the package into the destination
-        self.path = None  # Path class that holds all the information about the robots current path
+        self.path_queue = []  # List of coordinates that the robot will go to in order
         self.package = None  # Package class that was currently scanned
         self.depositing = False  # Flag for when the conveyor motor is depositing a package
         self.left_motor = None  # Motor class for the left motor
@@ -81,13 +81,18 @@ class Robot:
         return colour_reading
 
     def follow_path(self):
-        # As long as the is_moving flag is True
-        while self.is_moving:
-            # Make required moves to follow path
-            # TODO
-            pass
-        # When the is_moving flag is False for any reason, stop the robot's movement
-        # TODO
+        # THREAD FUNCTION
+        # Will drive to whatever waypoints are in the path queue variable in order and remove them
+        while True:
+            # Check if there are any waypoints in the queue
+            if len(self.path_queue) == 0 or self.is_impending_collision:
+                continue
+
+            # Drive to first waypoint
+            self.drive_to_coordinate(self.path_queue[0])
+
+            # Remove first waypoint from queue
+            self.path_queue.pop(0)
 
     def deposit_package(self):
         # Deposit the next package
@@ -96,7 +101,11 @@ class Robot:
 
     def plan_path(self, arena_map=None):
         # TODO
-        pass
+        # Implement A* search algorithm
+        # Return list of waypoints to drive to
+        path_waypoints = []
+        self.path_queue = path_waypoints
+        self.is_impending_collision = False
 
     def set_state(self, state=None, sub_state=None):
         if state is not None:
@@ -137,6 +146,10 @@ class Robot:
 
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
+
+            # Check if there will be a collision
+            if self.is_impending_collision:
+                break
 
     def do_turn(self, angle):
         # Reset encoders
@@ -179,16 +192,16 @@ class Robot:
         self.left_motor.stop()
         self.right_motor.stop()
 
-        # tick_sum = self.left_motor.ticks + self.right_motor.ticks
-        # distance_turned = (tick_sum / 2) * self.distance_per_tick
-        # measured_angle = distance_turned / self.turn_radius
-        #
-        # if angle > 0:
-        #     self.pose.theta += measured_angle
-        # else:
-        #     self.pose.theta -= measured_angle
+        tick_sum = self.left_motor.ticks + self.right_motor.ticks
+        distance_turned = (tick_sum / 2) * self.distance_per_tick
+        measured_angle = distance_turned / self.turn_radius
 
-        self.pose.theta += angle
+        if angle > 0:
+            self.pose.theta += measured_angle
+        else:
+            self.pose.theta -= measured_angle
+
+        # self.pose.theta += angle
 
     def do_drive(self, distance):
         # Reset encoders

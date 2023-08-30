@@ -1,5 +1,5 @@
 import numpy as np
-from BaseClasses import Pose, Polygon
+from BaseClasses import *
 class Map:
     def __init__(self, boundary=None, obstacles=None, destinations=None, pickup_location=None):
         self.boundary = boundary
@@ -7,8 +7,8 @@ class Map:
         self.destinations = destinations
         self.pickup_location = pickup_location
         self.map_grid = np.zeros(150, 150)
-        self.obstacle_guess_width = 0.09  # Create an obstacle of 10 cm
-        self.obstacle_guess_depth = 0.09  # Create an obstacle of 10 cm
+        self.obstacle_guess_width = 0.09  # Create an obstacle of 9 cm
+        self.obstacle_guess_depth = 0.09  # Create an obstacle of 9 cm
 
     def add_obstacle_to_grid(self, robot_angle=None, collision_point=None):
         perpendicular_angle = robot_angle + np.pi / 2
@@ -22,5 +22,14 @@ class Map:
         vertices = [bottom_left, bottom_right, top_left, top_right]
         bounding_box = Polygon(vertices)
 
-        for point in self.map_grid:
+        # Check if any point in the map grid overlap with the bounding box
+        for x_index in range(150):
+            for y_index in range(150):
+                grid_point = Pose(x_index / 100, y_index / 100)
+                if bounding_box.contains(grid_point):
+                    self.map_grid[x_index, y_index] = 1
 
+    def check_for_collision(self, robot_pose=None, waypoints=None):
+        # TODO
+        # Check if the given waypoints will collide with any of the 1s in the map grid.
+        # If so return True, otherwise return False
