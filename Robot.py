@@ -141,7 +141,7 @@ class Robot:
 
     def ultrasonic_update_loop(self):
         while True:
-            flag, coords_x, coords_y, th = self.detect_obstacle()
+            flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
             if flag:
                 # Add the new found obstacle
                 self.map_class.add_obstacle_to_grid(Pose(coords_x / 1000, coords_y / 1000), th)
@@ -153,8 +153,9 @@ class Robot:
                 if is_collision:
                     self.is_impending_collision = True
                     self.map_class.plan_path(self.pose, self.current_goal)
+                    self.path_queue = self.map_class.path
 
-            sleep(0.5)  # Sleep for a bit because we don't need to run this so much
+            sleep(0.2)  # Sleep for a bit because we don't need to run this so much
 
     def tick_check_and_speed_control(self, max_ticks, max_speed):
         """
