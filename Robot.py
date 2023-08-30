@@ -116,9 +116,10 @@ class Robot:
         print("Creating a path")
         # Plan a path
         self.map_class.plan_path(self.pose, self.current_goal)
-
+        print("Path goal:", self.current_goal.x, self.current_goal.y)
         # Pass coordinates to the queue
         self.path_queue = self.map_class.path
+        print("Path queue:", self.path_queue)
         self.is_impending_collision = False
 
     def set_state(self, state=None, sub_state=None):
