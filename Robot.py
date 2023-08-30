@@ -146,7 +146,7 @@ class Robot:
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
             if flag:
                 # Add the new found obstacle
-                self.map_class.add_obstacle_to_grid(Pose(coords_x / 1000, coords_y / 1000), th)
+                self.map_class.add_obstacle_to_grid(th, Pose(coords_x / 1000, coords_y / 1000))
 
                 # Check for collisions
                 is_collision = self.map_class.check_for_collision(self.map_class.path)
