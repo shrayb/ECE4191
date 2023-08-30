@@ -319,9 +319,9 @@ class Robot:
 
         sleep(0.25)
     
-    def detect_obstacle(self):
-        left_dist = self.front_left_ultrasonic.measure_dist()*10
-        right_dist = self.front_right_ultrasonic.measure_dist()*10
+    def detect_obstacle(self, front_left_ultrasonic=None, front_right_ultrasonic=None):
+        left_dist = front_left_ultrasonic.measure_dist()*10
+        right_dist = front_right_ultrasonic.measure_dist()*10
         x, y, th = self.pose
         
         if left_dist < 150 and right_dist < 150:
