@@ -13,6 +13,7 @@ class Map:
         self.y_count = int(math.ceil(self.map_size[1] / self.node_gap))
         self.map_grid = np.zeros((self.x_count, self.y_count))
         self.obstacle_polygon = None
+        self.path = None
 
     def plot_grid(self):
         for x_index in range(self.x_count):
@@ -116,6 +117,7 @@ class Map:
                 is_solution_found = True
                 break
 
+        self.path = waypoints
         return waypoints
 
     def check_for_collision(self, waypoints: list):

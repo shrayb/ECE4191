@@ -1,7 +1,7 @@
 import math
 from time import sleep, time
 from BaseClasses import *
-from mapping import *
+from Map import *
 
 class Robot:
     def __init__(self, pose=None, state="waiting"):
@@ -57,8 +57,7 @@ class Robot:
         self.create_map_class()
 
     def create_map_class(self):
-        map_class = Map((1500, 1500), self.node_radius * 1000, loc=(self.pose.x * 1000, self.pose.y * 1000, self.pose.theta))
-        map_class.generate_map()
+        map_class = Map()
         self.map_class = map_class
 
     def get_current_goal(self, arena_map=None):
@@ -114,7 +113,6 @@ class Robot:
         pass
 
     def plan_path(self, arena_map=None):
-        # TODO
         # Implement search algorithm
         goal_node = self.map_class.G.get_nearest_node((self.current_goal.x * 1000, self.current_goal.y * 1000))
         # self.map_class.add_obstacle(Pose(750, 750), 300)
@@ -146,15 +144,17 @@ class Robot:
 
     def ultrasonic_update_loop(self):
         while True:
-            # Loop through each of the ultrasonic sensors
-            front_left_detection, obstacle_coords = self.front_left_ultrasonic.detect_obstacle_coords(self.front_left_ultrasonic,
-                                                                                                      self.front_right_ultrasonic,
-                                                                                                      self.rear_left_ultrasonic,
-                                                                                                      self.rear_right_ultrasonic,
-                                                                                                      self.pose)
-            if front_left_detection:
-                self.map_class.add_obstacle(obstacle_coords, 300)
+            flag, coords_x, coords_y, th = self.detect_obstacle()
+            if flag:
+                # Add the new found obstacle
+                self.map_class.add_obstacle_to_grid(Pose(coords_x / 1000, coords_y / 1000), th)
 
+                # Check for collisions
+                is_collision = self.map_class.check_for_collision(self.map_class.path)
+
+                # If collision, re plan path
+                if is_collision:
+                    self.map_class.plan_path(self.pose, self.current_goal)
 
             sleep(0.5)  # Sleep for a bit because we don't need to run this so much
 
@@ -321,9 +321,9 @@ class Robot:
 
         sleep(0.25)
     
-    def detect_obstacle(self, front_left_us, front_right_us):
-        left_dist = front_left_us.measure_dist()*10
-        right_dist = front_right_us.measure_dist()*10
+    def detect_obstacle(self):
+        left_dist = self.front_left_ultrasonic.measure_dist()*10
+        right_dist = self.front_right_ultrasonic.measure_dist()*10
         x, y, th = self.pose
         
         if left_dist < 150 and right_dist < 150:
@@ -332,7 +332,6 @@ class Robot:
             coords_y = y + 0.5 * (left_dist + right_dist) * np.sin(th)
             print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from both US")
 
-        
         elif left_dist < 150:
             flag = True
             coords_x = x + left_dist * np.cos(th)
