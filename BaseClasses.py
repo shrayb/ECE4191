@@ -347,32 +347,4 @@ class Ultrasonic:
 
         return distance
     
-    def detect_obstacle(self, front_left_us, front_right_us, robot_pose):
-        left_dist = front_left_us.measure_dist()*10
-        right_dist = front_right_us.measure_dist()*10
-        x, y, th = robot_pose
-        
-        if left_dist < 150 and right_dist < 150:
-            flag = True
-            coords_x = x + 0.5 * (left_dist + right_dist) * np.cos(th)
-            coords_y = y + 0.5 * (left_dist + right_dist) * np.sin(th)
-            print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from both US")
-
-        
-        elif left_dist < 150:
-            flag = True
-            coords_x = x + left_dist * np.cos(th)
-            coords_y = y + left_dist * np.sin(th)
-            print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from left US")
-
-        elif right_dist <150:
-            flag = True
-            coords_x = x + right_dist * np.cos(th)
-            coords_y = y + right_dist * np.sin(th)
-            print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from right US")
-
-        else:
-            flag = False
-            coords_x, coords_y = None
-
-        return flag, coords_x, coords_y, th
+    
