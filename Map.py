@@ -65,13 +65,14 @@ class Map:
                     self.map_grid[x_index, y_index] = 1
 
     def plan_path(self, robot_pose: Pose, goal_coordinate: Pose):
+        print("Creating path from:", robot_pose.x, robot_pose.y, "| to:", goal_coordinate.x, goal_coordinate.y)
         # Create straight line from start to goal
         path_start = robot_pose
         path_end = goal_coordinate
 
         # Check if a collision will occur
         will_collide = self.check_for_collision([path_end], robot_pose)
-
+        print("Will it collide?:", will_collide)
         if not will_collide:
             self.path = [path_end]
             return self.path
