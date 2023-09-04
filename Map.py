@@ -108,8 +108,6 @@ class Map:
                     for bit in position_array:
                         if bit != 0:
                             is_complete = False
-                            print("Break on bit compelte")
-                            break
 
                     # If done all permutations, increment one to the point count
                     if is_complete:
