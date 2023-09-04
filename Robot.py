@@ -123,6 +123,8 @@ class Robot:
         # Pass coordinates to the queue
         self.path_queue = self.map_class.path
         print("Path queue:", self.path_queue)
+        for point in self.path_queue:
+            print(point.x, point.y)
         self.is_impending_collision = False
 
     def set_state(self, state=None, sub_state=None):
