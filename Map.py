@@ -82,10 +82,12 @@ class Map:
         intermediate_point_count = 1
         waypoints = []
         while not is_solution_found:
+            print("Here")
             intermediate_points, position_array, distance_array = create_intermediate_points(path_start, path_end, intermediate_point_count)
             perpendicular_angle = math.atan2(goal_coordinate.y - robot_pose.y, goal_coordinate.x - robot_pose.x) + math.pi / 2
             while will_collide:
                 updated_points = []
+                print("Hello")
                 for index in range(intermediate_point_count):
                     current_distance = 0
                     if position_array[index] == 1:
