@@ -137,6 +137,7 @@ class Map:
                 if self.map_grid[x_index, y_index] == 2:
                     self.map_grid[x_index, y_index] = 0
 
+        print("Waypoints before adding:", waypoints[0].x, waypoints[0].y)
         waypoints.insert(0, robot_pose)
 
         # Add 1 to the value of each node along the path
