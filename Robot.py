@@ -147,9 +147,6 @@ class Robot:
             self.left_motor.update_encoder()
             self.right_motor.update_encoder()
 
-    def update_position(self):
-
-
     def ultrasonic_update_loop(self):
         while True:
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
