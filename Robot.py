@@ -157,6 +157,8 @@ class Robot:
                 for point in self.map_class.obstacle_polygon.vertices:
                     print(point.x, point.y)
                 # Check for collisions
+                print("Calling from ultrasonic update")
+
                 is_collision = self.map_class.check_for_collision(self.map_class.path, self.pose)
                 print("Is collision:", is_collision)
 
