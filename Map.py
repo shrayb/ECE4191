@@ -94,7 +94,8 @@ class Map:
                         current_distance = -distance_array[index]
                     new_point = create_point(intermediate_points[index], current_distance, perpendicular_angle)
                     updated_points.append(new_point)
-
+                for point in updated_points:
+                    print("Points:", point.x, point.y)
                 # Check if new points collide
                 waypoints = updated_points
                 waypoints.append(path_end)
