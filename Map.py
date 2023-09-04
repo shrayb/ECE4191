@@ -75,7 +75,7 @@ class Map:
 
         if not will_collide:
             print("Doesn't collide")
-            self.path = [path_start, path_end]
+            self.path = [path_end]
             return self.path
 
         # Create intermediate points and move them around
