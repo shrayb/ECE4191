@@ -152,6 +152,7 @@ class Robot:
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
             if flag:
                 print("Obstacle Found at:", coords_x, coords_y)
+                sleep(0.05)
             if flag and len(self.path_queue) > 0:
                 # Add the new found obstacle
                 self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
