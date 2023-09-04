@@ -99,8 +99,7 @@ class Map:
                     updated_points.append(new_point)
 
                 # Check if new points collide
-                waypoints = [path_start]
-                waypoints.extend(updated_points)
+                waypoints = updated_points
                 waypoints.append(path_end)
                 print("Calling from plan path inside the loop")
                 print("Robot pose:", robot_pose.x, robot_pose.y)
