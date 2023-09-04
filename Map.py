@@ -65,18 +65,14 @@ class Map:
                     self.map_grid[x_index, y_index] = 1
 
     def plan_path(self, robot_pose: Pose, goal_coordinate: Pose):
-        print("Robot pose:", robot_pose.x, robot_pose.y, robot_pose.theta)
-        print("Goal:", goal_coordinate.x, goal_coordinate.y)
         # Create straight line from start to goal
         path_start = robot_pose
         path_end = goal_coordinate
 
         # Check if a collision will occur
-        print("Calling from plan path")
         will_collide = self.check_for_collision([path_end], robot_pose)
 
         if not will_collide:
-            print("Doesn't collide")
             self.path = [path_end]
             return self.path
 
@@ -101,10 +97,6 @@ class Map:
                 # Check if new points collide
                 waypoints = updated_points
                 waypoints.append(path_end)
-                print("Calling from plan path inside the loop")
-                print("Robot pose:", robot_pose.x, robot_pose.y)
-                for point in waypoints:
-                    print("Point:", point.x, point.y)
                 if self.check_for_collision(waypoints, robot_pose):
                     position_array = increment_base_3_number(position_array)
                     # Check if it has done all permutations
@@ -129,9 +121,6 @@ class Map:
         waypoints.pop(0)
 
         self.path = waypoints
-        print("Waypoints:")
-        for point in self.path:
-            print("Point:", point.x, point.y)
         return self.path
 
     def check_for_collision(self, waypoints: list, robot_pose: Pose):
@@ -145,7 +134,6 @@ class Map:
                 if self.map_grid[x_index, y_index] == 2:
                     self.map_grid[x_index, y_index] = 0
 
-        print("Waypoints before adding:", waypoints[0].x, waypoints[0].y)
         copy_waypoints = [robot_pose]
         copy_waypoints.extend(waypoints)
 
@@ -153,8 +141,6 @@ class Map:
         for index in range(len(copy_waypoints) - 1):
             point_1 = copy_waypoints[index]
             point_2 = copy_waypoints[index + 1]
-            print("Point 1:", point_1.x, point_1.y)
-            print("Point 2:", point_2.x, point_2.y)
             angle_to_point_2 = math.atan2(point_2.y - point_1.y, point_2.x - point_1.x)
             distance_between = calculate_distance_between_points(point_1, point_2)
             number_of_checks = math.ceil((distance_between / self.node_gap) * 1.3)

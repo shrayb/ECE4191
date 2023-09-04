@@ -160,7 +160,6 @@ class Robot:
                 for point in self.map_class.obstacle_polygon.vertices:
                     print(point.x, point.y)
                 # Check for collisions
-                print("Calling from ultrasonic update")
 
                 is_collision = self.map_class.check_for_collision(self.map_class.path, self.pose)
                 print("Is collision:", is_collision)
@@ -173,7 +172,10 @@ class Robot:
                     self.is_impending_collision = True
                     self.map_class.plan_path(self.pose, self.current_goal)
                     self.path_queue = self.map_class.path
-                    print("Done making pathy")
+                    print("Done making path")
+                    print("Path coords:")
+                    for point in self.path_queue:
+                        print(point.x, point.y)
                 sleep(0.1)
 
     def tick_check_and_speed_control(self, max_ticks, max_speed, is_turning):
