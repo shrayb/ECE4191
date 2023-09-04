@@ -81,7 +81,6 @@ class Map:
         # Create intermediate points and move them around
         is_solution_found = False
         intermediate_point_count = 1
-        updated_points = []
         waypoints = []
         while not is_solution_found:
             intermediate_points, position_array, distance_array = create_intermediate_points(path_start, path_end, intermediate_point_count)
@@ -130,13 +129,15 @@ class Map:
             print("Point:", point.x, point.y)
         return self.path
 
-    def check_for_collision(self, waypoints: list):
+    def check_for_collision(self, waypoints: list, robot_pose: Pose):
         # Check if the given waypoints will collide with any of the 1s in the map grid.
         # Clear the 2s
         for x_index in range(self.x_count):
             for y_index in range(self.y_count):
                 if self.map_grid[x_index, y_index] == 2:
                     self.map_grid[x_index, y_index] = 0
+
+        waypoints.insert(0, robot_pose)
 
         # Add 1 to the value of each node along the path
         for index in range(len(waypoints) - 1):
@@ -161,7 +162,6 @@ class Map:
                     self.map_grid[node_x, node_y] = 3
         # Check every value, if any are greater than 1, then there is a collision
         is_collision = False
-        print(self.map_grid)
         for x_index in range(self.x_count):
             for y_index in range(self.y_count):
                 if self.map_grid[x_index, y_index] == 3:
@@ -170,6 +170,11 @@ class Map:
 
         # If not then there is no collision
         return is_collision
+
+        # 0 is free
+        # 1 is obstacle
+        # 2 is drive
+        # 3 is collision
 
     def point_is_out_of_bounds(self, point):
         if 0 < point.x < self.map_size[0] and 0 < point.y < self.map_size[1]:
