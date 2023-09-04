@@ -152,7 +152,7 @@ class Robot:
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
             if flag:
                 print("Obstacle Found at:", coords_x, coords_y)
-                sleep(0.05)
+                sleep(0.1)
             if flag and len(self.path_queue) > 0:
                 # Add the new found obstacle
                 self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
@@ -172,6 +172,7 @@ class Robot:
                     self.is_impending_collision = True
                     self.map_class.plan_path(self.pose, self.current_goal)
                     self.path_queue = self.map_class.path
+                sleep(0.1)
 
     def tick_check_and_speed_control(self, max_ticks, max_speed, is_turning):
         """
