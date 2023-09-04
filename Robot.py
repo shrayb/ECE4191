@@ -56,20 +56,6 @@ class Robot:
         self.map_class = None
         self.create_map_class()
 
-        # TODO
-        # TODO# TODO
-        #         # TODO# TODO
-        #         # TODO# TODO
-        #         # TODO# TODO
-        #         # TODO# TODO
-        # dONT FORGET TO POP THE START POINT FOR PATH QUEUE
-        #         # TODO# TODO
-        #         # TODO# TODO
-        #         # TODO# TODO
-        #         # TODO# TODO
-        #         # TODO
-
-
     def create_map_class(self):
         map_class = Map()
         self.map_class = map_class
@@ -114,7 +100,8 @@ class Robot:
             # Check if there are any waypoints in the queue
             if len(self.path_queue) == 0 or self.is_impending_collision:
                 continue
-
+            print("No collision. Start driving to waypoint")
+            sleep(0.1)
             # Drive to first waypoint
             self.drive_to_coordinate(self.path_queue[0])
 
@@ -165,6 +152,7 @@ class Robot:
 
                 # Check for collisions
                 is_collision = self.map_class.check_for_collision(self.map_class.path)
+                print("Is collision:", is_collision)
 
                 # If collision, re plan path
                 if is_collision:
@@ -181,6 +169,10 @@ class Robot:
         left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
 
         while self.left_motor.ticks + self.right_motor.ticks < max_ticks:
+            # Check if there will be a collision
+            if self.is_impending_collision:
+                break
+
             # Every two ticks slow down the leading motor by 1 speed
             if left_tick_advantage > 0:
                 left_motor_speed = max(max_speed - math.floor(left_tick_advantage / (2 / self.PID_gain)), 0)
@@ -195,9 +187,6 @@ class Robot:
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
 
-            # Check if there will be a collision
-            if self.is_impending_collision:
-                break
 
     def do_turn(self, angle):
         # Reset encoders
@@ -314,6 +303,10 @@ class Robot:
             self.do_turn(angle_difference)
             print("\t\tTurn complete")
             sleep(0.25)
+
+        # Check if there is a collision
+        if self.is_impending_collision:
+            return None
 
         # Find distance to drive
         distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
