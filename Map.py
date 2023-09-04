@@ -136,7 +136,7 @@ class Map:
     def check_for_collision(self, waypoints: list, robot_pose: Pose):
         if len(waypoints) == 0:
             return None
-        
+
         # Check if the given waypoints will collide with any of the 1s in the map grid.
         # Clear the 2s
         for x_index in range(self.x_count):
@@ -188,7 +188,7 @@ class Map:
         # 3 is collision
 
     def point_is_out_of_bounds(self, point):
-        if 0 < point.x < self.map_size[0] and 0 < point.y < self.map_size[1]:
+        if 0 <= point.x <= self.map_size[0] and 0 <= point.y <= self.map_size[1]:
             return False
         else:
             return True
