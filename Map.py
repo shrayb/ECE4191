@@ -80,6 +80,7 @@ class Map:
         self.obstacle_polygon = bounding_box
 
         # Check if any point in the map grid overlap with the bounding box
+        # TODO I think this is slow as hell, try to make it faster somehow
         for x_index in range(self.x_count):
             for y_index in range(self.y_count):
                 world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
