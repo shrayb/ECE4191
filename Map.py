@@ -135,9 +135,14 @@ class Map:
                     position_array = increment_base_3_number(position_array)
 
                     # Check if it has done all permutations
+                    bit_combinations_complete = True
                     for bit in position_array:
                         if bit != 0:
-                            continue
+                            bit_combinations_complete = False
+                            break
+
+                    if not bit_combinations_complete:
+                        continue
 
                     # If done all permutations, increment one to the point count
                     intermediate_point_count += 1
@@ -173,11 +178,18 @@ class Map:
         for index in range(len(copy_waypoints) - 1):
             point_1 = copy_waypoints[index]
             point_2 = copy_waypoints[index + 1]
+
+            # If the two points of a segment equal each other, continue to next iteration
+            if point_1.equals(point_2):
+                return True
+
+            # Find how often to check along the drive path to fill in nodes on grid
             angle_to_point_2 = math.atan2(point_2.y - point_1.y, point_2.x - point_1.x)
             distance_between = calculate_distance_between_points(point_1, point_2)
             number_of_checks = math.ceil((distance_between / self.node_gap) * 1.3)
             distance_per_check = distance_between / number_of_checks
 
+            # Fill in drive path
             for check in range(number_of_checks):
                 point_to_check = create_point(point_1, distance_per_check * check, angle_to_point_2)
                 if self.point_is_out_of_bounds(point_to_check):
