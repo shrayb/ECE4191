@@ -316,6 +316,7 @@ class Robot:
 
         # Check if there is a collision
         if self.is_impending_collision:
+            self.is_moving = False
             return None
 
         # Find distance to drive
@@ -337,7 +338,7 @@ class Robot:
             print("\t\tStarting turn")
             self.do_turn(angle_difference)
             print("\t\tTurn complete")
-
+        self.is_moving = False
         sleep(0.25)
     
     def detect_obstacle(self, front_left_ultrasonic=None, front_right_ultrasonic=None):
