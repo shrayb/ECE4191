@@ -34,7 +34,7 @@ right_motor = Motor(motor_right_enable, motor_right_positive, motor_right_negati
 front_left_sonic = Ultrasonic(echo_pin=front_left_sonic_echo, trig_pin=front_left_sonic_trig)
 front_right_sonic = Ultrasonic(echo_pin=front_right_sonic_echo, trig_pin=front_right_sonic_trig)
 
-pose = Pose(0.3, 0.2, 0)
+pose = Pose(0.0, 0.0, 0)
 robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
