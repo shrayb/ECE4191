@@ -3,6 +3,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 from BaseClasses import *
+from copy import deepcopy
 class Map:
     def __init__(self):
         self.obstacle_guess_width = 0.15  # Create an obstacle of 9 cm
@@ -133,6 +134,9 @@ class Map:
         return self.path
 
     def check_for_collision(self, waypoints: list, robot_pose: Pose):
+        if len(waypoints) == 0:
+            return None
+        
         # Check if the given waypoints will collide with any of the 1s in the map grid.
         # Clear the 2s
         for x_index in range(self.x_count):
