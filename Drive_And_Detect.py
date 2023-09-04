@@ -71,6 +71,10 @@ def loop():
         robot.current_goal = coord
         robot.create_path()
 
+        if robot.is_plot and not robot.done_plot:
+            robot.map_class.plot_grid()
+            robot.done_plot = True
+
 if __name__ == "__main__":
     loop()
 

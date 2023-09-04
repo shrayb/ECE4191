@@ -55,7 +55,8 @@ class Robot:
         self.PID_gain = 2  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_class = None
         self.create_map_class()
-        self.is_plot = True
+        self.is_plot = False
+        self.done_plot = False
 
     def create_map_class(self):
         map_class = Map()
@@ -154,12 +155,10 @@ class Robot:
                 for point in self.map_class.obstacle_polygon.vertices:
                     print(point.x, point.y)
                 # Check for collisions
-                is_collision = self.map_class.check_for_collision(self.map_class.path)
+                is_collision = self.map_class.check_for_collision(self.map_class.path, self.pose)
                 print("Is collision:", is_collision)
 
-                if self.is_plot:
-                    self.map_class.plot_grid()
-                    self.is_plot = False
+                self.is_plot = True
 
                 # If collision, re plan path
                 if is_collision:

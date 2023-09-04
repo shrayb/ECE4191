@@ -71,7 +71,7 @@ class Map:
         path_end = goal_coordinate
 
         # Check if a collision will occur
-        will_collide = self.check_for_collision([path_start, path_end])
+        will_collide = self.check_for_collision([path_end], robot_pose)
 
         if not will_collide:
             print("Doesn't collide")
@@ -100,7 +100,7 @@ class Map:
                 waypoints = [path_start]
                 waypoints.extend(updated_points)
                 waypoints.append(path_end)
-                if self.check_for_collision(waypoints):
+                if self.check_for_collision(waypoints, robot_pose):
                     position_array = increment_base_3_number(position_array)
                     # Check if it has done all permutations
                     is_complete = True
