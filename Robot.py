@@ -1,6 +1,7 @@
 import math
 from time import sleep, time
 from BaseClasses import *
+from copy import deepcopy
 from Map import *
 
 class Robot:
@@ -146,6 +147,9 @@ class Robot:
             self.left_motor.update_encoder()
             self.right_motor.update_encoder()
 
+    def update_position(self):
+
+
     def ultrasonic_update_loop(self):
         while True:
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
@@ -170,13 +174,13 @@ class Robot:
                     self.map_class.plan_path(self.pose, self.current_goal)
                     self.path_queue = self.map_class.path
 
-            sleep(0.2)  # Sleep for a bit because we don't need to run this so much
-
-    def tick_check_and_speed_control(self, max_ticks, max_speed):
+    def tick_check_and_speed_control(self, max_ticks, max_speed, is_turning):
         """
         Runs the motors until max ticks are reached, also applies PID control to match speed
         """
         left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
+        distance_total = max_ticks * self.distance_per_tick
+        initial_pose = deepcopy(self.pose)
 
         while self.left_motor.ticks + self.right_motor.ticks < max_ticks:
             # Check if there will be a collision
@@ -197,6 +201,24 @@ class Robot:
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
 
+            if is_turning == 0:
+                distance_fraction = (self.left_motor.ticks + self.right_motor.ticks) / max_ticks
+                current_distance = distance_total * distance_fraction
+                self.pose.x = initial_pose.x + current_distance * math.cos(initial_pose.theta)
+                self.pose.y = initial_pose.y + current_distance * math.sin(initial_pose.theta)
+
+            if is_turning == 1:
+                tick_sum = self.left_motor.ticks + self.right_motor.ticks
+                distance_turned = (tick_sum / 2) * self.distance_per_tick
+                measured_angle = distance_turned / self.turn_radius
+                self.pose.theta = initial_pose.theta + measured_angle
+
+            if is_turning == -1:
+                tick_sum = self.left_motor.ticks + self.right_motor.ticks
+                distance_turned = (tick_sum / 2) * self.distance_per_tick
+                measured_angle = distance_turned / self.turn_radius
+                self.pose.theta = initial_pose.theta - measured_angle
+
 
     def do_turn(self, angle):
         # Reset encoders
@@ -208,9 +230,11 @@ class Robot:
         self.right_motor.set_speed(0)
 
         if angle > 0:  # Turn counterclockwise
+            is_turning = 1
             self.left_motor.backward()
             self.right_motor.forward()
         elif angle < 0:  # Turn clockwise
+            is_turning = -1
             self.left_motor.forward()
             self.right_motor.backward()
         else:  # Angle of zero given
@@ -220,35 +244,26 @@ class Robot:
         turn_distance = abs(angle) * self.turn_radius
         turn_ticks = (turn_distance / self.distance_per_tick) * 2
 
-        # Calculate how many ticks to do for the given angle minus 20 degrees
-        turn_distance = (abs(angle) - 20 * (math.pi / 180)) * self.turn_radius
-        turn_distance = max(turn_distance, 0)
-        turn_minus_10_ticks = (turn_distance / self.distance_per_tick) * 2
+        # Initial pose
+        initial_pose = deepcopy(self.pose)
 
         # Continuously check if the turn has less than 10 degrees of the turn remaining
-        self.tick_check_and_speed_control(turn_ticks, self.max_speed)
-
-        # # Slow down the motors to 50 percent for the remaining 10 degrees of the turn. This is to reduce overshoot
-        # self.left_motor.set_speed(self.slow_speed)
-        # self.right_motor.set_speed(self.slow_speed)
-        #
-        # # Continuously check if the turn is completed
-        # self.tick_check_and_speed_control(turn_ticks, self.slow_speed)
+        self.tick_check_and_speed_control(turn_ticks, self.max_speed, is_turning)
 
         # Stop the motors
         self.left_motor.stop()
         self.right_motor.stop()
+
+        sleep(0.1)
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         distance_turned = (tick_sum / 2) * self.distance_per_tick
         measured_angle = distance_turned / self.turn_radius
 
         if angle > 0:
-            self.pose.theta += measured_angle
+            self.pose.theta = initial_pose.theta + measured_angle
         else:
-            self.pose.theta -= measured_angle
-
-        # self.pose.theta += angle
+            self.pose.theta = initial_pose.theta - measured_angle
 
     def do_drive(self, distance):
         # Reset encoders
@@ -271,30 +286,23 @@ class Robot:
         # Calculate how many ticks to do for the given distance
         drive_ticks = (abs(distance) / self.distance_per_tick) * 2
 
-        # Calculate how many ticks to do for the given distance minus 10 centimetres
-        drive_minus_5_ticks = ((abs(distance) - 0.1) / self.distance_per_tick) * 2
-        drive_minus_5_ticks = max(drive_minus_5_ticks, 0)
+        # Initial pose
+        initial_pose = deepcopy(self.pose)
 
         # Continuously check if the robot has driven most of the way
-        self.tick_check_and_speed_control(drive_ticks, self.max_speed)
-
-        # # Slow down the motors to slow speed percent for the remaining 5 cm of the drive
-        # self.left_motor.set_speed(self.slow_speed)
-        # self.right_motor.set_speed(self.slow_speed)
-        #
-        # # Continuously check if the drive is completed
-        # self.tick_check_and_speed_control(drive_ticks, self.slow_speed)
+        self.tick_check_and_speed_control(drive_ticks, self.max_speed, 0)
 
         # Stop the motors
         self.left_motor.stop()
         self.right_motor.stop()
+        sleep(0.1)
 
         # Use the tick count to estimate where the robot is
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         measure_distance = (tick_sum / 2) * self.distance_per_tick
 
-        self.pose.x += measure_distance * math.cos(self.pose.theta)
-        self.pose.y += measure_distance * math.sin(self.pose.theta)
+        self.pose.x = initial_pose.x + measure_distance * math.cos(initial_pose.theta)
+        self.pose.y = initial_pose.y + measure_distance * math.sin(initial_pose.theta)
 
     def drive_to_coordinate(self, coordinate):
         print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
