@@ -143,6 +143,8 @@ class Map:
         for index in range(len(waypoints) - 1):
             point_1 = waypoints[index]
             point_2 = waypoints[index + 1]
+            print("Point 1:", point_1.x, point_1.y)
+            print("Point 2:", point_2.x, point_2.y)
             angle_to_point_2 = math.atan2(point_2.y - point_1.y, point_2.x - point_1.x)
             distance_between = calculate_distance_between_points(point_1, point_2)
             number_of_checks = math.ceil((distance_between / self.node_gap) * 1.3)
