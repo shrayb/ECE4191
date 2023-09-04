@@ -103,7 +103,9 @@ class Map:
                 waypoints.extend(updated_points)
                 waypoints.append(path_end)
                 print("Calling from plan path inside the loop")
-
+                print("Robot pose:", robot_pose.x, robot_pose.y)
+                for point in waypoints:
+                    print("Point:", point.x, point.y)
                 if self.check_for_collision(waypoints, robot_pose):
                     position_array = increment_base_3_number(position_array)
                     # Check if it has done all permutations
