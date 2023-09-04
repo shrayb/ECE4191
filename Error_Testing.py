@@ -228,6 +228,21 @@ scanner_thread.start()
 
 
 def loop():
+    # print("==================================")
+    # print("Currently at (", robot.pose.x, ",", robot.pose.y, ",", robot.pose.theta * 180 / math.pi, ")")
+    # print("==================================")
+    # x_coord = input("Pick new x coordinate")
+    # if x_coord == "":
+    #     x_coord = robot.pose.x
+    # y_coord = input("Pick new y coordinate")
+    # if y_coord == "":
+    #     y_coord = robot.pose.y
+    # theta_coord = input("Pick new end angle in degrees")
+    # if theta_coord == "":
+    #     theta_coord = None
+    # else:
+    #     theta_coord = float(theta_coord) * math.pi / 180
+
     coords = [Pose(0.3, 0.2, math.pi / 6),
               Pose(0.3, 0.2, 2 * math.pi / 6),
               Pose(0.3, 0.2, 3 * math.pi / 6),

@@ -1,37 +1,54 @@
 import math
 
-import numpy as np
 import matplotlib.pyplot as plt
 from BaseClasses import *
 from copy import deepcopy
+import numpy as np
+
 class Map:
     def __init__(self):
         self.obstacle_guess_width = 0.15  # Create an obstacle of 9 cm
         self.obstacle_guess_depth = 0.15  # Create an obstacle of 9 cm
-        self.node_gap = 0.050  # 1 cm between each node
+        self.node_gap = 0.050  # 5 cm between each node
         self.map_size = (1.5, 1.5)
         self.x_count = int(math.ceil(self.map_size[0] / self.node_gap))
         self.y_count = int(math.ceil(self.map_size[1] / self.node_gap))
         self.map_grid = np.zeros((self.x_count, self.y_count))
         self.obstacle_polygon = None
         self.path = []
+        self.robot_size = 0.3  # Metres diameter
 
     def plot_grid(self):
-        for x_index in range(self.x_count):
-            for y_index in range(self.y_count):
-                world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
-                value_at_point = self.map_grid[x_index, y_index]
-                if value_at_point == 0:
-                    plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="skyblue")
-                elif value_at_point == 1:
-                    plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="purple")
-                elif value_at_point == 2:
-                    plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="red")
-                else:
-                    plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="green")
+        free_space_x = []
+        free_space_y = []
+
+        drive_x = []
+        drive_y = []
+
+        obstacle_x = []
+        obstacle_y = []
+
+        collision_x = []
+        collision_y = []
 
         x_boundary = []
         y_boundary = []
+
+        for x_index in range(self.x_count):
+            for y_index in range(self.y_count):
+                value_at_point = self.map_grid[x_index, y_index]
+                if value_at_point == 0:
+                    free_space_x.append(x_index / self.x_count * self.map_size[0])
+                    free_space_y.append(y_index / self.y_count * self.map_size[1])
+                elif value_at_point == 1:
+                    drive_x.append(x_index / self.x_count * self.map_size[0])
+                    drive_y.append(y_index / self.y_count * self.map_size[1])
+                elif value_at_point == 2:
+                    obstacle_x.append(x_index / self.x_count * self.map_size[0])
+                    obstacle_y.append(y_index / self.y_count * self.map_size[1])
+                else:
+                    collision_x.append(x_index / self.x_count * self.map_size[0])
+                    collision_y.append(y_index / self.y_count * self.map_size[1])
 
         if self.obstacle_polygon is not None:
             for point in self.obstacle_polygon.vertices:
@@ -40,6 +57,11 @@ class Map:
             x_boundary.append(self.obstacle_polygon.vertices[0].x)
             y_boundary.append(self.obstacle_polygon.vertices[0].y)
             plt.plot(x_boundary, y_boundary, color="black")
+
+        plt.scatter(free_space_x, free_space_y, s=self.node_gap * 100, color="skyblue")
+        plt.scatter(drive_x, drive_y, s=self.node_gap * 100, color="purple")
+        plt.scatter(obstacle_x, obstacle_y, s=self.node_gap * 100, color="red")
+        plt.scatter(collision_x, collision_y, s=self.node_gap * 100, color="green")
 
         plt.axis('equal')
         plt.show()
@@ -72,7 +94,7 @@ class Map:
 
         # Check if a collision will occur
         will_collide = self.check_for_collision([path_end], robot_pose)
-        print("Will it collide?:", will_collide)
+        print("Will it collide:", will_collide)
         if not will_collide:
             self.path = [path_end]
             return self.path
@@ -82,12 +104,10 @@ class Map:
         intermediate_point_count = 1
         waypoints = []
         while not is_solution_found:
-            print("Here")
             intermediate_points, position_array, distance_array = create_intermediate_points(path_start, path_end, intermediate_point_count)
             perpendicular_angle = math.atan2(goal_coordinate.y - robot_pose.y, goal_coordinate.x - robot_pose.x) + math.pi / 2
             while will_collide:
                 updated_points = []
-                print("Hello")
                 for index in range(intermediate_point_count):
                     current_distance = 0
                     if position_array[index] == 1:
@@ -95,30 +115,38 @@ class Map:
                     elif position_array[index] == -1:
                         current_distance = -distance_array[index]
                     new_point = create_point(intermediate_points[index], current_distance, perpendicular_angle)
+
+                    # Make sure the new intermediate point doesn't go outside the bounds of the map
+                    if new_point.x < 0 + self.robot_size / 2 + 0.05:
+                        new_point.x = self.robot_size / 2 + 0.05
+                    if new_point.x > self.map_size[0] - self.robot_size / 2 - 0.05:
+                        new_point.x = self.map_size[0] - self.robot_size / 2 - 0.05
+                    if new_point.y < 0 + self.robot_size / 2 + 0.05:
+                        new_point.y = self.robot_size / 2 + 0.05
+                    if new_point.y > self.map_size[1] - self.robot_size / 2 - 0.05:
+                        new_point.y = self.map_size[1] - self.robot_size / 2 - 0.05
+
                     updated_points.append(new_point)
-                for point in updated_points:
-                    print("Points:", point.x, point.y)
+
                 # Check if new points collide
                 waypoints = updated_points
                 waypoints.append(path_end)
                 if self.check_for_collision(waypoints, robot_pose):
                     position_array = increment_base_3_number(position_array)
+
                     # Check if it has done all permutations
-                    is_complete = True
                     for bit in position_array:
                         if bit != 0:
-                            is_complete = False
+                            continue
 
                     # If done all permutations, increment one to the point count
-                    if is_complete:
-                        intermediate_point_count += 1
-                        print("Break on point count add")
-                        break
-                    else:
-                        continue
+                    intermediate_point_count += 1
+                    break
 
-                # If they don't collide, break
-                print("Bad")
+                # If they don't collide, break. That is the solution
+                print("Solution Found:")
+                for point in waypoints:
+                    print("\t", point.x, point.y)
                 is_solution_found = True
                 break
 
@@ -132,8 +160,7 @@ class Map:
         if len(waypoints) == 0:
             return None
 
-        # Check if the given waypoints will collide with any of the 1s in the map grid.
-        # Clear the 2s
+        # Clear the drive 2s from the previous attempt
         for x_index in range(self.x_count):
             for y_index in range(self.y_count):
                 if self.map_grid[x_index, y_index] == 2:
@@ -158,12 +185,13 @@ class Map:
                 node_x, node_y = self.find_closest_node(point_to_check)
                 grid_value = self.map_grid[node_x, node_y]
 
-                # Lay out the robot path
+                # Lay out the robot path. Put a 2 if that's somewhere the robot will drive. Put a 3 if there is an obstacle where we want to drive
                 if grid_value == 0:
                     self.map_grid[node_x, node_y] = 2
                 elif grid_value == 1:
                     self.map_grid[node_x, node_y] = 3
-        # Check every value, if any are greater than 1, then there is a collision
+
+        # Check every value, if there is 3, there is a collision. Make sure to remove the 3 though for next time
         is_collision = False
         for x_index in range(self.x_count):
             for y_index in range(self.y_count):
@@ -224,7 +252,7 @@ def create_intermediate_points(start: Pose, end: Pose, number_of_points: int):
         new_point = create_point(start, current_angled_distance, start_end_angle)
         intermediate_points.append(new_point)
         position_array.append(0)
-        distance_array.append(current_angled_distance * 0.5)
+        distance_array.append(current_angled_distance * 0.8)
 
     return intermediate_points, position_array, distance_array
 
@@ -233,6 +261,10 @@ if __name__ == "__main__":
     print("START")
     the_map = Map()
     the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(0.5, 0.5))
+    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(4 / 30, 20 / 30))
+    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(15 / 30, 2.5 / 30))
+    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(5 / 30, 11 / 30))
+    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(5 / 30, 38 / 30))
     path = the_map.plan_path(Pose(0.010, 0.010, math.pi / 2), Pose(1, 1.25))
     print("PATH FOUND")
-    #the_map.plot_grid()
+    the_map.plot_grid()

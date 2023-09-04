@@ -1,7 +1,6 @@
 import RPi.GPIO as GPIO
 from time import sleep, time
 import math
-import numpy as np
 
 def calculate_distance_between_points(point_1=None, point_2=None):
     return math.sqrt((point_1.x - point_2.x) ** 2 + (point_1.y - point_2.y) ** 2)

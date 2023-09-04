@@ -51,32 +51,23 @@ drive_thread = Thread(target=robot.follow_path)
 drive_thread.start()
 
 def loop():
+    # Define waypoints to go to in order
+    waypoints = [Pose(0.3, 0.2),
+                 Pose(0.9, 0.8),
+                 Pose(0.3, 0.8),
+                 Pose(0.3, 0.2)]
+
+    # Loop and travel to each waypoint
     while True:
         if not robot.is_moving:
-            # print("==================================")
-            # print("Currently at (", robot.pose.x, ",", robot.pose.y, ",", robot.pose.theta * 180 / math.pi, ")")
-            # print("==================================")
-            # x_coord = input("Pick new x coordinate")
-            # if x_coord == "":
-            #     x_coord = robot.pose.x
-            # y_coord = input("Pick new y coordinate")
-            # if y_coord == "":
-            #     y_coord = robot.pose.y
-            # theta_coord = input("Pick new end angle in degrees")
-            # if theta_coord == "":
-            #     theta_coord = None
-            # else:
-            #     theta_coord = float(theta_coord) * math.pi / 180
-            x_coord = 1
-            y_coord = 0
-            theta_coord = 0
-            coord = Pose(float(x_coord), float(y_coord), theta_coord)
-
+            # Travel to next waypoint
             robot.is_moving = True
-            robot.current_goal = coord
+            robot.current_goal = waypoints[0]
             robot.create_path()
+            waypoints.pop(0)
 
             # robot.map_class.plot_grid()
+
 
 if __name__ == "__main__":
     loop()

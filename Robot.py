@@ -111,6 +111,39 @@ class Robot:
             # Remove first waypoint from queue
             self.path_queue.pop(0)
 
+    def encoder_update_loop(self):
+        while True:
+            self.left_motor.update_encoder()
+            self.right_motor.update_encoder()
+
+    def ultrasonic_update_loop(self):
+        while True:
+            flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
+            if flag:
+                print("Obstacle Found at:", coords_x, coords_y)
+                sleep(0.1)
+            if flag and len(self.path_queue) > 0:
+                # Add the new-found obstacle
+                self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
+
+                # Check for collisions
+                is_collision = self.map_class.check_for_collision(self.map_class.path, self.pose)
+                print("New collision detected:", is_collision)
+
+                # If collision, re-plan path
+                if is_collision:
+                    print("Creating new path due to collision")
+                    self.is_impending_collision = True
+                    self.map_class.plan_path(self.pose, self.current_goal)
+                    self.path_queue = self.map_class.path
+                    print("Done making path")
+                    print("Path coords:")
+                    print("\t", self.pose.x, self.pose.y)
+                    for point in self.path_queue:
+                        print("\t", point.x, point.y)
+
+                sleep(0.1)
+
     def deposit_package(self):
         # Deposit the next package
         # TODO
@@ -142,54 +175,22 @@ class Robot:
     def get_sub_state(self):
         return self.sub_state
 
-    def encoder_update_loop(self):
-        while True:
-            self.left_motor.update_encoder()
-            self.right_motor.update_encoder()
-
-    def ultrasonic_update_loop(self):
-        while True:
-            flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
-            if flag:
-                print("Obstacle Found at:", coords_x, coords_y)
-                sleep(0.1)
-            if flag and len(self.path_queue) > 0:
-                # Add the new found obstacle
-                self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
-                print("Obstacle coordinates:")
-                for point in self.map_class.obstacle_polygon.vertices:
-                    print(point.x, point.y)
-                # Check for collisions
-
-                is_collision = self.map_class.check_for_collision(self.map_class.path, self.pose)
-                print("Is collision:", is_collision)
-
-                self.is_plot = True
-
-                # If collision, re plan path
-                if is_collision:
-                    print("Creating another path because of collision")
-                    self.is_impending_collision = True
-                    self.map_class.plan_path(self.pose, self.current_goal)
-                    self.path_queue = self.map_class.path
-                    print("Done making path")
-                    print("Path coords:")
-                    for point in self.path_queue:
-                        print(point.x, point.y)
-                sleep(0.1)
-
     def tick_check_and_speed_control(self, max_ticks, max_speed, is_turning):
         """
         Runs the motors until max ticks are reached, also applies PID control to match speed
         """
-        left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
-        distance_total = max_ticks * self.distance_per_tick
+        distance_total = (max_ticks / 2) * self.distance_per_tick
         initial_pose = deepcopy(self.pose)
 
-        while self.left_motor.ticks + self.right_motor.ticks < max_ticks:
+        tick_sum = self.left_motor.ticks + self.right_motor.ticks
+        while tick_sum < max_ticks:
             # Check if there will be a collision
             if self.is_impending_collision:
                 break
+
+            # Calculate the left tick advantage and tick sum
+            left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
+            tick_sum = self.left_motor.ticks + self.right_motor.ticks
 
             # Every two ticks slow down the leading motor by 1 speed
             if left_tick_advantage > 0:
@@ -205,24 +206,16 @@ class Robot:
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
 
-            if is_turning == 0:
-                distance_fraction = (self.left_motor.ticks + self.right_motor.ticks) / (2 * max_ticks)
+            # During this while loop, continuously update the pose of the robot
+            if is_turning == 0:  # 0 = Driving
+                distance_fraction = tick_sum / max_ticks
                 current_distance = distance_total * distance_fraction
                 self.pose.x = initial_pose.x + current_distance * math.cos(initial_pose.theta)
                 self.pose.y = initial_pose.y + current_distance * math.sin(initial_pose.theta)
-
-            if is_turning == 1:
-                tick_sum = self.left_motor.ticks + self.right_motor.ticks
+            else:  # 1 = Turning counterclockwise, -1 = Turning clockwise
                 distance_turned = (tick_sum / 2) * self.distance_per_tick
                 measured_angle = distance_turned / self.turn_radius
-                self.pose.theta = initial_pose.theta + measured_angle
-
-            if is_turning == -1:
-                tick_sum = self.left_motor.ticks + self.right_motor.ticks
-                distance_turned = (tick_sum / 2) * self.distance_per_tick
-                measured_angle = distance_turned / self.turn_radius
-                self.pose.theta = initial_pose.theta - measured_angle
-
+                self.pose.theta = initial_pose.theta + is_turning * measured_angle
 
     def do_turn(self, angle):
         # Reset encoders
@@ -312,19 +305,21 @@ class Robot:
         print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
 
         # Check if the robot is already there
-        if coordinate.x != self.pose.x or coordinate.y != self.pose.y:
-            # Find angle to turn
-            goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
-            angle_difference = goal_angle - self.pose.theta
-            if angle_difference > math.pi:
-                angle_difference = angle_difference - 2 * math.pi
-            elif angle_difference < -math.pi:
-                angle_difference = angle_difference + 2 * math.pi
-            print("\tTurning from:", self.pose.theta * 180 / math.pi, "degrees by", angle_difference * 180 / math.pi, "degrees")
-            print("\t\tStarting turn")
-            self.do_turn(angle_difference)
-            print("\t\tTurn complete")
-            sleep(0.25)
+        if self.pose.equals(coordinate):
+            return None
+
+        # Find angle to turn
+        goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
+        angle_difference = goal_angle - self.pose.theta
+        if angle_difference > math.pi:
+            angle_difference = angle_difference - 2 * math.pi
+        elif angle_difference < -math.pi:
+            angle_difference = angle_difference + 2 * math.pi
+        print("\tTurning from:", self.pose.theta * 180 / math.pi, "degrees by", angle_difference * 180 / math.pi, "degrees")
+        print("\t\tStarting turn")
+        self.do_turn(angle_difference)
+        print("\t\tTurn complete")
+        sleep(0.1)
 
         # Check if there is a collision
         if self.is_impending_collision:
@@ -337,7 +332,7 @@ class Robot:
         print("\t\tStarting drive")
         self.do_drive(distance)
         print("\t\tDrive complete")
-        sleep(0.25)
+        sleep(0.1)
 
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta:
@@ -350,45 +345,30 @@ class Robot:
             print("\t\tStarting turn")
             self.do_turn(angle_difference)
             print("\t\tTurn complete")
+
         self.is_moving = False
-        sleep(0.25)
+        sleep(0.1)
     
     def detect_obstacle(self, front_left_ultrasonic=None, front_right_ultrasonic=None):
-        left_dist = front_left_ultrasonic.measure_dist()/100
-        right_dist = front_right_ultrasonic.measure_dist()/100
+        left_dist = front_left_ultrasonic.measure_dist() / 100  # Convert to metres
+        right_dist = front_right_ultrasonic.measure_dist() / 100  # Convert to metres
         x, y, th = self.pose.x, self.pose.y, self.pose.theta
-        # print("Left dist measure: " + str(left_dist))
-        # print("Right dist measure: " + str(right_dist))
-        
+
+        # Make sure reading isn't a wall
         if left_dist < 0.3 and right_dist < 0.3:
             flag = True
             coords_x = x + 0.5 * (left_dist + right_dist) * np.cos(th)
             coords_y = y + 0.5 * (left_dist + right_dist) * np.sin(th)
-            #print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from both US")
-
         elif left_dist < 0.3:
             flag = True
             coords_x = x + left_dist * np.cos(th)
             coords_y = y + left_dist * np.sin(th)
-            #print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from left US")
-
-        elif right_dist <0.3:
+        elif right_dist < 0.3:
             flag = True
             coords_x = x + right_dist * np.cos(th)
             coords_y = y + right_dist * np.sin(th)
-            #print("Obstacle detected at: " + str(coords_x) + ", " + str(coords_y) + " from right US")
-
         else:
             flag = False
             coords_x, coords_y = None, None
 
         return flag, coords_x, coords_y, th
-
-
-def convert_tuple_to_pose(tuples=None):
-    poses = []
-    for tuple in tuples:
-        new_pose = Pose(tuple[0] / 1000, tuple[1] / 1000)
-        poses.append(new_pose)
-
-    return poses
