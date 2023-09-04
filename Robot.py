@@ -169,9 +169,11 @@ class Robot:
 
                 # If collision, re plan path
                 if is_collision:
+                    print("Creating another path because of collision")
                     self.is_impending_collision = True
                     self.map_class.plan_path(self.pose, self.current_goal)
                     self.path_queue = self.map_class.path
+                    print("Done making pathy")
                 sleep(0.1)
 
     def tick_check_and_speed_control(self, max_ticks, max_speed, is_turning):
