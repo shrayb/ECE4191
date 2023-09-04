@@ -202,7 +202,7 @@ class Robot:
             self.right_motor.set_speed(right_motor_speed)
 
             if is_turning == 0:
-                distance_fraction = (self.left_motor.ticks + self.right_motor.ticks) / max_ticks
+                distance_fraction = (self.left_motor.ticks + self.right_motor.ticks) / (2 * max_ticks)
                 current_distance = distance_total * distance_fraction
                 self.pose.x = initial_pose.x + current_distance * math.cos(initial_pose.theta)
                 self.pose.y = initial_pose.y + current_distance * math.sin(initial_pose.theta)
