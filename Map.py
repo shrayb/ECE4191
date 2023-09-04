@@ -161,6 +161,7 @@ class Map:
                     self.map_grid[node_x, node_y] = 3
         # Check every value, if any are greater than 1, then there is a collision
         is_collision = False
+        print(self.map_grid)
         for x_index in range(self.x_count):
             for y_index in range(self.y_count):
                 if self.map_grid[x_index, y_index] == 3:
