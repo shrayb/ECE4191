@@ -8,14 +8,14 @@ from threading import Thread
 from BaseClasses import Motor, Pose, Pose, Ultrasonic
 from Robot import Robot
 
-motor_left_positive = 15
-motor_left_negative = 18
+motor_left_positive = 18
+motor_left_negative = 15
 motor_left_enable = 14
 motor_left_encoder_a = 3
 motor_left_encoder_b = 4
 
-motor_right_positive = 17
-motor_right_negative = 27
+motor_right_positive = 27
+motor_right_negative = 17
 motor_right_enable = 22
 motor_right_encoder_a = 23
 motor_right_encoder_b = 24
