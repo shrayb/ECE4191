@@ -132,7 +132,7 @@ class Map:
             print("Point:", point.x, point.y)
         return self.path
 
-    def check_for_collision(self, incoming_waypoints: list, robot_pose: Pose):
+    def check_for_collision(self, waypoints: list, robot_pose: Pose):
         # Check if the given waypoints will collide with any of the 1s in the map grid.
         # Clear the 2s
         for x_index in range(self.x_count):
@@ -140,14 +140,14 @@ class Map:
                 if self.map_grid[x_index, y_index] == 2:
                     self.map_grid[x_index, y_index] = 0
 
-        print("Waypoints before adding:", incoming_waypoints[0].x, incoming_waypoints[0].y)
-        waypoints = incoming_waypoints
-        waypoints.insert(0, robot_pose)
+        print("Waypoints before adding:", waypoints[0].x, waypoints[0].y)
+        copy_waypoints = [robot_pose]
+        copy_waypoints.extend(waypoints)
 
         # Add 1 to the value of each node along the path
-        for index in range(len(waypoints) - 1):
-            point_1 = waypoints[index]
-            point_2 = waypoints[index + 1]
+        for index in range(len(copy_waypoints) - 1):
+            point_1 = copy_waypoints[index]
+            point_2 = copy_waypoints[index + 1]
             print("Point 1:", point_1.x, point_1.y)
             print("Point 2:", point_2.x, point_2.y)
             angle_to_point_2 = math.atan2(point_2.y - point_1.y, point_2.x - point_1.x)
