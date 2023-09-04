@@ -1,7 +1,7 @@
 import math
 
 import numpy as np
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from BaseClasses import *
 class Map:
     def __init__(self):
@@ -15,33 +15,33 @@ class Map:
         self.obstacle_polygon = None
         self.path = []
 
-    # def plot_grid(self):
-    #     for x_index in range(self.x_count):
-    #         for y_index in range(self.y_count):
-    #             world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
-    #             value_at_point = self.map_grid[x_index, y_index]
-    #             if value_at_point == 0:
-    #                 plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="skyblue")
-    #             elif value_at_point == 1:
-    #                 plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="purple")
-    #             elif value_at_point == 2:
-    #                 plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="red")
-    #             else:
-    #                 plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="green")
-    #
-    #     x_boundary = []
-    #     y_boundary = []
-    #
-    #     if self.obstacle_polygon is not None:
-    #         for point in self.obstacle_polygon.vertices:
-    #             x_boundary.append(point.x)
-    #             y_boundary.append(point.y)
-    #         x_boundary.append(self.obstacle_polygon.vertices[0].x)
-    #         y_boundary.append(self.obstacle_polygon.vertices[0].y)
-    #         plt.plot(x_boundary, y_boundary, color="black")
-    #
-    #     plt.axis('equal')
-    #     plt.show()
+    def plot_grid(self):
+        for x_index in range(self.x_count):
+            for y_index in range(self.y_count):
+                world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
+                value_at_point = self.map_grid[x_index, y_index]
+                if value_at_point == 0:
+                    plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="skyblue")
+                elif value_at_point == 1:
+                    plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="purple")
+                elif value_at_point == 2:
+                    plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="red")
+                else:
+                    plt.scatter(world_point.x, world_point.y, s=self.node_gap * 100, color="green")
+
+        x_boundary = []
+        y_boundary = []
+
+        if self.obstacle_polygon is not None:
+            for point in self.obstacle_polygon.vertices:
+                x_boundary.append(point.x)
+                y_boundary.append(point.y)
+            x_boundary.append(self.obstacle_polygon.vertices[0].x)
+            y_boundary.append(self.obstacle_polygon.vertices[0].y)
+            plt.plot(x_boundary, y_boundary, color="black")
+
+        plt.axis('equal')
+        plt.show()
 
     def add_obstacle_to_grid(self, robot_angle=None, collision_point=None):
         perpendicular_angle = robot_angle + np.pi / 2
