@@ -121,6 +121,9 @@ class Map:
                 is_solution_found = True
                 break
 
+        # Pop first point as it is where you will start
+        waypoints.pop(0)
+
         self.path = waypoints
         print("Waypoints:")
         for point in self.path:
