@@ -147,7 +147,7 @@ class Robot:
     def ultrasonic_update_loop(self):
         while True:
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
-            if flag:
+            if flag and len(self.path_queue) > 0:
                 print("Obstacle Found at:", coords_x, coords_y)
                 # Add the new found obstacle
                 self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
