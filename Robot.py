@@ -135,7 +135,7 @@ class Robot:
                 print("Hello", self.pose.x, self.pose.y)
                 print("OBstacel:", coords_x, coords_y)
                 # Add the new-found obstacle
-                self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
+                self.map_class.add_obstacle_to_grid(th, Pose(1.2 - coords_y, coords_x))
 
                 # Check for collisions
                 is_collision = self.map_class.check_for_collision(self.map_class.path, self.pose)

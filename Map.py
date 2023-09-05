@@ -98,13 +98,13 @@ class Map:
                 y_index = max(0, min(y_index, self.y_count - 1))
                 world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
                 if bounding_box.contains(world_point):
-                    self.map_grid[-(1 + y_index), x_index] = 1
+                    self.map_grid[x_index, y_index] = 1
 
     def delete_obstacles(self):
         for x_index in range(self.x_count):
             for y_index in range(self.y_count):
-                if self.map_grid[-(1 + y_index), x_index] == 1:
-                    self.map_grid[-(1 + y_index), x_index] = 0
+                if self.map_grid[x_index, y_index] == 1:
+                    self.map_grid[x_index, y_index] = 0
 
     def plan_path(self, robot_pose: Pose, goal_coordinate: Pose):
         print("Creating path from:", robot_pose.x, robot_pose.y, "| to:", goal_coordinate.x, goal_coordinate.y)
@@ -183,8 +183,8 @@ class Map:
         # Clear the drive 2s from the previous attempt
         for x_index in range(self.x_count):
             for y_index in range(self.y_count):
-                if self.map_grid[-(1 + y_index), x_index] == 2:
-                    self.map_grid[-(1 + y_index), x_index] = 0
+                if self.map_grid[x_index, y_index] == 2:
+                    self.map_grid[x_index, y_index] = 0
 
         copy_waypoints = [robot_pose]
         copy_waypoints.extend(waypoints)
@@ -214,17 +214,17 @@ class Map:
 
                 # Lay out the robot path. Put a 2 if that's somewhere the robot will drive. Put a 3 if there is an obstacle where we want to drive
                 if grid_value == 0:
-                    self.map_grid[-(1 + node_y), node_x] = 2
+                    self.map_grid[node_x, node_y] = 2
                 elif grid_value == 1:
-                    self.map_grid[-(1 + node_y), node_x] = 3
+                    self.map_grid[node_x, node_y] = 3
 
         # Check every value, if there is 3, there is a collision. Make sure to remove the 3 though for next time
         is_collision = False
         for x_index in range(self.x_count):
             for y_index in range(self.y_count):
-                if self.map_grid[-(1 + y_index), x_index] == 3:
+                if self.map_grid[x_index, y_index] == 3:
                     is_collision = True
-                    self.map_grid[-(1 + y_index), x_index] = 1
+                    self.map_grid[x_index, y_index] = 1
 
         # If not then there is no collision
         return is_collision
