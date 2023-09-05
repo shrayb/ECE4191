@@ -168,7 +168,7 @@ class Robot:
             if flag:
                 self.gaslight_exam = True
                 self.is_impending_collision = True
-                
+                break
                 # Add the new-found obstacle
                 # self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
 
