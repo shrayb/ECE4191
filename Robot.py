@@ -138,10 +138,10 @@ class Robot:
                     self.path_queue = self.map_class.path
                     self.path_is_tested = False
                     self.is_impending_collision = False
-                    # print("Path coords:")
-                    # print("\t", self.pose.x, self.pose.y)
-                    # for point in self.path_queue:
-                    #     print("\t", point.x, point.y)
+                    print("Path Solution:")
+                    print("\t", self.pose.x, self.pose.y)
+                    for point in self.path_queue:
+                        print("\t", point.x, point.y)
 
     def deposit_package(self):
         # Deposit the next package
@@ -310,7 +310,6 @@ class Robot:
             angle_difference = angle_difference - 2 * math.pi
         elif angle_difference < -math.pi:
             angle_difference = angle_difference + 2 * math.pi
-        print("\tTurning from:", self.pose.theta * 180 / math.pi, "degrees by", angle_difference * 180 / math.pi, "degrees")
         self.do_turn(angle_difference)
         sleep(0.1)
 
@@ -318,7 +317,6 @@ class Robot:
 
         # Find distance to drive
         distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
-        print("\tDriving:", distance, "metres")
         self.do_drive(distance)
         print("\t\tDrive complete")
         sleep(0.1)
@@ -330,9 +328,7 @@ class Robot:
                 angle_difference = angle_difference - 2 * math.pi
             elif angle_difference < -math.pi:
                 angle_difference = angle_difference + 2 * math.pi
-            print("\tAdjusting orientation by", angle_difference * 180 / math.pi, "degrees to face", coordinate.theta * 180 / math.pi, "degrees")
             self.do_turn(angle_difference)
-            print("\t\tTurn complete")
 
         self.is_moving = False
         sleep(0.1)
