@@ -118,6 +118,7 @@ class Robot:
             # Remove first waypoint from queue
             if self.path_is_tested:
                 self.path_queue.pop(0)
+                self.path_is_tested = False
 
             sleep(0.1)
 
