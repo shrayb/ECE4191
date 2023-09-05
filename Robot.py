@@ -343,7 +343,7 @@ class Robot:
             self.do_turn(angle_difference)
 
         self.is_moving = False
-        if drive_flag is not None:
+        if drive_flag is not None and len(self.path_queue) == 1:
             self.successful_waypoint = True
         sleep(0.1)
 
