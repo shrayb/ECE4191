@@ -211,16 +211,16 @@ class Robot:
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
 
-            # During this while loop, continuously update the pose of the robot
-            if is_turning == 0:  # 0 = Driving
-                distance_fraction = tick_sum / max_ticks
-                current_distance = distance_total * distance_fraction
-                self.pose.x = initial_pose.x + current_distance * math.cos(initial_pose.theta)
-                self.pose.y = initial_pose.y + current_distance * math.sin(initial_pose.theta)
-            else:  # 1 = Turning counterclockwise, -1 = Turning clockwise
-                distance_turned = 0.5 * tick_sum * self.distance_per_tick
-                measured_angle = distance_turned / self.turn_radius
-                self.pose.theta = initial_pose.theta + is_turning * measured_angle
+            # # During this while loop, continuously update the pose of the robot
+            # if is_turning == 0:  # 0 = Driving
+            #     distance_fraction = tick_sum / max_ticks
+            #     current_distance = distance_total * distance_fraction
+            #     self.pose.x = initial_pose.x + current_distance * math.cos(initial_pose.theta)
+            #     self.pose.y = initial_pose.y + current_distance * math.sin(initial_pose.theta)
+            # else:  # 1 = Turning counterclockwise, -1 = Turning clockwise
+            #     distance_turned = 0.5 * tick_sum * self.distance_per_tick
+            #     measured_angle = distance_turned / self.turn_radius
+            #     self.pose.theta = initial_pose.theta + is_turning * measured_angle
 
     def do_turn(self, angle):
         # Reset encoders
