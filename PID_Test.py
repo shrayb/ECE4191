@@ -63,7 +63,7 @@ def loop():
             y_coord = robot.pose.y
         theta_coord = input("Pick new end angle in degrees")
         if theta_coord == "":
-            theta_coord = math.pi
+            theta_coord = None
         else:
             theta_coord = float(theta_coord) * math.pi / 180
         coord = Pose(float(x_coord), float(y_coord), theta_coord)
