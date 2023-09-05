@@ -56,7 +56,7 @@ def loop():
 
     # Loop and travel to each waypoint
     while True:
-        if not robot.is_moving:
+        if not robot.is_moving and len(robot.current_goal) > 0:
             # Travel to next waypoint
             robot.is_moving = True
             robot.current_goal = waypoints[0]

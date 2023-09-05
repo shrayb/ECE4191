@@ -119,9 +119,10 @@ class Robot:
     def ultrasonic_update_loop(self):
         while True:
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
+            sleep(0.1)
+            print("Obstacle Detected:", flag)
             if flag:
                 print("Obstacle Found at:", coords_x, coords_y)
-                sleep(0.1)
             if flag and len(self.path_queue) > 0:
                 # Add the new-found obstacle
                 self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
@@ -142,7 +143,6 @@ class Robot:
                     for point in self.path_queue:
                         print("\t", point.x, point.y)
 
-                sleep(0.1)
 
     def deposit_package(self):
         # Deposit the next package
