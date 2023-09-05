@@ -120,7 +120,6 @@ class Robot:
         while True:
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
             sleep(0.1)
-            print("Obstacle Detected:", flag)
             if flag:
                 print("Obstacle Found at:", coords_x, coords_y)
             if flag and len(self.path_queue) > 0:
