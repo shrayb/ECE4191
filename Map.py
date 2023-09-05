@@ -238,7 +238,7 @@ class Map:
         return x_coord, y_coord
 
 
-def create_intermediate_points(self, start: Pose, end: Pose, number_of_points: int, safe_distance):
+def create_intermediate_points(start: Pose, end: Pose, number_of_points: int, safe_distance: float):
     start_end_distance = calculate_distance_between_points(start, end)
     each_point_distance = start_end_distance / (number_of_points + 1)
 
