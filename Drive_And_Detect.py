@@ -64,7 +64,7 @@ def loop():
         # robot.map_class.plot_grid()
 
     while True:
-        pass
+        sleep(1)
 
 
 if __name__ == "__main__":

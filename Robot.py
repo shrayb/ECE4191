@@ -125,30 +125,25 @@ class Robot:
         while True:
             sleep(0.25)
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
-            if flag:
-                print("Obstacle Found at:", coords_x, coords_y)
             if flag and len(self.path_queue) > 0 and self.path_is_tested:
                 # Add the new-found obstacle
                 self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
 
                 # Check for collisions
                 is_collision = self.map_class.check_for_collision(self.map_class.path, self.pose)
-                print("New collision detected:", is_collision)
 
                 # If collision, re-plan path
                 if is_collision:
-                    print("Creating new path due to collision")
+                    print("Obstacle Found at:", coords_x, coords_y)
                     self.is_impending_collision = True
                     self.map_class.plan_path(self.pose, self.current_goal)
                     self.path_queue = self.map_class.path
                     self.path_is_tested = False
                     self.is_impending_collision = False
-                    print("Done making path")
-                    print("Path queue data:", self.path_queue)
-                    print("Path coords:")
-                    print("\t", self.pose.x, self.pose.y)
-                    for point in self.path_queue:
-                        print("\t", point.x, point.y)
+                    # print("Path coords:")
+                    # print("\t", self.pose.x, self.pose.y)
+                    # for point in self.path_queue:
+                    #     print("\t", point.x, point.y)
 
     def deposit_package(self):
         # Deposit the next package

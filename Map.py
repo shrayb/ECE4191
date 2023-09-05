@@ -98,17 +98,6 @@ class Map:
                 world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
                 if bounding_box.contains(world_point):
                     self.map_grid[x_index, y_index] = 1
-        # Check if any point in the map grid overlap with the bounding box
-        # # TODO I think this is slow as hell, try to make it faster somehow
-        # print(self.obstacle_polygon.vertices[0].x, self.obstacle_polygon.vertices[0].y)
-        # print(self.obstacle_polygon.vertices[1].x, self.obstacle_polygon.vertices[1].y)
-        # print(self.obstacle_polygon.vertices[2].x, self.obstacle_polygon.vertices[2].y)
-        # print(self.obstacle_polygon.vertices[3].x, self.obstacle_polygon.vertices[3].y)
-        # for x_index in range(self.x_count):
-        #     for y_index in range(self.y_count):
-        #         world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
-        #         if bounding_box.contains(world_point):
-        #             self.map_grid[x_index, y_index] = 1
 
     def plan_path(self, robot_pose: Pose, goal_coordinate: Pose):
         print("Creating path from:", robot_pose.x, robot_pose.y, "| to:", goal_coordinate.x, goal_coordinate.y)
@@ -118,7 +107,6 @@ class Map:
 
         # Check if a collision will occur
         will_collide = self.check_for_collision([path_end], robot_pose)
-        print("Will it collide:", will_collide)
         if not will_collide:
             self.path = [path_end]
             return self.path
@@ -173,13 +161,8 @@ class Map:
                     break
 
                 # If they don't collide, break. That is the solution
-                print("Solution Found:")
-                for point in waypoints:
-                    print("\t", point.x, point.y)
                 is_solution_found = True
                 break
-
-        print("Exited path planning while loop")
 
         self.path = waypoints
         return self.path
