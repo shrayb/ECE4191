@@ -44,8 +44,8 @@ robot.front_right_ultrasonic = front_right_sonic
 encoder_thread = Thread(target=robot.encoder_update_loop)
 encoder_thread.start()
 
-ultrasonic_thread = Thread(target=robot.ultrasonic_update_loop)
-ultrasonic_thread.start()
+# ultrasonic_thread = Thread(target=robot.ultrasonic_update_loop)
+# ultrasonic_thread.start()
 
 drive_thread = Thread(target=robot.follow_path)
 drive_thread.start()
