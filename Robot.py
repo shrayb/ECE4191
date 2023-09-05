@@ -139,7 +139,7 @@ class Robot:
                 for point in self.path_queue:
                     print("\t", point.x, point.y)
                 # Check for collisions
-                is_collision = self.map_class.check_for_collision(self.path_queue, self.pose)
+                is_collision = self.map_class.check_for_collision(self.path_queue[1:], self.pose)
 
                 # If collision, re-plan path
                 if is_collision:
