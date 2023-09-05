@@ -93,9 +93,9 @@ class Map:
 
         # Check the points around the boundary if they are in the obstacle
         for x_index in range(lowest_x, highest_x + 1):
-            x_index = max(0, min(x_index, self.x_count))
+            x_index = max(0, min(x_index, self.x_count - 1))
             for y_index in range(lowest_y, highest_y + 1):
-                y_index = max(0, min(y_index, self.y_count))
+                y_index = max(0, min(y_index, self.y_count - 1))
                 world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
                 if bounding_box.contains(world_point):
                     self.map_grid[x_index, y_index] = 1
