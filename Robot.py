@@ -107,6 +107,9 @@ class Robot:
             if len(self.path_queue) == 0 or self.is_impending_collision or self.path_is_tested:
                 continue
 
+            # Remove all obstacles
+            self.map_class.delete_obstacles()
+
             # Drive to first waypoint
             self.drive_to_coordinate(self.path_queue[0])
 
