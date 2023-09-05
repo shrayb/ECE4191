@@ -103,7 +103,7 @@ class Robot:
         while True:
 
             # Check if there are any waypoints in the queue
-            if len(self.path_queue) == 0 or self.is_impending_collision:
+            if len(self.path_queue) == 0 or self.is_impending_collision or self.path_is_tested:
                 continue
             print("No collision. Start driving to waypoint")
 
