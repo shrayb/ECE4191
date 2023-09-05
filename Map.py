@@ -8,8 +8,8 @@ import numpy as np
 class Map:
     def __init__(self):
         self.robot_size = 0.3  # Metres diameter
-        self.obstacle_guess_width = 0.25 + self.robot_size / 2  # Create an obstacle of 20 cm wide
-        self.obstacle_guess_depth = 0.09 + self.robot_size / 2  # Create an obstacle of 20 cm deep
+        self.obstacle_guess_width = 0.25# + self.robot_size / 2  # Create an obstacle of 20 cm wide
+        self.obstacle_guess_depth = 0.09# + self.robot_size / 2  # Create an obstacle of 20 cm deep
         self.node_gap = 0.050  # Metres between each node
         self.map_size = (1.2, 1.2)
         self.x_count = int(math.ceil(self.map_size[0] / self.node_gap))
@@ -282,10 +282,10 @@ if __name__ == "__main__":
     print("START")
     the_map = Map()
     the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(0.5, 0.5))
-    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(3 / 30, 20 / 30))
-    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(15 / 30, 2.5 / 30))
-    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(5 / 30, 11 / 30))
-    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(5 / 30, 38 / 30))
-    path = the_map.plan_path(Pose(0.010, 0.010, math.pi / 2), Pose(1, 1.25))
+    # the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(3 / 30, 20 / 30))
+    # the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(15 / 30, 2.5 / 30))
+    # the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(5 / 30, 11 / 30))
+    # the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(5 / 30, 38 / 30))
+    path = the_map.plan_path(Pose(0.3, 0.2, 0), Pose(0.9, 0.8))
     print("PATH FOUND")
     the_map.plot_grid()
