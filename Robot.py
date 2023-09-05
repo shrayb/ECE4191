@@ -115,6 +115,7 @@ class Robot:
                 self.path_queue.pop(0)
                 self.path_is_tested = False
                 if len(self.path_queue) == 0 and self.successful_waypoint:
+                    print("deleting current goal")
                     self.current_goal = None
 
     def encoder_update_loop(self):
