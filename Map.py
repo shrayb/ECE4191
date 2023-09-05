@@ -112,6 +112,7 @@ class Map:
             self.path = [path_end]
             return self.path
 
+        print("Will it collide?", will_collide)
         # Create intermediate points and move them around
         is_solution_found = False
         intermediate_point_count = 2

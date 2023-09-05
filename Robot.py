@@ -352,7 +352,7 @@ class Robot:
         right_dist /= 100
 
         # Make sure reading isnt too close
-        acceptable_dist = 0.2
+        acceptable_dist = 0.25
         if left_dist < acceptable_dist and right_dist < acceptable_dist:
             flag = True
             coords_x = x + (front_left_ultrasonic.x_offset + 0.5 * (left_dist + right_dist)) * math.cos(self.pose.theta)
