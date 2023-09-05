@@ -354,6 +354,9 @@ class Robot:
         right_dist = front_right_ultrasonic.measure_dist() / 100  # Convert to metres
         x, y, th = self.pose.x, self.pose.y, self.pose.theta
 
+        if left_dist is None or right_dist is None:
+            return False
+
         # Make sure reading isn't a wall
         if left_dist < 0.3 and right_dist < 0.3:
             flag = True

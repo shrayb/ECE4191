@@ -329,10 +329,20 @@ class Ultrasonic:
         sleep(0.00001)
         GPIO.output(self.trig_pin, False)
 
+        pulse_start = time()
+        pulse_end = time()
+
+        initial_time = time()
         while GPIO.input(self.echo_pin) == 0:
+            if time() > initial_time + 0.2:
+                return None
             pulse_start = time()
 
+        initial_time = time()
+
         while GPIO.input(self.echo_pin) == 1:
+            if time() > initial_time + 0.2:
+                return None
             pulse_end = time()
 
         pulse_duration = pulse_end - pulse_start
