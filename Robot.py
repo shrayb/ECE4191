@@ -349,16 +349,17 @@ class Robot:
         left_dist /= 100
         right_dist /= 100
 
-        # Make sure reading isn't a wall
-        if left_dist < 0.3 and right_dist < 0.3:
+        # Make sure reading isnt too close
+        acceptable_dist = 0.15
+        if left_dist < acceptable_dist and right_dist < acceptable_dist:
             flag = True
             coords_x = x + 0.5 * (left_dist + right_dist) * np.cos(th)
             coords_y = y + 0.5 * (left_dist + right_dist) * np.sin(th)
-        elif left_dist < 0.3:
+        elif left_dist < acceptable_dist:
             flag = True
             coords_x = x + left_dist * np.cos(th)
             coords_y = y + left_dist * np.sin(th)
-        elif right_dist < 0.3:
+        elif right_dist < acceptable_dist:
             flag = True
             coords_x = x + right_dist * np.cos(th)
             coords_y = y + right_dist * np.sin(th)
