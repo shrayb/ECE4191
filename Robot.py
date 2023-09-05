@@ -101,6 +101,11 @@ class Robot:
         # THREAD FUNCTION
         # Will drive to whatever waypoints are in the path queue variable in order and remove them
         while True:
+            print("Follow path thread path coords:")
+            print("\t", self.pose.x, self.pose.y)
+            for point in self.path_queue:
+                print("\t", point.x, point.y)
+
             # Check if there are any waypoints in the queue
             if len(self.path_queue) == 0 or self.is_impending_collision or self.path_queue is None:
                 continue
@@ -147,22 +152,17 @@ class Robot:
                     for point in self.path_queue:
                         print("\t", point.x, point.y)
 
-
     def deposit_package(self):
         # Deposit the next package
         # TODO
         pass
 
     def create_path(self):
-        print("Creating a path")
+        print("Initial Path Creation")
         # Plan a path
         self.map_class.plan_path(self.pose, self.current_goal)
-        print("Path goal:", self.current_goal.x, self.current_goal.y)
         # Pass coordinates to the queue
         self.path_queue = self.map_class.path
-        print("Path queue:", self.path_queue)
-        for point in self.path_queue:
-            print(point.x, point.y)
         self.is_impending_collision = False
 
     def set_state(self, state=None, sub_state=None):
