@@ -59,6 +59,7 @@ class Robot:
         self.is_plot = False
         self.done_plot = False
         self.path_is_tested = False
+        self.successful_waypoint = False
 
     def create_map_class(self):
         map_class = Map()
@@ -113,6 +114,8 @@ class Robot:
             if self.path_is_tested:
                 self.path_queue.pop(0)
                 self.path_is_tested = False
+                if len(self.path_queue) == 0 and self.successful_waypoint:
+                    self.current_goal = None
 
     def encoder_update_loop(self):
         while True:
@@ -331,6 +334,7 @@ class Robot:
             self.do_turn(angle_difference)
 
         self.is_moving = False
+        self.successful_waypoint = True
         sleep(0.1)
     
     def detect_obstacle(self, front_left_ultrasonic=None, front_right_ultrasonic=None):
@@ -349,19 +353,25 @@ class Robot:
         acceptable_dist = 0.15
         if left_dist < acceptable_dist and right_dist < acceptable_dist:
             flag = True
-            coords_x = x + 0.5 * (left_dist + right_dist) * np.cos(th)
-            coords_y = y + 0.5 * (left_dist + right_dist) * np.sin(th)
+            coords_x = x + (front_left_ultrasonic.x_offset + 0.5 * (left_dist + right_dist)) * math.cos(self.pose.theta)
+            coords_y = y + (front_left_ultrasonic.x_offset + 0.5 * (left_dist + right_dist)) * math.sin(self.pose.theta)
+
+            # coords_x = x + 0.5 * (left_dist + right_dist) * np.cos(th)
+            # coords_y = y + 0.5 * (left_dist + right_dist) * np.sin(th)
         elif left_dist < acceptable_dist:
-            
-
-
             flag = True
-            coords_x = x + left_dist * np.cos(th)
-            coords_y = y + left_dist * np.sin(th)
+            coords_x = front_left_ultrasonic.y_offset * math.sin(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.cos(self.pose.theta)
+            coords_y = front_left_ultrasonic.y_offset * math.cos(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.sin(self.pose.theta)
+
+            # coords_x = x + left_dist * np.cos(th)
+            # coords_y = y + left_dist * np.sin(th)
         elif right_dist < acceptable_dist:
             flag = True
-            coords_x = x + right_dist * np.cos(th)
-            coords_y = y + right_dist * np.sin(th)
+            coords_x = front_right_ultrasonic.y_offset * math.sin(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.cos(self.pose.theta)
+            coords_y = front_right_ultrasonic.y_offset * math.cos(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.sin(self.pose.theta)
+
+            # coords_x = x + right_dist * np.cos(th)
+            # coords_y = y + right_dist * np.sin(th)
         else:
             flag = False
             coords_x, coords_y = None, None

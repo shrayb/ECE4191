@@ -31,10 +31,10 @@ GPIO.setmode(GPIO.BCM)
 left_motor = Motor(motor_left_enable, motor_left_positive, motor_left_negative, motor_left_encoder_a, motor_left_encoder_b)
 right_motor = Motor(motor_right_enable, motor_right_positive, motor_right_negative, motor_right_encoder_a, motor_right_encoder_b)
 
-front_left_sonic = Ultrasonic(echo_pin=front_left_sonic_echo, trig_pin=front_left_sonic_trig, x_offset=0.155, y_offset=0.0585)
-front_right_sonic = Ultrasonic(echo_pin=front_right_sonic_echo, trig_pin=front_right_sonic_trig, x_offset=0.155, y_offset=-0.0585)
+front_left_sonic = Ultrasonic(echo_pin=front_left_sonic_echo, trig_pin=front_left_sonic_trig, x_offset=0.155, y_offset=-0.0585)
+front_right_sonic = Ultrasonic(echo_pin=front_right_sonic_echo, trig_pin=front_right_sonic_trig, x_offset=0.155, y_offset=0.0585)
 
-pose = Pose(0.2, 0.3, 0)
+pose = Pose(0.3, 0.2, 0)
 robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
@@ -52,16 +52,23 @@ drive_thread.start()
 
 def loop():
     # Define waypoints to go to in order
-    robot.current_goal = Pose(0.8, 0.9, 0)
+    waypoints = [Pose(0.3, 0.2, 0),
+                 Pose(0.9, 0.8),
+                 Pose(0.3, 0.8),
+                 Pose(0.3, 0.2, 0)]
+    robot.current_goal = Pose(0.9, 0.8, 0)
 
-    # Loop and travel to each waypoint
-    if not robot.is_moving:
-        # Travel to next waypoint
-        robot.create_path()
-        # robot.path_queue.pop(0)
-        robot.is_moving = True
+    while True:
+        # Loop and travel to each waypoint
+        if not robot.is_moving and robot.current_goal is None:
+            waypoints.pop(0)
+            # Travel to next waypoint
+            robot.current_goal = waypoints[0]
+            robot.create_path()
+            # robot.path_queue.pop(0)
+            robot.is_moving = True
 
-        # robot.map_class.plot_grid()
+            # robot.map_class.plot_grid()
 
     while True:
         sleep(1)
