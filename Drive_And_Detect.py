@@ -34,7 +34,7 @@ right_motor = Motor(motor_right_enable, motor_right_positive, motor_right_negati
 front_left_sonic = Ultrasonic(echo_pin=front_left_sonic_echo, trig_pin=front_left_sonic_trig)
 front_right_sonic = Ultrasonic(echo_pin=front_right_sonic_echo, trig_pin=front_right_sonic_trig)
 
-pose = Pose(0.0, 0.0, 0)
+pose = Pose(0.25, 0.25, 0)
 robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
@@ -52,7 +52,7 @@ drive_thread.start()
 
 def loop():
     # Define waypoints to go to in order
-    robot.current_goal = Pose(1.0, 0.0, 0)
+    robot.current_goal = Pose(1.0, 0.25, 0)
 
     # Loop and travel to each waypoint
     if not robot.is_moving:
