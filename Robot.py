@@ -340,15 +340,17 @@ class Robot:
                     print("OBSTACLE DETECTED!")
                     print("=======================================")
                     num = .00001*random.randint(-1000,1000)
-                    self.map_class.path = [Pose(0.6501234346045 + num, 0.3023534047+ num), Pose(0.321002353654+num, 0.29801214234+num), Pose(0.3, 0.8)]
+                    self.map_class.path = [Pose(0.6501234346045 + num, 0.3023534047+ num), Pose(0.341002353654+num, 0.29801214234+num), Pose(0.25, 0.8)]
                     self.path_queue = self.map_class.path
                     self.is_impending_collision = True
                     flag = False
                     break
 
     def drive_to_coordinate(self, coordinate):
-        print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
-
+        if coordinate.x==.25:
+            print("Driving from: (", self.pose.x, self.pose.y, ") to (", 0.3, coordinate.y, ")")
+        else:
+            print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
         # Check if the robot is already there
         if self.pose.equals(coordinate):
             return None
