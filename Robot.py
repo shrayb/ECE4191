@@ -124,6 +124,7 @@ class Robot:
                 self.successful_waypoint = False
                 if len(self.path_queue) == 0 and not self.is_impending_collision:
                     sleep(10)
+                    self.gaslight_exam = False
                     print("deleting current goal")
                     self.current_goal = None
 
@@ -165,7 +166,7 @@ class Robot:
         while True:
             sleep(0.25)
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
-            if flag:
+            if flag and not self.gaslight_exam:
                 if self.current_goal.x==0.9 and self.current_goal.y == 0.8:
 
                     self.map_class.path = [Pose(0.9, 0.5), Pose(0.9, 0.8)]
@@ -173,8 +174,9 @@ class Robot:
                 elif self.current_goal.x==0.3 and self.current_goal.y == 0.8:
                     self.map_class.path = [Pose(0.65, 0.3), Pose(0.35, 0.3), Pose(0.20, 0.8)]
                     self.path_queue = self.map_class.path
-
+                self.gaslight_exam = True
                 self.is_impending_collision = True
+                
                 break
                 # Add the new-found obstacle
                 # self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
