@@ -101,13 +101,9 @@ class Robot:
         # THREAD FUNCTION
         # Will drive to whatever waypoints are in the path queue variable in order and remove them
         while True:
-            print("Follow path thread path coords:")
-            print("\t", self.pose.x, self.pose.y)
-            for point in self.path_queue:
-                print("\t", point.x, point.y)
 
             # Check if there are any waypoints in the queue
-            if len(self.path_queue) == 0 or self.is_impending_collision or self.path_queue is None:
+            if len(self.path_queue) == 0 or self.is_impending_collision:
                 continue
             print("No collision. Start driving to waypoint")
 
@@ -145,6 +141,8 @@ class Robot:
                     self.map_class.plan_path(self.pose, self.current_goal)
                     self.path_queue = self.map_class.path
                     self.path_is_tested = False
+                    sleep(0.25)
+                    self.is_impending_collision = False
                     print("Done making path")
                     print("Path queue data:", self.path_queue)
                     print("Path coords:")
@@ -325,7 +323,6 @@ class Robot:
         print("\t\tTurn complete")
         sleep(0.1)
 
-        self.is_impending_collision = False
         self.path_is_tested = True
 
         # Find distance to drive
