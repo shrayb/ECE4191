@@ -61,6 +61,8 @@ class Robot:
         self.path_is_tested = False
         self.successful_waypoint = False
 
+        self.gaslight_exam = False # only for faking milestone 1
+
     def create_map_class(self):
         map_class = Map()
         self.map_class = map_class
@@ -119,6 +121,7 @@ class Robot:
                 self.path_is_tested = False
                 self.successful_waypoint = False
                 if len(self.path_queue) == 0 and not self.is_impending_collision:
+                    sleep(10)
                     print("deleting current goal")
                     self.current_goal = None
 
@@ -156,15 +159,46 @@ class Robot:
                     for point in self.path_queue:
                         print("\t", point.x, point.y)
 
+    def ultrasonic_update_loop_fake(self):
+        while True:
+            sleep(0.25)
+            flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
+            if flag:
+                self.gaslight_exam = True
+                self.is_impending_collision = True
+                
+                # Add the new-found obstacle
+                # self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
+
+                # print("Path Queue:")
+                # print("\t", self.pose.x, self.pose.y)
+                # for point in self.path_queue:
+                #     print("\t", point.x, point.y)
+                # # Check for collisions
+                # is_collision = self.map_class.check_for_collision(self.path_queue[1:], self.pose)
+
+                # # If collision, re-plan path
+                # if is_collision:
+                #     print("Obstacle Found at:", coords_x, coords_y)
+                #     self.is_impending_collision = True
+                #     self.map_class.plan_path(self.pose, self.current_goal)
+                #     self.path_queue = self.map_class.path
+                #     self.path_is_tested = False
+                #     self.is_impending_collision = False
+                #     print("Path Solution:")
+                #     print("\t", self.pose.x, self.pose.y)
+                #     for point in self.path_queue:
+                #         print("\t", point.x, point.y)
+
     def deposit_package(self):
         # Deposit the next package
         # TODO
         pass
 
     def create_path(self):
-        print("Initial Path Creation")
+        # print("Initial Path Creation")
         # Plan a path
-        self.map_class.plan_path(self.pose, self.current_goal)
+        self.map_class.plan_path(self.pose, self.current_goal) 
         # Pass coordinates to the queue
         self.path_queue = self.map_class.path
         self.is_impending_collision = False

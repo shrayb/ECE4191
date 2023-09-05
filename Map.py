@@ -117,7 +117,7 @@ class Map:
         intermediate_point_count = 1
         waypoints = []
         while not is_solution_found:
-            print("Entering while 1")
+            # print("Trying to find solution in plan path, 1")
             intermediate_points, position_array, distance_array = create_intermediate_points(path_start, path_end, intermediate_point_count, self.safe_distance)
             perpendicular_angle = math.atan2(goal_coordinate.y - robot_pose.y, goal_coordinate.x - robot_pose.x) + math.pi / 2
             while will_collide:
@@ -164,6 +164,7 @@ class Map:
 
                 # If they don't collide, break. That is the solution
                 is_solution_found = True
+                # potentially change will_collide to False to break
                 break
 
         self.path = waypoints
@@ -174,7 +175,7 @@ class Map:
             return None
 
         # Clear the drive 2s from the previous attempt
-        for x_index in range(self.x_count):
+        for x_index in range(self.x_count): # numberr of nodes in x and y
             for y_index in range(self.y_count):
                 if self.map_grid[x_index, y_index] == 2:
                     self.map_grid[x_index, y_index] = 0
