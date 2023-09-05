@@ -184,11 +184,11 @@ class Robot:
         """
         Runs the motors until max ticks are reached, also applies PID control to match speed
         """
-        distance_total = (max_ticks / 2) * self.distance_per_tick
+        distance_total = max_ticks * self.distance_per_tick
         initial_pose = deepcopy(self.pose)
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
-        while tick_sum < max_ticks / 2:
+        while tick_sum < max_ticks:
             # Check if there will be a collision
             if self.is_impending_collision:
                 break
@@ -218,7 +218,7 @@ class Robot:
                 self.pose.x = initial_pose.x + current_distance * math.cos(initial_pose.theta)
                 self.pose.y = initial_pose.y + current_distance * math.sin(initial_pose.theta)
             else:  # 1 = Turning counterclockwise, -1 = Turning clockwise
-                distance_turned = (tick_sum / 2) * self.distance_per_tick
+                distance_turned = tick_sum * self.distance_per_tick
                 measured_angle = distance_turned / self.turn_radius
                 self.pose.theta = initial_pose.theta + is_turning * measured_angle
 
