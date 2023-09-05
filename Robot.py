@@ -104,7 +104,7 @@ class Robot:
         while True:
             sleep(0.25)
             # Check if there are any waypoints in the queue
-            if len(self.path_queue) == 0 or self.path_is_tested:
+            if len(self.path_queue) == 0 or self.is_impending_collision or self.path_is_tested:
                 print("impending:", self.is_impending_collision)
                 print("path is tested:", self.path_is_tested)
                 continue
@@ -113,7 +113,7 @@ class Robot:
             self.drive_to_coordinate(self.path_queue[0])
 
             # Remove first waypoint from queue
-            if self.path_is_tested:
+            if self.successful_waypoint:
                 self.path_queue.pop(0)
                 self.path_is_tested = False
                 if len(self.path_queue) == 0 and self.successful_waypoint:
