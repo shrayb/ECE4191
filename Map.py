@@ -126,6 +126,7 @@ class Map:
                         current_distance = distance_array[index]
                     elif position_array[index] == -1:
                         current_distance = -distance_array[index]
+                    print("Distance looking at:", current_distance)
                     new_point = create_point(intermediate_points[index], current_distance, perpendicular_angle)
 
                     # Make sure the new intermediate point doesn't go outside the bounds of the map
