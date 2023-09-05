@@ -52,7 +52,7 @@ drive_thread.start()
 
 def loop():
     # Define waypoints to go to in order
-    waypoints = [Pose(0.75, 0.0)]
+    waypoints = [Pose(1.0, 0.0)]
 
     # Loop and travel to each waypoint
     while True:
