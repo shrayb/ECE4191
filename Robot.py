@@ -106,6 +106,7 @@ class Robot:
             print("No collision. Start driving to waypoint")
             sleep(0.1)
             # Drive to first waypoint
+            print("PATH QUEUE:", self.path_queue)
             self.drive_to_coordinate(self.path_queue[0])
 
             # Remove first waypoint from queue
