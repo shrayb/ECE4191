@@ -125,8 +125,8 @@ class Robot:
 
     def ultrasonic_update_loop(self):
         while True:
+            sleep(0.25)
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
-            sleep(0.1)
             if flag:
                 print("Obstacle Found at:", coords_x, coords_y)
             if flag and len(self.path_queue) > 0 and self.path_is_tested:
@@ -144,7 +144,6 @@ class Robot:
                     self.map_class.plan_path(self.pose, self.current_goal)
                     self.path_queue = self.map_class.path
                     self.path_is_tested = False
-                    sleep(0.25)
                     self.is_impending_collision = False
                     print("Done making path")
                     print("Path queue data:", self.path_queue)
