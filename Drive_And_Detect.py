@@ -52,7 +52,7 @@ drive_thread.start()
 
 def loop():
     # Define waypoints to go to in order
-    robot.path_queue.append([Pose(1.0, 0.0)])
+    robot.path_queue.append(Pose(1.0, 0.0))
 
     # Loop and travel to each waypoint
     while True:
