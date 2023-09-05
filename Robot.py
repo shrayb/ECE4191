@@ -178,7 +178,7 @@ class Robot:
                     print("OBSTACLE DETECTED!")
                     print("=======================================")
                     num = .00001*random.randint(-1000,1000)
-                    self.map_class.path = [Pose(0.6501234346045 + num, 0.3023534047+ num), Pose(0.301002353654+num, 0.29801214234+num), Pose(0.3, 0.8)]
+                    self.map_class.path = [Pose(0.6501234346045 + num, 0.3023534047+ num), Pose(0.321002353654+num, 0.29801214234+num), Pose(0.3, 0.8)]
                     self.path_queue = self.map_class.path
                     self.is_impending_collision = True
                     flag = False
