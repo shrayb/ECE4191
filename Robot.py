@@ -144,7 +144,8 @@ class Robot:
                 if is_collision:
                     print("Obstacle Found at:", coords_x, coords_y)
                     self.is_impending_collision = True
-                    self.map_class.plan_path(self.pose, self.current_goal)
+                    self.map_class.plan_path(Pose(1.2 - self.pose.y, self.pose.x), Pose(1.2 - self.current_goal.y, self.current_goal.x))
+                    #self.map_class.plan_path(self.pose, self.current_goal)
                     self.path_queue = self.map_class.path
                     self.path_is_tested = False
                     self.is_impending_collision = False
