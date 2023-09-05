@@ -79,26 +79,34 @@ class Map:
         bounding_box = Polygon(vertices)
         self.obstacle_polygon = bounding_box
 
+        # # Check if any point in the map grid overlap with the bounding box
+        # bot_left_x, bot_left_y = self.find_closest_node(self.obstacle_polygon.vertices[0])
+        # top_left_x, top_left_y = self.find_closest_node(self.obstacle_polygon.vertices[1])
+        # top_right_x, top_right_y = self.find_closest_node(self.obstacle_polygon.vertices[2])
+        # bot_right_x, bot_right_y = self.find_closest_node(self.obstacle_polygon.vertices[3])
+        #
+        # lowest_x = min([bot_left_x, top_left_x, top_right_x, bot_right_x])
+        # highest_x = max([bot_left_x, top_left_x, top_right_x, bot_right_x])
+        # lowest_y = min([bot_left_y, top_left_y, top_right_y, bot_right_y])
+        # highest_y = max([bot_left_y, top_left_y, top_right_y, bot_right_y])
+        #
+        # # Check the points around the boundary if they are in the obstacle
+        # for x_index in range(lowest_x, highest_x + 1):
+        #     x_index = max(0, min(x_index, self.x_count))
+        #     for y_index in range(lowest_y, highest_y + 1):
+        #         y_index = max(0, min(y_index, self.y_count))
+        #         world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
+        #         print("WOrld point:", world_point.x, world_point.y)
+        #         if bounding_box.contains(world_point):
+        #             self.map_grid[x_index, y_index] = 1
         # Check if any point in the map grid overlap with the bounding box
-        bot_left_x, bot_left_y = self.find_closest_node(self.obstacle_polygon.vertices[0])
-        top_left_x, top_left_y = self.find_closest_node(self.obstacle_polygon.vertices[1])
-        top_right_x, top_right_y = self.find_closest_node(self.obstacle_polygon.vertices[2])
-        bot_right_x, bot_right_y = self.find_closest_node(self.obstacle_polygon.vertices[3])
-
-        lowest_x = min([bot_left_x, top_left_x, top_right_x, bot_right_x])
-        highest_x = max([bot_left_x, top_left_x, top_right_x, bot_right_x])
-        lowest_y = min([bot_left_y, top_left_y, top_right_y, bot_right_y])
-        highest_y = max([bot_left_y, top_left_y, top_right_y, bot_right_y])
-
-        # Check the points around the boundary if they are in the obstacle
-        for x_index in range(lowest_x, highest_x + 1):
-            x_index = max(0, min(x_index, self.x_count))
-            for y_index in range(lowest_y, highest_y + 1):
-                y_index = max(0, min(y_index, self.y_count))
+        # TODO I think this is slow as hell, try to make it faster somehow
+        for x_index in range(self.x_count):
+            for y_index in range(self.y_count):
                 world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
-                print("WOrld point:", world_point.x, world_point.y)
                 if bounding_box.contains(world_point):
                     self.map_grid[x_index, y_index] = 1
+
 
     def plan_path(self, robot_pose: Pose, goal_coordinate: Pose):
         print("Creating path from:", robot_pose.x, robot_pose.y, "| to:", goal_coordinate.x, goal_coordinate.y)
