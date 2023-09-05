@@ -105,10 +105,8 @@ class Robot:
             # Check if there are any waypoints in the queue
             if len(self.path_queue) == 0 or self.is_impending_collision or self.path_is_tested:
                 continue
-            print("No collision. Start driving to waypoint")
 
             # Drive to first waypoint
-            print("PATH QUEUE:", self.path_queue)
             self.drive_to_coordinate(self.path_queue[0])
 
             # Remove first waypoint from queue
@@ -313,9 +311,7 @@ class Robot:
         elif angle_difference < -math.pi:
             angle_difference = angle_difference + 2 * math.pi
         print("\tTurning from:", self.pose.theta * 180 / math.pi, "degrees by", angle_difference * 180 / math.pi, "degrees")
-        print("\t\tStarting turn")
         self.do_turn(angle_difference)
-        print("\t\tTurn complete")
         sleep(0.1)
 
         self.path_is_tested = True
@@ -323,7 +319,6 @@ class Robot:
         # Find distance to drive
         distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
         print("\tDriving:", distance, "metres")
-        print("\t\tStarting drive")
         self.do_drive(distance)
         print("\t\tDrive complete")
         sleep(0.1)
@@ -336,7 +331,6 @@ class Robot:
             elif angle_difference < -math.pi:
                 angle_difference = angle_difference + 2 * math.pi
             print("\tAdjusting orientation by", angle_difference * 180 / math.pi, "degrees to face", coordinate.theta * 180 / math.pi, "degrees")
-            print("\t\tStarting turn")
             self.do_turn(angle_difference)
             print("\t\tTurn complete")
 
