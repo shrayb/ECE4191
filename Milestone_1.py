@@ -60,6 +60,7 @@ def loop():
 
     while True:
         # Loop and travel to each waypoint
+        sleep(1)
         if not robot.is_moving and robot.current_goal is None:
             if len(waypoints) == 0:
                 break
