@@ -166,8 +166,13 @@ class Robot:
             sleep(0.25)
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
             if flag:
-                self.map_class.path = [Pose(0.65, 0.3), Pose(0.3, 0.3), Pose(0.25, 0.8)]
-                self.path_queue = self.map_class.path
+                if self.current_goal.x==0.9 and self.current_goal.y == 0.8:
+
+                    self.map_class.path = [Pose(0.9, 0.5), Pose(0.9, 0.8)]
+                    self.path_queue = self.map_class.path
+                elif self.current_goal.x==0.3 and self.current_goal.y == 0.8:
+                    self.map_class.path = [Pose(0.65, 0.3), Pose(0.35, 0.3), Pose(0.20, 0.8)]
+                    self.path_queue = self.map_class.path
 
                 self.is_impending_collision = True
                 break
