@@ -139,6 +139,7 @@ class Robot:
                     self.map_class.plan_path(self.pose, self.current_goal)
                     self.path_queue = self.map_class.path
                     print("Done making path")
+                    print("Path queue data:", self.path_queue)
                     print("Path coords:")
                     print("\t", self.pose.x, self.pose.y)
                     for point in self.path_queue:
