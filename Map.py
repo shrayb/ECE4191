@@ -8,8 +8,8 @@ import numpy as np
 class Map:
     def __init__(self):
         self.robot_size = 0.3  # Metres diameter
-        self.obstacle_guess_width = 0.30 + self.robot_size / 2  # Create an obstacle of 20 cm wide
-        self.obstacle_guess_depth = 0.10 + self.robot_size / 2  # Create an obstacle of 20 cm deep
+        self.obstacle_guess_width = 0.25 + self.robot_size / 2  # Create an obstacle of 20 cm wide
+        self.obstacle_guess_depth = 0.09 + self.robot_size / 2  # Create an obstacle of 20 cm deep
         self.node_gap = 0.050  # Metres between each node
         self.map_size = (1.2, 1.2)
         self.x_count = int(math.ceil(self.map_size[0] / self.node_gap))
@@ -17,7 +17,7 @@ class Map:
         self.map_grid = np.zeros((self.x_count, self.y_count))
         self.obstacle_polygon = None
         self.path = []
-        self.safe_distance = self.robot_size / 2 + self.obstacle_guess_width / 2 + 0.25  # Distance to travel in perpendicular direction
+        self.safe_distance = self.robot_size / 2 + self.obstacle_guess_width / 2 + 0.10  # Distance to travel in perpendicular direction
 
     def plot_grid(self):
         free_space_x = []
@@ -100,12 +100,6 @@ class Map:
                 if bounding_box.contains(world_point):
                     self.map_grid[x_index, y_index] = 1
 
-    def delete_obstacles(self):
-        for x_index in range(self.x_count):
-            for y_index in range(self.y_count):
-                if self.map_grid[x_index, y_index] == 1:
-                    self.map_grid[x_index, y_index] = 0
-
     def plan_path(self, robot_pose: Pose, goal_coordinate: Pose):
         print("Creating path from:", robot_pose.x, robot_pose.y, "| to:", goal_coordinate.x, goal_coordinate.y)
         # Create straight line from start to goal
@@ -118,13 +112,12 @@ class Map:
             self.path = [path_end]
             return self.path
 
-        print("Will it collide?", will_collide)
         # Create intermediate points and move them around
         is_solution_found = False
         intermediate_point_count = 2
         waypoints = []
         while not is_solution_found:
-            #print("Entering while 1")
+            print("Entering while 1")
             intermediate_points, position_array, distance_array = create_intermediate_points(path_start, path_end, intermediate_point_count, self.safe_distance)
             perpendicular_angle = math.atan2(goal_coordinate.y - robot_pose.y, goal_coordinate.x - robot_pose.x) + math.pi / 2
             while will_collide:
@@ -289,10 +282,10 @@ if __name__ == "__main__":
     print("START")
     the_map = Map()
     the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(0.5, 0.5))
-    # the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(3 / 30, 20 / 30))
-    # the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(15 / 30, 2.5 / 30))
-    # the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(5 / 30, 11 / 30))
-    # the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(5 / 30, 38 / 30))
-    path = the_map.plan_path(Pose(0.3, 0.2, 0), Pose(0.9, 0.8))
+    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(3 / 30, 20 / 30))
+    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(15 / 30, 2.5 / 30))
+    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(5 / 30, 11 / 30))
+    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(5 / 30, 38 / 30))
+    path = the_map.plan_path(Pose(0.010, 0.010, math.pi / 2), Pose(1, 1.25))
     print("PATH FOUND")
     the_map.plot_grid()

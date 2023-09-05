@@ -107,9 +107,6 @@ class Robot:
             if len(self.path_queue) == 0 or self.is_impending_collision or self.path_is_tested:
                 continue
 
-            # Remove all obstacles
-            self.map_class.delete_obstacles()
-
             # Drive to first waypoint
             self.drive_to_coordinate(self.path_queue[0])
 
@@ -127,15 +124,11 @@ class Robot:
 
     def ultrasonic_update_loop(self):
         while True:
-            sleep(0.2)
+            sleep(0.25)
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
-            if flag:
-                print("Obstacle detected at:", coords_x, coords_y)
             if flag and len(self.path_queue) > 0 and self.path_is_tested:
-                print("Hello", self.pose.x, self.pose.y)
-                print("OBstacel:", coords_x, coords_y)
                 # Add the new-found obstacle
-                self.map_class.add_obstacle_to_grid(th, Pose(1.2 - coords_y, coords_x))
+                self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
 
                 # Check for collisions
                 is_collision = self.map_class.check_for_collision(self.map_class.path, self.pose)
@@ -144,8 +137,7 @@ class Robot:
                 if is_collision:
                     print("Obstacle Found at:", coords_x, coords_y)
                     self.is_impending_collision = True
-                    self.map_class.plan_path(Pose(1.2 - self.pose.y, self.pose.x), Pose(1.2 - self.current_goal.y, self.current_goal.x))
-                    #self.map_class.plan_path(self.pose, self.current_goal)
+                    self.map_class.plan_path(self.pose, self.current_goal)
                     self.path_queue = self.map_class.path
                     self.path_is_tested = False
                     self.is_impending_collision = False
@@ -358,10 +350,9 @@ class Robot:
         right_dist /= 100
 
         # Make sure reading isnt too close
-        acceptable_dist = 0.25
+        acceptable_dist = 0.15
         if left_dist < acceptable_dist and right_dist < acceptable_dist:
             flag = True
-            print("Both")
             coords_x = x + (front_left_ultrasonic.x_offset + 0.5 * (left_dist + right_dist)) * math.cos(self.pose.theta)
             coords_y = y + (front_left_ultrasonic.x_offset + 0.5 * (left_dist + right_dist)) * math.sin(self.pose.theta)
 
@@ -369,7 +360,6 @@ class Robot:
             # coords_y = y + 0.5 * (left_dist + right_dist) * np.sin(th)
         elif left_dist < acceptable_dist:
             flag = True
-            print("Left")
             coords_x = front_left_ultrasonic.y_offset * math.sin(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.cos(self.pose.theta)
             coords_y = front_left_ultrasonic.y_offset * math.cos(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.sin(self.pose.theta)
 
@@ -377,7 +367,6 @@ class Robot:
             # coords_y = y + left_dist * np.sin(th)
         elif right_dist < acceptable_dist:
             flag = True
-            print("Right")
             coords_x = front_right_ultrasonic.y_offset * math.sin(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.cos(self.pose.theta)
             coords_y = front_right_ultrasonic.y_offset * math.cos(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.sin(self.pose.theta)
 
