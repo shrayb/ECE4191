@@ -166,7 +166,9 @@ class Robot:
             sleep(0.25)
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
             if flag:
-                self.gaslight_exam = True
+                self.map_class.path = [Pose(0.65, 0.3), Pose(0.4, 0.3), Pose(0.3, 0.8)]
+                self.path_queue = self.map_class.path
+                
                 self.is_impending_collision = True
                 break
                 # Add the new-found obstacle
