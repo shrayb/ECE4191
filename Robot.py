@@ -188,7 +188,7 @@ class Robot:
         initial_pose = deepcopy(self.pose)
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
-        while tick_sum < max_ticks / 2:
+        while tick_sum < max_ticks:
             # Check if there will be a collision
             if self.is_impending_collision:
                 break
@@ -259,7 +259,7 @@ class Robot:
         sleep(0.1)
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
-        distance_turned = (tick_sum / 2) * self.distance_per_tick
+        distance_turned = 0.5 * tick_sum * self.distance_per_tick
         measured_angle = distance_turned / self.turn_radius
 
         if angle > 0:
@@ -301,7 +301,7 @@ class Robot:
 
         # Use the tick count to estimate where the robot is
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
-        measure_distance = (tick_sum / 2) * self.distance_per_tick
+        measure_distance = 0.5 * tick_sum * self.distance_per_tick
 
         self.pose.x = initial_pose.x + measure_distance * math.cos(initial_pose.theta)
         self.pose.y = initial_pose.y + measure_distance * math.sin(initial_pose.theta)
