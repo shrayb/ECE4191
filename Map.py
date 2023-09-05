@@ -17,6 +17,7 @@ class Map:
         self.obstacle_polygon = None
         self.path = []
         self.robot_size = 0.3  # Metres diameter
+        self.safe_distance = self.robot_size / 2 + self.obstacle_guess_width / 2 + 0.05  # Distance to travel in perpendicular direction
 
     def plot_grid(self):
         free_space_x = []
@@ -116,7 +117,7 @@ class Map:
         intermediate_point_count = 1
         waypoints = []
         while not is_solution_found:
-            intermediate_points, position_array, distance_array = create_intermediate_points(path_start, path_end, intermediate_point_count)
+            intermediate_points, position_array, distance_array = create_intermediate_points(path_start, path_end, intermediate_point_count, self.safe_distance)
             perpendicular_angle = math.atan2(goal_coordinate.y - robot_pose.y, goal_coordinate.x - robot_pose.x) + math.pi / 2
             while will_collide:
                 updated_points = []
@@ -236,6 +237,24 @@ class Map:
         y_coord = int(math.floor(point.y / self.node_gap))
         return x_coord, y_coord
 
+
+def create_intermediate_points(self, start: Pose, end: Pose, number_of_points: int, safe_distance):
+    start_end_distance = calculate_distance_between_points(start, end)
+    each_point_distance = start_end_distance / (number_of_points + 1)
+
+    start_end_angle = math.atan2(end.y - start.y, end.x - start.x)
+    intermediate_points = []
+    position_array = []
+    distance_array = []
+    for index in range(number_of_points):
+        current_angled_distance = each_point_distance * (index + 1)
+        new_point = create_point(start, current_angled_distance, start_end_angle)
+        intermediate_points.append(new_point)
+        position_array.append(0)
+        distance_array.append(safe_distance)
+
+    return intermediate_points, position_array, distance_array
+
 def increment_base_3_number(input_list: list):
     bits = len(input_list)
     output = input_list
@@ -256,23 +275,6 @@ def increment_base_3_number(input_list: list):
             carry_flag = False
 
     return output
-
-def create_intermediate_points(start: Pose, end: Pose, number_of_points: int):
-    start_end_distance = calculate_distance_between_points(start, end)
-    each_point_distance = start_end_distance / (number_of_points + 1)
-
-    start_end_angle = math.atan2(end.y - start.y, end.x - start.x)
-    intermediate_points = []
-    position_array = []
-    distance_array = []
-    for index in range(number_of_points):
-        current_angled_distance = each_point_distance * (index + 1)
-        new_point = create_point(start, current_angled_distance, start_end_angle)
-        intermediate_points.append(new_point)
-        position_array.append(0)
-        distance_array.append(current_angled_distance * 0.8)
-
-    return intermediate_points, position_array, distance_array
 
 
 if __name__ == "__main__":
