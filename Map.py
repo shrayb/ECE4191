@@ -101,10 +101,14 @@ class Map:
         #             self.map_grid[x_index, y_index] = 1
         # Check if any point in the map grid overlap with the bounding box
         # TODO I think this is slow as hell, try to make it faster somehow
+        print(self.obstacle_polygon.vertices[0])
+        print(self.obstacle_polygon.vertices[1])
+        print(self.obstacle_polygon.vertices[2])
+        print(self.obstacle_polygon.vertices[3])
         for x_index in range(self.x_count):
             for y_index in range(self.y_count):
                 world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
-                print("WOrld point:", world_point.x, world_point.y)
+                print("World point:", world_point.x, world_point.y)
                 if bounding_box.contains(world_point):
                     self.map_grid[x_index, y_index] = 1
 
