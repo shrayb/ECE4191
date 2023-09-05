@@ -111,12 +111,12 @@ class Robot:
 
             # Drive to first waypoint
             self.drive_to_coordinate(self.path_queue[0])
-
+            print(self.path_queue)
             # Remove first waypoint from queue
             if self.successful_waypoint:
                 self.path_queue.pop(0)
                 self.path_is_tested = False
-                if len(self.path_queue) == 0 and self.successful_waypoint:
+                if len(self.path_queue) == 0:
                     print("deleting current goal")
                     self.current_goal = None
 
