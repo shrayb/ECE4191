@@ -355,7 +355,7 @@ class Robot:
         x, y, th = self.pose.x, self.pose.y, self.pose.theta
 
         if left_dist is None or right_dist is None:
-            return False
+            return False, 0, 0, 0
 
         # Convert to metres
         left_dist /= 100
