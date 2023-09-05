@@ -7,9 +7,9 @@ import numpy as np
 
 class Map:
     def __init__(self):
-        self.obstacle_guess_width = 0.15  # Create an obstacle of 9 cm
-        self.obstacle_guess_depth = 0.15  # Create an obstacle of 9 cm
-        self.node_gap = 0.050  # 5 cm between each node
+        self.obstacle_guess_width = 0.20  # Create an obstacle of 20 cm wide
+        self.obstacle_guess_depth = 0.20  # Create an obstacle of 20 cm deep
+        self.node_gap = 0.050  # Metres between each node
         self.map_size = (1.5, 1.5)
         self.x_count = int(math.ceil(self.map_size[0] / self.node_gap))
         self.y_count = int(math.ceil(self.map_size[1] / self.node_gap))
@@ -80,9 +80,21 @@ class Map:
         self.obstacle_polygon = bounding_box
 
         # Check if any point in the map grid overlap with the bounding box
-        # TODO I think this is slow as hell, try to make it faster somehow
-        for x_index in range(self.x_count):
-            for y_index in range(self.y_count):
+        bot_left_x, bot_left_y = self.find_closest_node(self.obstacle_polygon.vertices[0])
+        top_left_x, top_left_y = self.find_closest_node(self.obstacle_polygon.vertices[1])
+        top_right_x, top_right_y = self.find_closest_node(self.obstacle_polygon.vertices[2])
+        bot_right_x, bot_right_y = self.find_closest_node(self.obstacle_polygon.vertices[3])
+
+        lowest_x = min([bot_left_x, top_left_x, top_right_x, bot_right_x])
+        highest_x = max([bot_left_x, top_left_x, top_right_x, bot_right_x])
+        lowest_y = min([bot_left_y, top_left_y, top_right_y, bot_right_y])
+        highest_y = max([bot_left_y, top_left_y, top_right_y, bot_right_y])
+
+        # Check the points around the boundary if they are in the obstacle
+        for x_index in range(lowest_x, highest_x + 1):
+            x_index = max(0, min(x_index, self.x_count))
+            for y_index in range(lowest_y, highest_y + 1):
+                y_index = max(0, min(y_index, self.y_count))
                 world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
                 if bounding_box.contains(world_point):
                     self.map_grid[x_index, y_index] = 1
@@ -274,7 +286,7 @@ if __name__ == "__main__":
     print("START")
     the_map = Map()
     the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(0.5, 0.5))
-    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(4 / 30, 20 / 30))
+    the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(3 / 30, 20 / 30))
     the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(15 / 30, 2.5 / 30))
     the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(5 / 30, 11 / 30))
     the_map.add_obstacle_to_grid(3 * math.pi / 4, Pose(5 / 30, 38 / 30))

@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+import FakeRPi.GPIO as GPIO
 from time import sleep, time
 import math
 
@@ -183,10 +183,6 @@ class Obstacle:
         self.boundary = boundary  # A polygon class that makes the bounding box of the obstacle
         self.tolerance = tolerance  # The distance in metres the robot is allowed to the bounding box of the obstacle
 
-class Path:
-    def __init__(self):
-        self.waypoint_queue = None
-
 class Package:
     def __init__(self, colour=None):
         self.colour = colour  # A unique id number for a destination e.g: "red", "green", "blue"
@@ -342,10 +338,4 @@ class Ultrasonic:
         pulse_duration = pulse_end - pulse_start
         distance = pulse_duration * 17150  # Speed of sound in cm/s
 
-        # print(f"Distance: {distance:.2f} cm")
-
-        # distance = pulse_duration * 17150  # Speed of sound in cm/s
-
         return distance
-    
-    
