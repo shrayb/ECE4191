@@ -139,6 +139,7 @@ class Robot:
                     self.is_impending_collision = True
                     self.map_class.plan_path(self.pose, self.current_goal)
                     self.path_queue = self.map_class.path
+                    self.path_is_tested = False
                     print("Done making path")
                     print("Path queue data:", self.path_queue)
                     print("Path coords:")
