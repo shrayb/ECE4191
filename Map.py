@@ -17,7 +17,7 @@ class Map:
         self.map_grid = np.zeros((self.x_count, self.y_count))
         self.obstacle_polygon = None
         self.path = []
-        self.safe_distance = self.robot_size / 2 + self.obstacle_guess_width / 2 + 0.10  # Distance to travel in perpendicular direction
+        self.safe_distance = self.robot_size / 2 + self.obstacle_guess_width / 2 + 0.25  # Distance to travel in perpendicular direction
 
     def plot_grid(self):
         free_space_x = []
