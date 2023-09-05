@@ -112,7 +112,9 @@ class Robot:
             self.drive_to_coordinate(self.path_queue[0])
 
             # Remove first waypoint from queue
-            self.path_queue.pop(0)
+            if self.path_is_tested:
+                self.path_queue.pop(0)
+
             sleep(0.1)
 
     def encoder_update_loop(self):
