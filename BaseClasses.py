@@ -103,7 +103,7 @@ class Segment:
 class Polygon:
     def __init__(self, vertices=None):
         self.vertices = vertices  # List of Point instances
-        self.maximum = 2  # metres
+        self.maximum = 3  # metres
         self.segments = self.calculate_segments()
         self.count = self.calculate_count()
         self.centroid = self.calculate_centroid()
@@ -153,8 +153,10 @@ class Polygon:
         intersections = []
         for segment in self.segments:
             if do_segments_intersect(ray, segment):
-                intersection_count += 1
-                intersections.append(find_segment_intersection(ray, segment))
+                intersection_point = find_segment_intersection(ray, segment)
+                if intersection_point is not None:
+                    intersection_count += 1
+                    intersections.append(intersection_point)
 
         # If no intersections, point not in the polygon
         if intersection_count == 0:
