@@ -52,7 +52,7 @@ drive_thread.start()
 
 def loop():
     # Define waypoints to go to in order
-    robot.current_goal = Pose(1.0, 0.25, 0)
+    robot.current_goal = Pose(1.25, 0.25, 0)
 
     # Loop and travel to each waypoint
     if not robot.is_moving:

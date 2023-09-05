@@ -10,7 +10,7 @@ class Map:
         self.obstacle_guess_width = 0.25  # Create an obstacle of 20 cm wide
         self.obstacle_guess_depth = 0.20  # Create an obstacle of 20 cm deep
         self.node_gap = 0.050  # Metres between each node
-        self.map_size = (1.2, 1.2)
+        self.map_size = (1.5, 1.5)
         self.x_count = int(math.ceil(self.map_size[0] / self.node_gap))
         self.y_count = int(math.ceil(self.map_size[1] / self.node_gap))
         self.map_grid = np.zeros((self.x_count, self.y_count))
