@@ -51,7 +51,7 @@ class Robot:
         self.turn_radius = 0.12753  # Metres
         self.wheel_radius = 0.05484  # Metres
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
-        self.max_speed = 80  # Upper percentage for maximum speed
+        self.max_speed = 70  # Upper percentage for maximum speed
         self.slow_speed = 100  # Upper percentage for slower speed
         self.PID_gain = 1.3  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_class = None
