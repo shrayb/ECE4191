@@ -75,7 +75,8 @@ def loop():
                 # robot.path_queue.pop(0)
             
             if robot.current_goal.x == 0.3 and robot.current_goal.y == 0.8 and robot.gaslight_exam:
-                robot.map_class.path = [Pose(0.8, 0.8), Pose(0.65, 0.3), Pose(0.4, 0.3), Pose(0.3, 0.8)]
+                print("waypoint 1 to 2 test")
+                robot.map_class.path = [Pose(0.65, 0.3), Pose(0.4, 0.3), Pose(0.3, 0.8)]
                 robot.path_queue = robot.map_class.path
                 robot.is_impending_collision = False
 
