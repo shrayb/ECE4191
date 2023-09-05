@@ -135,7 +135,7 @@ class Robot:
                 self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
 
                 # Check for collisions
-                is_collision = self.map_class.check_for_collision(self.map_class.path, self.pose)
+                is_collision = self.map_class.check_for_collision(self.path_queue, self.pose)
 
                 # If collision, re-plan path
                 if is_collision:
