@@ -352,6 +352,9 @@ class Robot:
             coords_x = x + 0.5 * (left_dist + right_dist) * np.cos(th)
             coords_y = y + 0.5 * (left_dist + right_dist) * np.sin(th)
         elif left_dist < acceptable_dist:
+            
+
+
             flag = True
             coords_x = x + left_dist * np.cos(th)
             coords_y = y + left_dist * np.sin(th)
