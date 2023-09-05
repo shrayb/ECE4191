@@ -105,6 +105,8 @@ class Robot:
             sleep(0.25)
             # Check if there are any waypoints in the queue
             if len(self.path_queue) == 0 or self.is_impending_collision or self.path_is_tested:
+                print("impending:", self.is_impending_collision)
+                print("path is tested:", self.path_is_tested)
                 continue
 
             # Drive to first waypoint
