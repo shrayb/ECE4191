@@ -7,8 +7,9 @@ import numpy as np
 
 class Map:
     def __init__(self):
-        self.obstacle_guess_width = 0.25  # Create an obstacle of 20 cm wide
-        self.obstacle_guess_depth = 0.20  # Create an obstacle of 20 cm deep
+        self.robot_size = 0.3  # Metres diameter
+        self.obstacle_guess_width = 0.25 + self.robot_size / 2  # Create an obstacle of 20 cm wide
+        self.obstacle_guess_depth = 0.09 + self.robot_size / 2  # Create an obstacle of 20 cm deep
         self.node_gap = 0.050  # Metres between each node
         self.map_size = (1.5, 1.5)
         self.x_count = int(math.ceil(self.map_size[0] / self.node_gap))
@@ -16,7 +17,6 @@ class Map:
         self.map_grid = np.zeros((self.x_count, self.y_count))
         self.obstacle_polygon = None
         self.path = []
-        self.robot_size = 0.3  # Metres diameter
         self.safe_distance = self.robot_size / 2 + self.obstacle_guess_width / 2 + 0.10  # Distance to travel in perpendicular direction
 
     def plot_grid(self):
