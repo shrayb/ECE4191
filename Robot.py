@@ -358,6 +358,7 @@ class Robot:
         acceptable_dist = 0.25
         if left_dist < acceptable_dist and right_dist < acceptable_dist:
             flag = True
+            print("Both")
             coords_x = x + (front_left_ultrasonic.x_offset + 0.5 * (left_dist + right_dist)) * math.cos(self.pose.theta)
             coords_y = y + (front_left_ultrasonic.x_offset + 0.5 * (left_dist + right_dist)) * math.sin(self.pose.theta)
 
@@ -365,6 +366,7 @@ class Robot:
             # coords_y = y + 0.5 * (left_dist + right_dist) * np.sin(th)
         elif left_dist < acceptable_dist:
             flag = True
+            print("Left")
             coords_x = front_left_ultrasonic.y_offset * math.sin(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.cos(self.pose.theta)
             coords_y = front_left_ultrasonic.y_offset * math.cos(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.sin(self.pose.theta)
 
@@ -372,6 +374,7 @@ class Robot:
             # coords_y = y + left_dist * np.sin(th)
         elif right_dist < acceptable_dist:
             flag = True
+            print("Right")
             coords_x = front_right_ultrasonic.y_offset * math.sin(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.cos(self.pose.theta)
             coords_y = front_right_ultrasonic.y_offset * math.cos(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.sin(self.pose.theta)
 
