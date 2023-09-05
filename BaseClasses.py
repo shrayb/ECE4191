@@ -166,8 +166,6 @@ class Polygon:
         indices_to_remove = []
         for index1, point1 in enumerate(intersections):
             for index2, point2 in enumerate(intersections):
-                print("Point 1:", point1.x, point1.y)
-                print("Point 2:", point2.x, point2.y)
                 if index1 != index2 and point1.equals(point2):
                     indices_to_remove.append(index1)
 
