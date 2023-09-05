@@ -8,8 +8,8 @@ import numpy as np
 class Map:
     def __init__(self):
         self.robot_size = 0.3  # Metres diameter
-        self.obstacle_guess_width = 0.25 + self.robot_size / 2  # Create an obstacle of 20 cm wide
-        self.obstacle_guess_depth = 0.09 + self.robot_size / 2  # Create an obstacle of 20 cm deep
+        self.obstacle_guess_width = 0.25# + self.robot_size / 2  # Create an obstacle of 20 cm wide
+        self.obstacle_guess_depth = 0.09# + self.robot_size / 2  # Create an obstacle of 20 cm deep
         self.node_gap = 0.050  # Metres between each node
         self.map_size = (1.2, 1.2)
         self.x_count = int(math.ceil(self.map_size[0] / self.node_gap))
