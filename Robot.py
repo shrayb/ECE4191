@@ -300,6 +300,11 @@ class Robot:
         self.pose.x = initial_pose.x + measure_distance * math.cos(initial_pose.theta)
         self.pose.y = initial_pose.y + measure_distance * math.sin(initial_pose.theta)
 
+        if measure_distance < distance:
+            return None
+
+        return True
+
     def drive_to_coordinate(self, coordinate):
         print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
 
@@ -321,7 +326,7 @@ class Robot:
 
         # Find distance to drive
         distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
-        self.do_drive(distance)
+        drive_flag = self.do_drive(distance)
         print("\t\tDrive complete")
         sleep(0.1)
 
@@ -335,9 +340,10 @@ class Robot:
             self.do_turn(angle_difference)
 
         self.is_moving = False
-        self.successful_waypoint = True
+        if drive_flag is not None:
+            self.successful_waypoint = True
         sleep(0.1)
-    
+
     def detect_obstacle(self, front_left_ultrasonic=None, front_right_ultrasonic=None):
         left_dist = front_left_ultrasonic.measure_dist()
         right_dist = front_right_ultrasonic.measure_dist()
