@@ -104,6 +104,10 @@ class Robot:
 
             # Check if there are any waypoints in the queue
             if len(self.path_queue) == 0 or self.is_impending_collision or self.path_is_tested:
+                print("\tPath queue length:", len(self.path_queue))
+                print("\tImpending collision:", self.is_impending_collision)
+                print("\tPath is tested:", self.path_is_tested)
+                sleep(0.5)
                 continue
             print("No collision. Start driving to waypoint")
 
