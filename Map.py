@@ -96,6 +96,7 @@ class Map:
             for y_index in range(lowest_y, highest_y + 1):
                 y_index = max(0, min(y_index, self.y_count))
                 world_point = Pose(x_index * self.node_gap, y_index * self.node_gap)
+                print("WOrld point:", world_point.x, world_point.y)
                 if bounding_box.contains(world_point):
                     self.map_grid[x_index, y_index] = 1
 
