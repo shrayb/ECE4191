@@ -134,6 +134,10 @@ class Robot:
                 # Add the new-found obstacle
                 self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
 
+                print("Path Queue:")
+                print("\t", self.pose.x, self.pose.y)
+                for point in self.path_queue:
+                    print("\t", point.x, point.y)
                 # Check for collisions
                 is_collision = self.map_class.check_for_collision(self.path_queue, self.pose)
 
