@@ -101,7 +101,7 @@ class Robot:
         # THREAD FUNCTION
         # Will drive to whatever waypoints are in the path queue variable in order and remove them
         while True:
-
+            sleep(0.25)
             # Check if there are any waypoints in the queue
             if len(self.path_queue) == 0 or self.is_impending_collision or self.path_is_tested:
                 continue
@@ -115,8 +115,6 @@ class Robot:
             if self.path_is_tested:
                 self.path_queue.pop(0)
                 self.path_is_tested = False
-
-            sleep(0.1)
 
     def encoder_update_loop(self):
         while True:
