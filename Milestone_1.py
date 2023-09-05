@@ -56,7 +56,6 @@ def loop():
                  Pose(0.9, 0.8),
                  Pose(0.3, 0.8),
                  Pose(0.3, 0.2, 0)]
-    robot.current_goal = Pose(0.9, 0.8, 0)
 
     while True:
         # Loop and travel to each waypoint
