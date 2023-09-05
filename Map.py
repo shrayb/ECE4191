@@ -179,9 +179,7 @@ class Map:
                 is_solution_found = True
                 break
 
-        # Pop first point as it is where you will start
         print("Exited path planning while loop")
-        waypoints.pop(0)
 
         self.path = waypoints
         return self.path
