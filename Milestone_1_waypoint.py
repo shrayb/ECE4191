@@ -67,19 +67,6 @@ def loop():
                 break
             # Travel to next waypoint
             robot.current_goal = waypoints[0]
-            if robot.current_goal.x == 0.9 and robot.current_goal.y == 0.8 and robot.gaslight_exam:
-                robot.map_class.path = [Pose(0.9, 0.5), Pose(0.9, 0.8)]
-                robot.path_queue = robot.map_class.path
-                robot.is_impending_collision = False
-                # robot.create_path()
-                # robot.path_queue.pop(0)
-            
-            if robot.current_goal.x == 0.3 and robot.current_goal.y == 0.8 and robot.gaslight_exam:
-                print("waypoint 1 to 2 test")
-                robot.map_class.path = [Pose(0.65, 0.3), Pose(0.4, 0.3), Pose(0.3, 0.8)]
-                robot.path_queue = robot.map_class.path
-                robot.is_impending_collision = False
-
             robot.map_class.path = [robot.current_goal]
             robot.path_queue = robot.map_class.path
             # robot.create_path()

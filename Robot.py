@@ -160,29 +160,6 @@ class Robot:
                     print("\t", self.pose.x, self.pose.y)
                     for point in self.path_queue:
                         print("\t", point.x, point.y)
-
-    def ultrasonic_update_loop_waypoint(self):
-        while True:
-            sleep(0.25)
-            flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
-            if flag:
-                if self.current_goal.x==0.9 and self.current_goal.y == 0.8:
-
-                    self.map_class.path = [Pose(0.9, 0.5), Pose(0.9, 0.8)]
-                    self.path_queue = self.map_class.path
-                    self.is_impending_collision = True
-                    flag = False
-
-                elif self.current_goal.x==0.3 and self.current_goal.y == 0.8:
-                    print("=======================================")
-                    print("OBSTACLE DETECTED!")
-                    print("=======================================")
-                    num = .00001*random.randint(-1000,1000)
-                    self.map_class.path = [Pose(0.6501234346045 + num, 0.3023534047+ num), Pose(0.321002353654+num, 0.29801214234+num), Pose(0.3, 0.8)]
-                    self.path_queue = self.map_class.path
-                    self.is_impending_collision = True
-                    flag = False
-                    break
                 
     def deposit_package(self):
         # Deposit the next package
@@ -341,6 +318,33 @@ class Robot:
             return None
 
         return True
+    
+    def ultrasonic_update_loop_waypoint(self):
+        while True:
+            sleep(0.2)
+            flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
+            if flag:
+                if self.current_goal.x==0.9 and self.current_goal.y == 0.8:
+                    print("=======================================")
+                    print("OBSTACLE DETECTED!")
+                    print("=======================================")
+                    self.map_class.path = [Pose(0.9, 0.5), Pose(0.9, 0.8)]
+                    self.path_queue = self.map_class.path
+                    self.is_impending_collision = True
+                    flag = False
+                    sleep(5)
+                    continue
+
+                elif self.current_goal.x==0.3 and self.current_goal.y == 0.8:
+                    print("=======================================")
+                    print("OBSTACLE DETECTED!")
+                    print("=======================================")
+                    num = .00001*random.randint(-1000,1000)
+                    self.map_class.path = [Pose(0.6501234346045 + num, 0.3023534047+ num), Pose(0.321002353654+num, 0.29801214234+num), Pose(0.3, 0.8)]
+                    self.path_queue = self.map_class.path
+                    self.is_impending_collision = True
+                    flag = False
+                    break
 
     def drive_to_coordinate(self, coordinate):
         print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
