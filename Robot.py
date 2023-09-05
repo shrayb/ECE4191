@@ -101,7 +101,7 @@ class Robot:
         # Will drive to whatever waypoints are in the path queue variable in order and remove them
         while True:
             # Check if there are any waypoints in the queue
-            if len(self.path_queue) == 0 or self.is_impending_collision:
+            if len(self.path_queue) == 0 or self.is_impending_collision or self.path_queue is None:
                 continue
             print("No collision. Start driving to waypoint")
             sleep(0.1)
