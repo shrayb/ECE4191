@@ -187,19 +187,16 @@ class Robot:
             left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
             tick_sum = self.left_motor.ticks + self.right_motor.ticks
 
-            # # Every two ticks slow down the leading motor by 1 speed
-            # if left_tick_advantage > 0:
-            #     left_motor_speed = max(max_speed - math.floor(left_tick_advantage / (2 / self.PID_gain)), 0)
-            #     right_motor_speed = max_speed
-            # elif left_tick_advantage < 0:
-            #     left_motor_speed = max_speed
-            #     right_motor_speed = max(max_speed + math.ceil(left_tick_advantage / (2 / self.PID_gain)), 0)
-            # else:
-            #     left_motor_speed = max_speed
-            #     right_motor_speed = max_speed
-
-            left_motor_speed = self.max_speed
-            right_motor_speed = self.max_speed
+            # Every two ticks slow down the leading motor by 1 speed
+            if left_tick_advantage > 0:
+                left_motor_speed = max(max_speed - math.floor(left_tick_advantage / (2 / self.PID_gain)), 0)
+                right_motor_speed = max_speed
+            elif left_tick_advantage < 0:
+                left_motor_speed = max_speed
+                right_motor_speed = max(max_speed + math.ceil(left_tick_advantage / (2 / self.PID_gain)), 0)
+            else:
+                left_motor_speed = max_speed
+                right_motor_speed = max_speed
 
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
