@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+import FakeRPi.GPIO as GPIO
 from time import sleep, time
 import math
 
