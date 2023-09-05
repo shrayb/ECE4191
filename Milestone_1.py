@@ -62,9 +62,9 @@ def loop():
         # Loop and travel to each waypoint
         sleep(1)
         if not robot.is_moving and robot.current_goal is None:
+            waypoints.pop(0)
             if len(waypoints) == 0:
                 break
-            waypoints.pop(0)
             # Travel to next waypoint
             robot.current_goal = waypoints[0]
             robot.create_path()
