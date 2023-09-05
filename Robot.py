@@ -58,6 +58,7 @@ class Robot:
         self.create_map_class()
         self.is_plot = False
         self.done_plot = False
+        self.path_is_tested = False
 
     def create_map_class(self):
         map_class = Map()
@@ -124,7 +125,7 @@ class Robot:
             sleep(0.1)
             if flag:
                 print("Obstacle Found at:", coords_x, coords_y)
-            if flag and len(self.path_queue) > 0:
+            if flag and len(self.path_queue) > 0 and self.path_is_tested:
                 # Add the new-found obstacle
                 self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
 
@@ -327,6 +328,8 @@ class Robot:
         if self.is_impending_collision:
             self.is_moving = False
             return None
+
+        self.path_is_tested = True
 
         # Find distance to drive
         distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
