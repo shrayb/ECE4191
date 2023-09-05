@@ -124,7 +124,7 @@ class Robot:
 
     def ultrasonic_update_loop(self):
         while True:
-            sleep(0.25)
+            sleep(0.2)
             flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
             if flag:
                 print("Obstacle detected at:", coords_x, coords_y)
