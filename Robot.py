@@ -109,6 +109,7 @@ class Robot:
             if len(self.path_queue) == 0 or self.is_impending_collision or self.path_is_tested:
                 print("impending:", self.is_impending_collision)
                 print("path is tested:", self.path_is_tested)
+                self.is_impending_collision = False
                 continue
 
             # Drive to first waypoint
