@@ -325,8 +325,8 @@ class Ultrasonic:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.trig_pin, GPIO.OUT)
         GPIO.setup(self.echo_pin, GPIO.IN)
-        self.x = x_offset
-        self.y = y_offset
+        self.x_offset = x_offset
+        self.y_offset = y_offset
 
     def measure_dist(self):
         GPIO.output(self.trig_pin, True)
