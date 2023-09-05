@@ -350,12 +350,16 @@ class Robot:
         sleep(0.1)
     
     def detect_obstacle(self, front_left_ultrasonic=None, front_right_ultrasonic=None):
-        left_dist = front_left_ultrasonic.measure_dist() / 100  # Convert to metres
-        right_dist = front_right_ultrasonic.measure_dist() / 100  # Convert to metres
+        left_dist = front_left_ultrasonic.measure_dist()
+        right_dist = front_right_ultrasonic.measure_dist()
         x, y, th = self.pose.x, self.pose.y, self.pose.theta
 
         if left_dist is None or right_dist is None:
             return False
+
+        # Convert to metres
+        left_dist /= 100
+        right_dist /= 100
 
         # Make sure reading isn't a wall
         if left_dist < 0.3 and right_dist < 0.3:
