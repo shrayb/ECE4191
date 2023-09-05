@@ -52,17 +52,16 @@ drive_thread.start()
 
 def loop():
     # Define waypoints to go to in order
-    robot.path_queue.append(Pose(1.0, 0.0))
+    robot.current_goal = Pose(1.0, 0.0)
 
     # Loop and travel to each waypoint
     while True:
         if not robot.is_moving:
             if len(robot.path_queue) > 0:
                 # Travel to next waypoint
-                robot.is_moving = True
-                robot.current_goal = robot.path_queue[0]
                 robot.create_path()
-                robot.path_queue.pop(0)
+                # robot.path_queue.pop(0)
+                robot.is_moving = True
 
                 # robot.map_class.plot_grid()
 

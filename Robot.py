@@ -104,13 +104,14 @@ class Robot:
             if len(self.path_queue) == 0 or self.is_impending_collision or self.path_queue is None:
                 continue
             print("No collision. Start driving to waypoint")
-            sleep(0.1)
+
             # Drive to first waypoint
             print("PATH QUEUE:", self.path_queue)
             self.drive_to_coordinate(self.path_queue[0])
 
             # Remove first waypoint from queue
             self.path_queue.pop(0)
+            sleep(0.1)
 
     def encoder_update_loop(self):
         while True:
