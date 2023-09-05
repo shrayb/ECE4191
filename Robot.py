@@ -117,6 +117,7 @@ class Robot:
                 print("Popping waypoint")
                 self.path_queue.pop(0)
                 self.path_is_tested = False
+                self.successful_waypoint = False
                 if len(self.path_queue) == 0 and not self.is_impending_collision:
                     print("deleting current goal")
                     self.current_goal = None
