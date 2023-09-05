@@ -17,7 +17,7 @@ class Map:
         self.obstacle_polygon = None
         self.path = []
         self.robot_size = 0.3  # Metres diameter
-        self.safe_distance = self.robot_size / 2 + self.obstacle_guess_width / 2 + 0.05  # Distance to travel in perpendicular direction
+        self.safe_distance = self.robot_size / 2 + self.obstacle_guess_width / 2 + 0.10  # Distance to travel in perpendicular direction
 
     def plot_grid(self):
         free_space_x = []
@@ -114,7 +114,7 @@ class Map:
 
         # Create intermediate points and move them around
         is_solution_found = False
-        intermediate_point_count = 1
+        intermediate_point_count = 2
         waypoints = []
         while not is_solution_found:
             intermediate_points, position_array, distance_array = create_intermediate_points(path_start, path_end, intermediate_point_count, self.safe_distance)
