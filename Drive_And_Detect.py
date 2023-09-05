@@ -56,14 +56,15 @@ def loop():
 
     # Loop and travel to each waypoint
     while True:
-        if not robot.is_moving and len(robot.current_goal) > 0:
-            # Travel to next waypoint
-            robot.is_moving = True
-            robot.current_goal = waypoints[0]
-            robot.create_path()
-            waypoints.pop(0)
+        if not robot.is_moving and robot.current_goal is not None:
+            if len(robot.current_goal) > 0:
+                # Travel to next waypoint
+                robot.is_moving = True
+                robot.current_goal = waypoints[0]
+                robot.create_path()
+                waypoints.pop(0)
 
-            # robot.map_class.plot_grid()
+                # robot.map_class.plot_grid()
 
 
 if __name__ == "__main__":
