@@ -100,7 +100,7 @@ class Map:
                 if bounding_box.contains(world_point):
                     self.map_grid[x_index, y_index] = 1
 
-    def plan_path(self, robot_pose: Pose, goal_coordinate: Pose):
+    def plan_path(self, robot_pose: Pose, _goalcoordinate: Pose):
         print("Creating path from:", robot_pose.x, robot_pose.y, "| to:", goal_coordinate.x, goal_coordinate.y)
         # Create straight line from start to goal
         path_start = robot_pose

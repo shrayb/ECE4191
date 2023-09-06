@@ -1,5 +1,8 @@
 import math
 from time import sleep, time
+
+import numpy as np
+
 from BaseClasses import *
 from copy import deepcopy
 from Map import *
@@ -55,11 +58,13 @@ class Robot:
         self.slow_speed = 100  # Upper percentage for slower speed
         self.PID_gain = 1.3  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_class = None
+        self.map_size = (1.2, 1.2)
         self.create_map_class()
         self.is_plot = False
         self.done_plot = False
         self.path_is_tested = False
         self.successful_waypoint = False
+        self.sensor_readings = np.zeros(5, 5)  # 5 sensors by 5 past readings
 
         self.gaslight_exam = False # only for faking milestone 1
 
@@ -405,25 +410,58 @@ class Robot:
             flag = True
             coords_x = x + (front_left_ultrasonic.x_offset + 0.5 * (left_dist + right_dist)) * math.cos(self.pose.theta)
             coords_y = y + (front_left_ultrasonic.x_offset + 0.5 * (left_dist + right_dist)) * math.sin(self.pose.theta)
-
-            # coords_x = x + 0.5 * (left_dist + right_dist) * np.cos(th)
-            # coords_y = y + 0.5 * (left_dist + right_dist) * np.sin(th)
         elif left_dist < acceptable_dist:
             flag = True
             coords_x = front_left_ultrasonic.y_offset * math.sin(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.cos(self.pose.theta)
             coords_y = front_left_ultrasonic.y_offset * math.cos(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.sin(self.pose.theta)
-
-            # coords_x = x + left_dist * np.cos(th)
-            # coords_y = y + left_dist * np.sin(th)
         elif right_dist < acceptable_dist:
             flag = True
             coords_x = front_right_ultrasonic.y_offset * math.sin(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.cos(self.pose.theta)
             coords_y = front_right_ultrasonic.y_offset * math.cos(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.sin(self.pose.theta)
-
-            # coords_x = x + right_dist * np.cos(th)
-            # coords_y = y + right_dist * np.sin(th)
         else:
             flag = False
             coords_x, coords_y = None, None
 
         return flag, coords_x, coords_y, th
+
+    def detect_impending_collision(self, ultrasonic_unit):
+        # Get a reading
+        sonic_distance = ultrasonic_unit.measure_dist()
+
+        # Check that the distance is within acceptable sensor distance
+        if sonic_distance > ultrasonic_unit.maximum_read_distance:
+            self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
+            return None
+
+        # Create coordinate for obstacle
+        coords_x = ultrasonic_unit.y_offset * math.sin(self.pose.theta + ultrasonic_unit.theta) + (ultrasonic_unit.x_offset + sonic_distance) * math.cos(self.pose.theta + ultrasonic_unit.theta)
+        coords_y = ultrasonic_unit.y_offset * math.cos(self.pose.theta + ultrasonic_unit.theta) + (ultrasonic_unit.x_offset + sonic_distance) * math.sin(self.pose.theta + ultrasonic_unit.theta)
+
+        # Check if coordinate is a wall, if so return none
+        if coords_x < 0.05 or coords_x > self.map_size[0] - 0.05 or coords_y < 0.05 or coords_y > self.map_size[1] - 0.05:
+            self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
+            return None
+
+        # Add distance to proper array in the correct index
+        self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
+        self.sensor_readings[ultrasonic_unit.reading_index].append(sonic_distance)
+
+        # If object is getting closer
+        if object_getting_closer(self.sensor_readings[ultrasonic_unit.reading_index]):
+            self.sensor_readings[ultrasonic_unit.reading_index, 0] = True
+            return True
+
+        # Object not getting closer
+        return None
+
+def object_getting_closer(array):
+    # Check if all elements of array are descending from 1st index to end
+    for index in range(1, len(array) - 1):
+        first_val = array[index]
+        second_val = array[index + 1]
+
+        # If the distance goes up instead of down, it's not getting closer
+        if first_val < second_val:
+            return False
+
+    return True
