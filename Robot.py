@@ -60,6 +60,7 @@ class Robot:
         self.time_flag = False
         self.stopping_time = None
         self.safe_reversing = False
+        self.ultrasonic_names = ["Front Left", "Front Right"]
 
     def get_current_goal(self):
         if self.package is not None:
@@ -123,8 +124,6 @@ class Robot:
                     self.safe_reversing = True
                     self.is_impending_collision = False
                     self.do_drive(-0.1)  # Drive backwards 10 cm
-                    self.do_turn(math.pi / 2)
-                    self.do_drive(0.3)  # Drive forward 30 cm
                     self.safe_reversing = False
 
                 if should_it_stay:
@@ -165,7 +164,7 @@ class Robot:
                 for index in range(2):
                     if self.sensor_readings[index][0]:
                         self.is_impending_collision = True
-                        continue
+                        print("Object detected from sensor:", self.ultrasonic_names[index])
                 
     def deposit_package(self):
         # Deposit the next package
