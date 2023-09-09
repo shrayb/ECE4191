@@ -363,14 +363,6 @@ class Robot:
 
         coords = create_point(ultra_coords, sonic_distance, ultrasonic_unit.theta + self.pose.theta)
 
-        # coords_x = self.pose.x + sonic_distance * (math.cos(self.pose.theta)) + ultrasonic_unit.hypot * math.cos(self.pose.theta - ultrasonic_unit.centre_angle)
-        # coords_y = self.pose.y + sonic_distance * (math.sin(self.pose.theta)) + ultrasonic_unit.hypot * math.sin(self.pose.theta - ultrasonic_unit.centre_angle)
-
-        # Create coordinate for obstacle
-        print(self.pose.x, self.pose.y, self.pose.theta)
-        # coords_x = self.pose.x + (sonic_distance + ultrasonic_unit.y_offset) * math.sin(self.pose.theta + ultrasonic_unit.theta) + (ultrasonic_unit.x_offset + sonic_distance) * math.cos(self.pose.theta + ultrasonic_unit.theta)
-        # coords_y = self.pose.y + (sonic_distance + ultrasonic_unit.y_offset) * math.cos(self.pose.theta + ultrasonic_unit.theta) + (ultrasonic_unit.x_offset + sonic_distance) * math.sin(self.pose.theta + ultrasonic_unit.theta)
-
         # Check if coordinate is a wall, if so return none
         if coords.x < 0.05 or coords.x > self.map_size[0] - 0.05 or coords.y < 0.05 or coords.y > self.map_size[1] - 0.05:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
