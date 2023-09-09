@@ -123,6 +123,8 @@ class Robot:
                     self.safe_reversing = True
                     self.is_impending_collision = False
                     self.do_drive(-0.1)  # Drive backwards 10 cm
+                    self.do_turn(math.pi / 2)
+                    self.do_drive(0.3)  # Drive forward 30 cm
                     self.safe_reversing = False
 
                 if should_it_stay:
