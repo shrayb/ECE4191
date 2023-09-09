@@ -108,13 +108,13 @@ class Robot:
                     self.stopping_time = time()
 
                 # Check all sensors for if there is still an obstacle in the way
-                for index in range(1):
+                for index in range(2):
                     is_vision_blocked = self.is_vision_blocked(index)
                     self.sensor_readings[index][0] = is_vision_blocked
 
                 # Check all sensor flags
                 should_it_stay = False
-                for index in range(1):
+                for index in range(2):
                     if self.sensor_readings[index][0]:
                         should_it_stay = True
 
@@ -158,11 +158,11 @@ class Robot:
 
             # Update impending collision array
             self.detect_impending_collision(self.front_left_ultrasonic)
-            # self.detect_impending_collision(self.front_right_ultrasonic)
+            self.detect_impending_collision(self.front_right_ultrasonic)
 
             # Check if any sensors detect an impending collision
             if not self.safe_reversing:
-                for index in range(1):
+                for index in range(2):
                     if self.sensor_readings[index][0]:
                         self.is_impending_collision = True
                         continue
