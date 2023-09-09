@@ -115,15 +115,15 @@ class Robot:
 
     def ultrasonic_update_loop(self):
         while True:
-            sleep(0.2)
+            sleep(1)
 
             # Update impending collision array
             self.detect_impending_collision(self.front_left_ultrasonic)
-            self.detect_impending_collision(self.front_right_ultrasonic)
+            # self.detect_impending_collision(self.front_right_ultrasonic)
 
             # Check if any sensors detect an impending collision
             collision_flag = False
-            for index in range(2):
+            for index in range(1):
                 if self.sensor_readings[index, 0]:
                     collision_flag = True
             self.is_impending_collision = collision_flag
@@ -351,6 +351,7 @@ class Robot:
 
         # Check that the distance is within acceptable sensor distance
         if sonic_distance > ultrasonic_unit.maximum_read_distance:
+            print("Reading greater than max distance")
             self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
             return None
 
@@ -360,6 +361,8 @@ class Robot:
 
         # Check if coordinate is a wall, if so return none
         if coords_x < 0.05 or coords_x > self.map_size[0] - 0.05 or coords_y < 0.05 or coords_y > self.map_size[1] - 0.05:
+            print("Reading is a wall")
+            print("X:", coords_x, "| Y:", coords_y)
             self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
             return None
 
@@ -371,6 +374,8 @@ class Robot:
         if object_getting_closer(self.sensor_readings[ultrasonic_unit.reading_index]):
             self.sensor_readings[ultrasonic_unit.reading_index, 0] = True
             return None
+
+        print("Object not getting closer")
 
         # Object not getting closer
         self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
