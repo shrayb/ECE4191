@@ -55,12 +55,19 @@ class Robot:
         self.slow_speed = 100  # Upper percentage for slower speed
         self.PID_gain = 1.3  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_size = (1.9, 1.9)
-        self.sensor_readings = [[0] * 6] * 5  # 5 sensors by 6 columns
+        self.sensor_readings = self.set_default_sensor_readings()  # 5 Sensors by 6 columns
         self.drive_success = False
         self.time_flag = False
         self.stopping_time = None
         self.safe_reversing = False
         self.ultrasonic_names = ["Front Left", "Front Right"]
+
+    def set_default_sensor_readings(self):
+        sensor_readings = []
+        for index in range(5):  # 5 ultrasonics
+            sensor_readings.append([0] * 6)
+
+        return sensor_readings
 
     def get_current_goal(self):
         if self.package is not None:
@@ -429,7 +436,6 @@ class Robot:
 
         # Object not getting closer
         self.sensor_readings[ultrasonic_unit.reading_index][0] = False
-        return None
 
 def object_getting_closer(array):
     # Check if all elements of array are descending from 1st index to end
