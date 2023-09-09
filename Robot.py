@@ -146,7 +146,7 @@ class Robot:
     def is_vision_blocked(self, sensor_index):
         # Check if they are all None
         for index in range(1, len(self.sensor_readings[sensor_index])):
-            if self.sensor_readings[sensor_index][index] > 100:
+            if self.sensor_readings[sensor_index][index] is None:
                 return True
 
         return False
@@ -393,14 +393,14 @@ class Robot:
         if sonic_distance is None:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
-            self.sensor_readings[ultrasonic_unit.reading_index].append(100)
+            self.sensor_readings[ultrasonic_unit.reading_index].append(None)
             return None
 
         # Check that the distance is within acceptable sensor distance
         if sonic_distance > ultrasonic_unit.maximum_read_distance:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
-            self.sensor_readings[ultrasonic_unit.reading_index].append(100)
+            self.sensor_readings[ultrasonic_unit.reading_index].append(None)
             return None
 
         # Create coordinate for ultrasonic
@@ -413,7 +413,7 @@ class Robot:
         if coords.x < 0.05 or coords.x > self.map_size[0] - 0.05 or coords.y < 0.05 or coords.y > self.map_size[1] - 0.05:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
-            self.sensor_readings[ultrasonic_unit.reading_index].append(100)
+            self.sensor_readings[ultrasonic_unit.reading_index].append(None)
             return None
 
         # Add distance to proper array in the correct index
@@ -437,6 +437,9 @@ def object_getting_closer(array):
         second_val = array[index + 1]
 
         # If the distance goes up instead of down, it's not getting closer
+        if first_val is None or second_val is None:
+            return False
+
         if first_val < second_val:
             return False
 
