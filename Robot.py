@@ -104,7 +104,7 @@ class Robot:
 
                 # Check all sensor flags
                 for index in range(1):
-                    if self.sensor_readings[index][0] == True:
+                    if self.sensor_readings[index][0]:
                         continue
 
                 self.is_impending_collision = False
@@ -114,6 +114,7 @@ class Robot:
 
             # If drive was successful, remove the current goal
             if not self.is_impending_collision:
+                print("GOAL COMPLETE")
                 self.current_goal = None
 
     def encoder_update_loop(self):
