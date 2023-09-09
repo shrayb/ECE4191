@@ -330,6 +330,8 @@ class Ultrasonic:
         self.theta = theta
         self.maximum_read_distance = maximum_read_distance
         self.reading_index = reading_index
+        self.hypot = math.hypot(x_offset, y_offset)
+        self.centre_angle = math.atan2(y_offset, x_offset)
 
     def measure_dist(self):
         GPIO.output(self.trig_pin, True)
