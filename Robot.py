@@ -117,6 +117,11 @@ class Robot:
         while True:
             sleep(0.2)
 
+            print("ULTRASONIC ARRAY")
+            print("Latest:")
+            print("\t", self.sensor_readings[0, 1])
+            print("\t", self.sensor_readings[1, 1])
+
             # Update impending collision array
             self.detect_impending_collision(self.front_left_ultrasonic)
             self.detect_impending_collision(self.front_right_ultrasonic)
