@@ -106,12 +106,12 @@ class Robot:
                     self.sensor_readings[index][0] = is_vision_blocked
 
                 # Check all sensor flags
-                should_it_move = False
+                should_it_stay = False
                 for index in range(1):
                     if self.sensor_readings[index][0]:
-                        should_it_move = True
+                        should_it_stay = True
 
-                if not should_it_move:
+                if should_it_stay:
                     continue
 
                 self.is_impending_collision = False
