@@ -55,7 +55,7 @@ class Robot:
         self.slow_speed = 100  # Upper percentage for slower speed
         self.PID_gain = 1.3  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_size = (1.2, 1.2)
-        self.sensor_readings = np.zeros((5, 5)).tolist()  # 5 sensors by 5 past readings
+        self.sensor_readings = [[0] * 5] * 5  # 5 sensors by 5 past readings
         self.drive_success = False
 
     def get_current_goal(self):
@@ -122,7 +122,7 @@ class Robot:
             # Check if any sensors detect an impending collision
             collision_flag = False
             for index in range(1):
-                if self.sensor_readings[index, 0]:
+                if self.sensor_readings[index][0]:
                     collision_flag = True
             self.is_impending_collision = collision_flag
                 
