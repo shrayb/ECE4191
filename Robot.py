@@ -373,7 +373,7 @@ class Robot:
         print(self.pose.x, self.pose.y, self.pose.theta)
         # coords_x = self.pose.x + (sonic_distance + ultrasonic_unit.y_offset) * math.sin(self.pose.theta + ultrasonic_unit.theta) + (ultrasonic_unit.x_offset + sonic_distance) * math.cos(self.pose.theta + ultrasonic_unit.theta)
         # coords_y = self.pose.y + (sonic_distance + ultrasonic_unit.y_offset) * math.cos(self.pose.theta + ultrasonic_unit.theta) + (ultrasonic_unit.x_offset + sonic_distance) * math.sin(self.pose.theta + ultrasonic_unit.theta)
-        print("Ultra X:", ultra_coords.c, "| Ultra Y:", ultra_coords.y)
+        print("Ultra X:", ultra_coords.x, "| Ultra Y:", ultra_coords.y)
         print("X:", coords.x, "| Y:", coords.y)
 
         # Check if coordinate is a wall, if so return none
