@@ -115,7 +115,7 @@ class Robot:
 
     def ultrasonic_update_loop(self):
         while True:
-            sleep(1)
+            sleep(0.2)
 
             # Update impending collision array
             self.detect_impending_collision(self.front_left_ultrasonic)
@@ -315,6 +315,8 @@ class Robot:
     def detect_obstacle(self, front_left_ultrasonic=None, front_right_ultrasonic=None):
         left_dist = front_left_ultrasonic.measure_dist()
         right_dist = front_right_ultrasonic.measure_dist()
+        if left_dist is None or right_dist is None:
+            return None
         x, y, th = self.pose.x, self.pose.y, self.pose.theta
 
         if left_dist is None or right_dist is None:
@@ -347,11 +349,13 @@ class Robot:
     def detect_impending_collision(self, ultrasonic_unit):
         # Get a reading
         sonic_distance = ultrasonic_unit.measure_dist()
-        print("Reading distance:", sonic_distance)
+
+        if sonic_distance is None:
+            self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
+            return None
 
         # Check that the distance is within acceptable sensor distance
         if sonic_distance > ultrasonic_unit.maximum_read_distance:
-            print("Reading greater than max distance")
             self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
             return None
 
@@ -361,8 +365,6 @@ class Robot:
 
         # Check if coordinate is a wall, if so return none
         if coords_x < 0.05 or coords_x > self.map_size[0] - 0.05 or coords_y < 0.05 or coords_y > self.map_size[1] - 0.05:
-            print("Reading is a wall")
-            print("X:", coords_x, "| Y:", coords_y)
             self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
             return None
 
@@ -374,8 +376,6 @@ class Robot:
         if object_getting_closer(self.sensor_readings[ultrasonic_unit.reading_index]):
             self.sensor_readings[ultrasonic_unit.reading_index, 0] = True
             return None
-
-        print("Object not getting closer")
 
         # Object not getting closer
         self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
