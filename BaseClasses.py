@@ -327,7 +327,7 @@ class Ultrasonic:
         GPIO.setup(self.echo_pin, GPIO.IN)
         self.x_offset = x_offset
         self.y_offset = y_offset
-        self.theta = None
+        self.theta = theta
         self.maximum_read_distance = maximum_read_distance
         self.reading_index = reading_index
 
