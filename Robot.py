@@ -362,6 +362,8 @@ class Robot:
             return None
 
         # Create coordinate for obstacle
+        print("Pose:")
+        print(self.pose.x, self.pose.y, self.pose.theta)
         coords_x = ultrasonic_unit.y_offset * math.sin(self.pose.theta + ultrasonic_unit.theta) + (ultrasonic_unit.x_offset + sonic_distance) * math.cos(self.pose.theta + ultrasonic_unit.theta)
         coords_y = ultrasonic_unit.y_offset * math.cos(self.pose.theta + ultrasonic_unit.theta) + (ultrasonic_unit.x_offset + sonic_distance) * math.sin(self.pose.theta + ultrasonic_unit.theta)
 
