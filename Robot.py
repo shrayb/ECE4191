@@ -55,8 +55,7 @@ class Robot:
         self.slow_speed = 100  # Upper percentage for slower speed
         self.PID_gain = 1.3  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_size = (1.9, 1.9)
-        self.sensor_readings = [[0] * 5] * 5  # 5 sensors by 5 past readings
-        print(self.sensor_readings)
+        self.sensor_readings = [[0] * 6] * 5  # 5 sensors by 5 past readings
         self.drive_success = False
         self.time_flag = False
         self.stopping_time = None
