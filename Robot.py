@@ -57,6 +57,9 @@ class Robot:
         self.map_size = (1.2, 1.2)
         self.sensor_readings = [[0] * 5] * 5  # 5 sensors by 5 past readings
         self.drive_success = False
+        self.time_flag = False
+        self.stopping_time = None
+        self.safe_reversing = False
 
     def get_current_goal(self):
         if self.package is not None:
@@ -100,6 +103,10 @@ class Robot:
                 continue
 
             if self.is_impending_collision:
+                if not self.time_flag:
+                    self.time_flag = True
+                    self.stopping_time = time()
+
                 # Check all sensors for if there is still an obstacle in the way
                 for index in range(1):
                     is_vision_blocked = self.is_vision_blocked(index)
@@ -110,6 +117,13 @@ class Robot:
                 for index in range(1):
                     if self.sensor_readings[index][0]:
                         should_it_stay = True
+
+                if time() > self.stopping_time + 5:
+                    self.time_flag = False
+                    self.safe_reversing = True
+                    self.is_impending_collision = False
+                    self.do_drive(-0.1)  # Drive backwards 10 cm
+                    self.safe_reversing = False
 
                 if should_it_stay:
                     continue
@@ -145,10 +159,11 @@ class Robot:
             # self.detect_impending_collision(self.front_right_ultrasonic)
 
             # Check if any sensors detect an impending collision
-            for index in range(1):
-                if self.sensor_readings[index][0]:
-                    self.is_impending_collision = True
-                    continue
+            if not self.safe_reversing:
+                for index in range(1):
+                    if self.sensor_readings[index][0]:
+                        self.is_impending_collision = True
+                        continue
                 
     def deposit_package(self):
         # Deposit the next package
