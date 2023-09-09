@@ -56,6 +56,7 @@ class Robot:
         self.PID_gain = 1.3  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_size = (1.2, 1.2)
         self.sensor_readings = np.zeros((5, 5))  # 5 sensors by 5 past readings
+        self.drive_success = False
 
         self.gaslight_exam = False # only for faking milestone 1
 
@@ -102,6 +103,10 @@ class Robot:
 
             # Drive to current goal
             self.drive_to_coordinate(self.current_goal)
+
+            # If drive was successful, remove the current goal
+            if self.is_impending_collision:
+                self.current_goal = None
 
     def encoder_update_loop(self):
         while True:
