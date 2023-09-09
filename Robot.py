@@ -5,7 +5,6 @@ import numpy as np
 
 from BaseClasses import *
 from copy import deepcopy
-from Map import *
 import random
 class Robot:
     def __init__(self, pose=None, state="waiting"):
@@ -39,8 +38,6 @@ class Robot:
         # Sub-states of "delivering"
         #   "depositing": The robot is depositing the package into the destination
         self.current_goal = None  # Current coordinate the robot wants to end at
-        self.node_radius = 0.05  # metres
-        self.path_queue = []  # List of coordinates that the robot will go to in order
         self.package = None  # Package class that was currently scanned
         self.depositing = False  # Flag for when the conveyor motor is depositing a package
         self.left_motor = None  # Motor class for the left motor
@@ -57,26 +54,14 @@ class Robot:
         self.max_speed = 100  # Upper percentage for maximum speed
         self.slow_speed = 100  # Upper percentage for slower speed
         self.PID_gain = 1.3  # Raise to make the PID more sensitive, lower to make the PID less sensitive
-        self.map_class = None
         self.map_size = (1.2, 1.2)
-        self.create_map_class()
-        self.is_plot = False
-        self.done_plot = False
-        self.path_is_tested = False
-        self.successful_waypoint = False
         self.sensor_readings = np.zeros(5, 5)  # 5 sensors by 5 past readings
 
         self.gaslight_exam = False # only for faking milestone 1
 
-    def create_map_class(self):
-        map_class = Map()
-        self.map_class = map_class
-
-    def get_current_goal(self, arena_map=None):
+    def get_current_goal(self):
         if self.package is not None:
             return self.package.destination_pose
-        else:
-            return arena_map.pickup_location
 
     def continuous_scan(self):
         """
@@ -110,27 +95,13 @@ class Robot:
         # Will drive to whatever waypoints are in the path queue variable in order and remove them
         while True:
             sleep(0.25)
-            # Check if there are any waypoints in the queue
-            if len(self.path_queue) == 0 or self.is_impending_collision or self.path_is_tested:
-                # print("impending:", self.is_impending_collision)
-                # print("path is tested:", self.path_is_tested)
-                self.path_is_tested = False
-                self.is_impending_collision = False
+
+            # Check if there is an impending collision
+            if self.is_impending_collision:
                 continue
 
-            # Drive to first waypoint
-            self.drive_to_coordinate(self.path_queue[0])
-            print(self.path_queue)
-            # Remove first waypoint from queue
-            if self.successful_waypoint:
-                print("Popping waypoint")
-                self.path_queue.pop(0)
-                self.path_is_tested = False
-                self.successful_waypoint = False
-                if len(self.path_queue) == 0 and not self.is_impending_collision:
-                    sleep(10)
-                    print("deleting current goal")
-                    self.current_goal = None
+            # Drive to current goal
+            self.drive_to_coordinate(self.current_goal)
 
     def encoder_update_loop(self):
         while True:
@@ -139,45 +110,23 @@ class Robot:
 
     def ultrasonic_update_loop(self):
         while True:
-            sleep(0.25)
-            flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
-            if flag and len(self.path_queue) > 0 and self.path_is_tested:
-                self.is_impending_collision = True
-                # Add the new-found obstacle
-                self.map_class.add_obstacle_to_grid(th, Pose(coords_x, coords_y))
+            sleep(0.2)
 
-                print("Path Queue:")
-                print("\t", self.pose.x, self.pose.y)
-                for point in self.path_queue:
-                    print("\t", point.x, point.y)
-                # Check for collisions
-                is_collision = self.map_class.check_for_collision(self.path_queue[1:], self.pose)
+            # Update impending collision array
+            self.detect_impending_collision(self.front_left_ultrasonic)
+            self.detect_impending_collision(self.front_right_ultrasonic)
 
-                # If collision, re-plan path
-                if is_collision:
-                    print("Obstacle Found at:", coords_x, coords_y)
-                    self.is_impending_collision = True
-                    self.map_class.plan_path(self.pose, self.current_goal)
-                    self.path_queue = self.map_class.path
-                    self.path_is_tested = False
-                    self.is_impending_collision = False
-                    print("Path Solution:")
-                    print("\t", self.pose.x, self.pose.y)
-                    for point in self.path_queue:
-                        print("\t", point.x, point.y)
+            # Check if any sensors detect an impending collision
+            collision_flag = False
+            for index in range(2):
+                if self.sensor_readings[index, 0]:
+                    collision_flag = True
+            self.is_impending_collision = collision_flag
                 
     def deposit_package(self):
         # Deposit the next package
         # TODO
         pass
-
-    def create_path(self):
-        # print("Initial Path Creation")
-        # Plan a path
-        self.map_class.plan_path(self.pose, self.current_goal) 
-        # Pass coordinates to the queue
-        self.path_queue = self.map_class.path
-        self.is_impending_collision = False
 
     def set_state(self, state=None, sub_state=None):
         if state is not None:
@@ -323,39 +272,10 @@ class Robot:
             return None
 
         return True
-    
-    def ultrasonic_update_loop_waypoint(self):
-        while True:
-            sleep(0.2)
-            flag, coords_x, coords_y, th = self.detect_obstacle(self.front_left_ultrasonic, self.front_right_ultrasonic)
-            if flag:
-                if self.current_goal.x==0.9 and self.current_goal.y == 0.8:
-                    print("=======================================")
-                    print("OBSTACLE DETECTED!")
-                    print("=======================================")
-                    self.map_class.path = [Pose(0.9, 0.5), Pose(0.9, 0.8)]
-                    self.path_queue = self.map_class.path
-                    self.is_impending_collision = True
-                    flag = False
-                    sleep(5)
-                    continue
-
-                elif self.current_goal.x==0.3 and self.current_goal.y == 0.8:
-                    print("=======================================")
-                    print("OBSTACLE DETECTED!")
-                    print("=======================================")
-                    num = .00001*random.randint(-1000,1000)
-                    self.map_class.path = [Pose(0.6501234346045 + num, 0.3023534047+ num), Pose(0.341002353654+num, 0.29801214234+num), Pose(0.25, 0.8)]
-                    self.path_queue = self.map_class.path
-                    self.is_impending_collision = True
-                    flag = False
-                    break
 
     def drive_to_coordinate(self, coordinate):
-        if coordinate.x==.25:
-            print("Driving from: (", self.pose.x, self.pose.y, ") to (", 0.3, coordinate.y, ")")
-        else:
-            print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
+        print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
+
         # Check if the robot is already there
         if self.pose.equals(coordinate):
             return None
@@ -370,11 +290,9 @@ class Robot:
         self.do_turn(angle_difference)
         sleep(0.1)
 
-        self.path_is_tested = True
-
         # Find distance to drive
         distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
-        drive_flag = self.do_drive(distance)
+        self.do_drive(distance)
         print("\t\tDrive complete")
         sleep(0.1)
 
@@ -387,9 +305,6 @@ class Robot:
                 angle_difference = angle_difference + 2 * math.pi
             self.do_turn(angle_difference)
 
-        self.is_moving = False
-        if drive_flag is not None:
-            self.successful_waypoint = True
         sleep(0.1)
 
     def detect_obstacle(self, front_left_ultrasonic=None, front_right_ultrasonic=None):
@@ -449,9 +364,10 @@ class Robot:
         # If object is getting closer
         if object_getting_closer(self.sensor_readings[ultrasonic_unit.reading_index]):
             self.sensor_readings[ultrasonic_unit.reading_index, 0] = True
-            return True
+            return None
 
         # Object not getting closer
+        self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
         return None
 
 def object_getting_closer(array):
