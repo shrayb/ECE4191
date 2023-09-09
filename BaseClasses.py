@@ -319,7 +319,7 @@ class ColourSensor:
 # Measure distance
 class Ultrasonic:
     
-    def __init__(self, trig_pin = None, echo_pin = None, x_offset=None, y_offset=None, reading_index=Nonde, maximum_read_distance=None):
+    def __init__(self, trig_pin = None, echo_pin = None, x_offset=None, y_offset=None, reading_index=None, maximum_read_distance=None):
         self.trig_pin = trig_pin
         self.echo_pin = echo_pin
         GPIO.setmode(GPIO.BCM)
