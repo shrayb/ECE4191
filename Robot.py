@@ -96,7 +96,10 @@ class Robot:
             sleep(0.25)
 
             # Check if there is an impending collision
-            if self.is_impending_collision or self.current_goal is None:
+            if self.current_goal is None:
+                continue
+
+            if self.is_impending_collision:
                 # Check all sensors for if there is still an obstacle in the way
                 for index in range(1):
                     is_vision_blocked = self.is_vision_blocked(index)
