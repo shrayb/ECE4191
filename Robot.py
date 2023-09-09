@@ -110,7 +110,6 @@ class Robot:
                 should_it_stay = False
                 for index in range(1):
                     if self.sensor_readings[index][0]:
-                        print("Sensor reading:", self.sensor_readings[index][0])
                         should_it_stay = True
 
                 if should_it_stay:
@@ -123,7 +122,6 @@ class Robot:
 
             # If drive was successful, remove the current goal
             if not self.is_impending_collision:
-                print("GOAL COMPLETE")
                 self.current_goal = None
 
     def encoder_update_loop(self):
@@ -408,11 +406,9 @@ class Robot:
         # If object is getting closer
         if object_getting_closer(self.sensor_readings[ultrasonic_unit.reading_index]):
             self.sensor_readings[ultrasonic_unit.reading_index][0] = True
-            print("Object getting closer")
             return None
 
         # Object not getting closer
-        print("Object gone")
         self.sensor_readings[ultrasonic_unit.reading_index][0] = False
         return None
 
