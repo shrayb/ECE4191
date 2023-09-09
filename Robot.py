@@ -408,9 +408,11 @@ class Robot:
         # If object is getting closer
         if object_getting_closer(self.sensor_readings[ultrasonic_unit.reading_index]):
             self.sensor_readings[ultrasonic_unit.reading_index][0] = True
+            print("Object getting closer")
             return None
 
         # Object not getting closer
+        print("Object gone")
         self.sensor_readings[ultrasonic_unit.reading_index][0] = False
         return None
 
