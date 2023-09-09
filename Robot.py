@@ -110,7 +110,7 @@ class Robot:
 
                 # Check all sensors for if there is still an obstacle in the way
                 for index in range(2):
-                    is_vision_blocked = self.is_vision_blocked(index)
+                    is_vision_blocked = self.is_vision_blocked(self.sensor_readings[index])
                     self.sensor_readings[index][0] = is_vision_blocked
 
                 # Check all sensor flags
@@ -146,7 +146,7 @@ class Robot:
     def is_vision_blocked(self, sensor_index):
         # Check if they are all None
         for index in range(1, len(self.sensor_readings[sensor_index])):
-            if self.sensor_readings[sensor_index][index] != 100:
+            if self.sensor_readings[sensor_index][index] > 100:
                 return True
 
         return False
