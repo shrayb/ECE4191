@@ -100,7 +100,6 @@ class Robot:
                 continue
 
             if self.is_impending_collision:
-                print("Impending collision")
                 # Check all sensors for if there is still an obstacle in the way
                 for index in range(1):
                     is_vision_blocked = self.is_vision_blocked(index)
