@@ -113,7 +113,7 @@ class Robot:
 
     def ultrasonic_update_loop(self):
         while True:
-            sleep(1)
+            sleep(0.1)
 
             # Update impending collision array
             self.detect_impending_collision(self.front_left_ultrasonic)
@@ -347,7 +347,6 @@ class Robot:
     def detect_impending_collision(self, ultrasonic_unit):
         # Get a reading
         sonic_distance = ultrasonic_unit.measure_dist()
-        print("Reading distance:", sonic_distance)
 
         if sonic_distance is None:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
@@ -355,7 +354,6 @@ class Robot:
 
         # Check that the distance is within acceptable sensor distance
         if sonic_distance > ultrasonic_unit.maximum_read_distance:
-            print("Reading greater than max distance")
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             return None
 
@@ -369,16 +367,12 @@ class Robot:
         # coords_y = self.pose.y + sonic_distance * (math.sin(self.pose.theta)) + ultrasonic_unit.hypot * math.sin(self.pose.theta - ultrasonic_unit.centre_angle)
 
         # Create coordinate for obstacle
-        print("Pose:")
         print(self.pose.x, self.pose.y, self.pose.theta)
         # coords_x = self.pose.x + (sonic_distance + ultrasonic_unit.y_offset) * math.sin(self.pose.theta + ultrasonic_unit.theta) + (ultrasonic_unit.x_offset + sonic_distance) * math.cos(self.pose.theta + ultrasonic_unit.theta)
         # coords_y = self.pose.y + (sonic_distance + ultrasonic_unit.y_offset) * math.cos(self.pose.theta + ultrasonic_unit.theta) + (ultrasonic_unit.x_offset + sonic_distance) * math.sin(self.pose.theta + ultrasonic_unit.theta)
-        print("Ultra X:", ultra_coords.x, "| Ultra Y:", ultra_coords.y)
-        print("X:", coords.x, "| Y:", coords.y)
 
         # Check if coordinate is a wall, if so return none
         if coords.x < 0.05 or coords.x > self.map_size[0] - 0.05 or coords.y < 0.05 or coords.y > self.map_size[1] - 0.05:
-            print("Reading is a wall")
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             return None
 
@@ -390,8 +384,6 @@ class Robot:
         if object_getting_closer(self.sensor_readings[ultrasonic_unit.reading_index]):
             self.sensor_readings[ultrasonic_unit.reading_index][0] = True
             return None
-
-        print("Object not getting closer")
 
         # Object not getting closer
         self.sensor_readings[ultrasonic_unit.reading_index][0] = False
