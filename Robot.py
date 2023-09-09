@@ -432,7 +432,7 @@ class Robot:
 
 def object_getting_closer(array):
     # Check if all elements of array are descending from 1st index to end
-    for index in range(1, len(array) - 1):
+    for index in range(1, len(array)):
         first_val = array[index]
         second_val = array[index + 1]
 
