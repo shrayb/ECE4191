@@ -55,7 +55,7 @@ class Robot:
         self.slow_speed = 100  # Upper percentage for slower speed
         self.PID_gain = 1.3  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_size = (1.2, 1.2)
-        self.sensor_readings = np.zeros(5, 5)  # 5 sensors by 5 past readings
+        self.sensor_readings = np.zeros((5, 5))  # 5 sensors by 5 past readings
 
         self.gaslight_exam = False # only for faking milestone 1
 
