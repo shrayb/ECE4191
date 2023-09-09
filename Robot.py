@@ -58,8 +58,6 @@ class Robot:
         self.sensor_readings = np.zeros((5, 5)).tolist()  # 5 sensors by 5 past readings
         self.drive_success = False
 
-        self.gaslight_exam = False # only for faking milestone 1
-
     def get_current_goal(self):
         if self.package is not None:
             return self.package.destination_pose
@@ -352,13 +350,13 @@ class Robot:
         print("Reading distance:", sonic_distance)
 
         if sonic_distance is None:
-            self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
+            self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             return None
 
         # Check that the distance is within acceptable sensor distance
         if sonic_distance > ultrasonic_unit.maximum_read_distance:
             print("Reading greater than max distance")
-            self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
+            self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             return None
 
         # Create coordinate for obstacle
@@ -371,7 +369,7 @@ class Robot:
         if coords_x < 0.05 or coords_x > self.map_size[0] - 0.05 or coords_y < 0.05 or coords_y > self.map_size[1] - 0.05:
             print("Reading is a wall")
             print("X:", coords_x, "| Y:", coords_y)
-            self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
+            self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             return None
 
         # Add distance to proper array in the correct index
@@ -380,13 +378,13 @@ class Robot:
 
         # If object is getting closer
         if object_getting_closer(self.sensor_readings[ultrasonic_unit.reading_index]):
-            self.sensor_readings[ultrasonic_unit.reading_index, 0] = True
+            self.sensor_readings[ultrasonic_unit.reading_index][0] = True
             return None
 
         print("Object not getting closer")
 
         # Object not getting closer
-        self.sensor_readings[ultrasonic_unit.reading_index, 0] = False
+        self.sensor_readings[ultrasonic_unit.reading_index][0] = False
         return None
 
 def object_getting_closer(array):
