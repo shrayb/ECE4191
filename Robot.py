@@ -97,7 +97,17 @@ class Robot:
 
             # Check if there is an impending collision
             if self.is_impending_collision or self.current_goal is None:
-                continue
+                # Check all sensors for if there is still an obstacle in the way
+                for index in range(1):
+                    is_vision_blocked = self.is_vision_blocked(index)
+                    self.sensor_readings[index][0] = is_vision_blocked
+
+                # Check all sensor flags
+                for index in range(1):
+                    if self.sensor_readings[index][0] == True:
+                        continue
+
+                self.is_impending_collision = False
 
             # Drive to current goal
             self.drive_to_coordinate(self.current_goal)
@@ -111,6 +121,14 @@ class Robot:
             self.left_motor.update_encoder()
             self.right_motor.update_encoder()
 
+    def is_vision_blocked(self, sensor_index):
+        # Check if they are all None
+        for index in range(1, len(self.sensor_readings[sensor_index])):
+            if self.sensor_readings[sensor_index][index] is not None:
+                return True
+
+        return False
+
     def ultrasonic_update_loop(self):
         while True:
             sleep(0.1)
@@ -120,7 +138,6 @@ class Robot:
             # self.detect_impending_collision(self.front_right_ultrasonic)
 
             # Check if any sensors detect an impending collision
-            collision_flag = False
             for index in range(1):
                 if self.sensor_readings[index][0]:
                     collision_flag = True
@@ -350,10 +367,14 @@ class Robot:
 
         if sonic_distance is None:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
+            self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
+            self.sensor_readings[ultrasonic_unit.reading_index].append(-1)
             return None
 
         # Check that the distance is within acceptable sensor distance
         if sonic_distance > ultrasonic_unit.maximum_read_distance:
+            self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
+            self.sensor_readings[ultrasonic_unit.reading_index].append(-1)
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             return None
 
@@ -366,6 +387,8 @@ class Robot:
         # Check if coordinate is a wall, if so return none
         if coords.x < 0.05 or coords.x > self.map_size[0] - 0.05 or coords.y < 0.05 or coords.y > self.map_size[1] - 0.05:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
+            self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
+            self.sensor_readings[ultrasonic_unit.reading_index].append(-1)
             return None
 
         # Add distance to proper array in the correct index
