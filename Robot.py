@@ -164,7 +164,6 @@ class Robot:
                 for index in range(2):
                     if self.sensor_readings[index][0]:
                         self.is_impending_collision = True
-                        print(self.sensor_readings)
                         print("Object detected from sensor:", self.ultrasonic_names[index])
                 
     def deposit_package(self):
@@ -399,9 +398,9 @@ class Robot:
 
         # Check that the distance is within acceptable sensor distance
         if sonic_distance > ultrasonic_unit.maximum_read_distance:
+            self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
             self.sensor_readings[ultrasonic_unit.reading_index].append(100)
-            self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             return None
 
         # Create coordinate for ultrasonic
@@ -424,6 +423,7 @@ class Robot:
         # If object is getting closer
         if object_getting_closer(self.sensor_readings[ultrasonic_unit.reading_index]):
             self.sensor_readings[ultrasonic_unit.reading_index][0] = True
+            print(self.sensor_readings)
             return None
 
         # Object not getting closer
