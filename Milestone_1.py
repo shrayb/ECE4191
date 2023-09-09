@@ -68,6 +68,7 @@ def loop():
             robot.current_goal = waypoints[0]
 
     print("WAYPOINTS COMPLETED")
+    print(robot.pose.x, robot.pose.y, robot.pose.theta * 180 / math.pi)
     while True:
         sleep(1)
 
