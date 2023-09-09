@@ -364,11 +364,11 @@ class Robot:
         print(self.pose.x, self.pose.y, self.pose.theta)
         coords_x = self.pose.x + (sonic_distance + ultrasonic_unit.y_offset) * math.sin(self.pose.theta + ultrasonic_unit.theta) + (ultrasonic_unit.x_offset + sonic_distance) * math.cos(self.pose.theta + ultrasonic_unit.theta)
         coords_y = self.pose.y + (sonic_distance + ultrasonic_unit.y_offset) * math.cos(self.pose.theta + ultrasonic_unit.theta) + (ultrasonic_unit.x_offset + sonic_distance) * math.sin(self.pose.theta + ultrasonic_unit.theta)
+        print("X:", coords_x, "| Y:", coords_y)
 
         # Check if coordinate is a wall, if so return none
         if coords_x < 0.05 or coords_x > self.map_size[0] - 0.05 or coords_y < 0.05 or coords_y > self.map_size[1] - 0.05:
             print("Reading is a wall")
-            print("X:", coords_x, "| Y:", coords_y)
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             return None
 
