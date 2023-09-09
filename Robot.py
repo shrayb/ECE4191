@@ -105,7 +105,7 @@ class Robot:
             self.drive_to_coordinate(self.current_goal)
 
             # If drive was successful, remove the current goal
-            if self.is_impending_collision:
+            if not self.is_impending_collision:
                 self.current_goal = None
 
     def encoder_update_loop(self):
