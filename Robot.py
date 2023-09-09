@@ -100,6 +100,7 @@ class Robot:
                 continue
 
             if self.is_impending_collision:
+                print("Impending collision")
                 # Check all sensors for if there is still an obstacle in the way
                 for index in range(1):
                     is_vision_blocked = self.is_vision_blocked(index)
@@ -109,6 +110,7 @@ class Robot:
                 should_it_stay = False
                 for index in range(1):
                     if self.sensor_readings[index][0]:
+                        print("Sensor reading:", self.sensor_readings[index][0])
                         should_it_stay = True
 
                 if should_it_stay:
@@ -376,13 +378,13 @@ class Robot:
         if sonic_distance is None:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
-            self.sensor_readings[ultrasonic_unit.reading_index].append(-1)
+            self.sensor_readings[ultrasonic_unit.reading_index].append(int('inf'))
             return None
 
         # Check that the distance is within acceptable sensor distance
         if sonic_distance > ultrasonic_unit.maximum_read_distance:
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
-            self.sensor_readings[ultrasonic_unit.reading_index].append(-1)
+            self.sensor_readings[ultrasonic_unit.reading_index].append(int('inf'))
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             return None
 
@@ -396,7 +398,7 @@ class Robot:
         if coords.x < 0.05 or coords.x > self.map_size[0] - 0.05 or coords.y < 0.05 or coords.y > self.map_size[1] - 0.05:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
-            self.sensor_readings[ultrasonic_unit.reading_index].append(-1)
+            self.sensor_readings[ultrasonic_unit.reading_index].append(int('inf'))
             return None
 
         # Add distance to proper array in the correct index
