@@ -437,7 +437,7 @@ def object_getting_closer(array):
         second_val = array[index + 1]
 
         # If the distance goes up instead of down, it's not getting closer
-        if first_val is 100 or second_val is 100:
+        if first_val == 100 or second_val == 100:
             return False
 
         if first_val < second_val:
