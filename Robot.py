@@ -260,7 +260,7 @@ class Robot:
         self.left_motor.stop()
         self.right_motor.stop()
 
-        sleep(0.1)
+        sleep(0.5)
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         distance_turned = 0.5 * tick_sum * self.distance_per_tick
@@ -301,7 +301,7 @@ class Robot:
         # Stop the motors
         self.left_motor.stop()
         self.right_motor.stop()
-        sleep(0.1)
+        sleep(0.5)
 
         # Use the tick count to estimate where the robot is
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
