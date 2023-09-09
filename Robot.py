@@ -144,7 +144,7 @@ class Robot:
             self.right_motor.update_encoder()
 
     def is_vision_blocked(self, sensor_index):
-        # Check if they are all 100
+        # Check if any are 100
         for index in range(1, len(self.sensor_readings[sensor_index])):
             if self.sensor_readings[sensor_index][index] == 100:
                 return True
@@ -420,10 +420,11 @@ class Robot:
         self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
         self.sensor_readings[ultrasonic_unit.reading_index].append(sonic_distance)
 
+        print(self.sensor_readings)
+
         # If object is getting closer
         if object_getting_closer(self.sensor_readings[ultrasonic_unit.reading_index]):
             self.sensor_readings[ultrasonic_unit.reading_index][0] = True
-            print(self.sensor_readings)
             return None
 
         # Object not getting closer
@@ -432,7 +433,7 @@ class Robot:
 
 def object_getting_closer(array):
     # Check if all elements of array are descending from 1st index to end
-    for index in range(1, len(array)):
+    for index in range(1, len(array) - 1):
         first_val = array[index]
         second_val = array[index + 1]
 
