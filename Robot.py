@@ -307,6 +307,9 @@ class Robot:
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         measure_distance = 0.5 * tick_sum * self.distance_per_tick
 
+        if distance < 0:
+            measure_distance *= -1
+
         self.pose.x = initial_pose.x + measure_distance * math.cos(initial_pose.theta)
         self.pose.y = initial_pose.y + measure_distance * math.sin(initial_pose.theta)
 
