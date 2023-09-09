@@ -353,6 +353,6 @@ class Ultrasonic:
             pulse_end = time()
 
         pulse_duration = pulse_end - pulse_start
-        distance = pulse_duration * 17150  # Speed of sound in cm/s
+        distance = pulse_duration * 17.150  # Speed of sound in m/s
 
         return distance
