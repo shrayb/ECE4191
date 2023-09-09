@@ -140,8 +140,8 @@ class Robot:
             # Check if any sensors detect an impending collision
             for index in range(1):
                 if self.sensor_readings[index][0]:
-                    collision_flag = True
-            self.is_impending_collision = collision_flag
+                    self.is_impending_collision = True
+                    continue
                 
     def deposit_package(self):
         # Deposit the next package
