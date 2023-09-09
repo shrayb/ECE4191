@@ -97,7 +97,7 @@ class Robot:
             sleep(0.25)
 
             # Check if there is an impending collision
-            if self.is_impending_collision:
+            if self.is_impending_collision or self.current_goal is None:
                 continue
 
             # Drive to current goal
