@@ -378,13 +378,13 @@ class Robot:
         if sonic_distance is None:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
-            self.sensor_readings[ultrasonic_unit.reading_index].append(int('inf'))
+            self.sensor_readings[ultrasonic_unit.reading_index].append(100)
             return None
 
         # Check that the distance is within acceptable sensor distance
         if sonic_distance > ultrasonic_unit.maximum_read_distance:
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
-            self.sensor_readings[ultrasonic_unit.reading_index].append(int('inf'))
+            self.sensor_readings[ultrasonic_unit.reading_index].append(100)
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             return None
 
@@ -398,7 +398,7 @@ class Robot:
         if coords.x < 0.05 or coords.x > self.map_size[0] - 0.05 or coords.y < 0.05 or coords.y > self.map_size[1] - 0.05:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
-            self.sensor_readings[ultrasonic_unit.reading_index].append(int('inf'))
+            self.sensor_readings[ultrasonic_unit.reading_index].append(100)
             return None
 
         # Add distance to proper array in the correct index
