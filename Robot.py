@@ -164,6 +164,7 @@ class Robot:
                 for index in range(2):
                     if self.sensor_readings[index][0]:
                         self.is_impending_collision = True
+                        print(self.sensor_readings)
                         print("Object detected from sensor:", self.ultrasonic_names[index])
                 
     def deposit_package(self):
