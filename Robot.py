@@ -104,7 +104,7 @@ class Robot:
         # THREAD FUNCTION
         # Will drive to whatever waypoints are in the path queue variable in order and remove them
         while True:
-            sleep(0.25)
+            sleep(0.05)
 
             # Check if there is an impending collision
             if self.current_goal is None:
