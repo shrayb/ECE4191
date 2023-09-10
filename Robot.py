@@ -427,8 +427,6 @@ class Robot:
         self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
         self.sensor_readings[ultrasonic_unit.reading_index].append(sonic_distance)
 
-        print(self.sensor_readings)
-
         # If object is getting closer
         if object_getting_closer(self.sensor_readings[ultrasonic_unit.reading_index]):
             self.sensor_readings[ultrasonic_unit.reading_index][0] = True
