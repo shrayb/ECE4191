@@ -153,7 +153,7 @@ class Robot:
     def is_vision_blocked(self, sensor_index):
         # Check if any are 100
         for index in range(1, len(self.sensor_readings[sensor_index])):
-            if self.sensor_readings[sensor_index][index] == 100:
+            if self.sensor_readings[sensor_index][index] != 100:
                 return True
 
         return False
