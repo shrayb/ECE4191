@@ -330,7 +330,8 @@ class Robot:
         print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
 
         # Check if the robot is already there
-        if not self.pose.equals(coordinate):
+        distance_error = calculate_distance_between_points(self.pose, coordinate)
+        if distance_error > 0.03:  # 3 cm away
 
             # Find angle to turn
             goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
