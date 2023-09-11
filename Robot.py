@@ -140,7 +140,7 @@ class Robot:
             waypoint_error_angle = calculate_angle_difference(angle1=self.pose.theta, angle2=self.current_goal.theta)
             print("Drive error:", waypoint_error_distance * 100, "cm")
             print("Angle difference:", waypoint_error_angle * 180 / math.pi, "degrees")
-            if waypoint_error_distance < 0.01 and waypoint_error_angle < (1 * math.pi / 180) and not self.is_impending_collision:  # 5 cm accuracy and 1 degree accuracy
+            if waypoint_error_distance < 0.01 and not self.is_impending_collision:  # 5 cm accuracy and 1 degree accuracy
                 self.current_goal = None
 
     def encoder_update_loop(self):
