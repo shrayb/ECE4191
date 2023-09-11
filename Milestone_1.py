@@ -27,6 +27,7 @@ front_right_sonic_echo = 6
 front_right_sonic_trig = 13
 
 GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 
 left_motor = Motor(motor_left_enable, motor_left_positive, motor_left_negative, motor_left_encoder_a, motor_left_encoder_b)
 right_motor = Motor(motor_right_enable, motor_right_positive, motor_right_negative, motor_right_encoder_a, motor_right_encoder_b)
