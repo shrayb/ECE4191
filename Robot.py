@@ -231,7 +231,7 @@ class Robot:
                 measured_angle = distance_turned / self.turn_radius
                 self.pose.theta = initial_pose.theta + is_turning * measured_angle
 
-    def do_turn(self, angle, max_speed):
+    def do_turn(self, angle, max_speed=None):
         # Reset encoders
         self.left_motor.reset_encoder()
         self.right_motor.reset_encoder()
