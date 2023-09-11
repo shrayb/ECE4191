@@ -197,6 +197,8 @@ class Robot:
         initial_pose = deepcopy(self.pose)
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
+        ramp_up_check = 0.2
+        ramp_down_check = 0.8
         while tick_sum < max_ticks:
             # Check if there will be a collision
             if self.is_impending_collision:
@@ -218,8 +220,13 @@ class Robot:
                 left_motor_speed = max_speed
                 right_motor_speed = max_speed
 
-            left_motor_speed *= max((1 - tick_percentage), self.slow_speed / 100)
-            right_motor_speed *= max((1 - tick_percentage), self.slow_speed / 100)
+            # At the start ramp up speed slowly, then near the end slow it down slowly. Increases final pose accuracy
+            if tick_percentage < ramp_up_check:
+                left_motor_speed *= max(tick_percentage / ramp_up_check, self.slow_speed / 100)
+                right_motor_speed *= max(tick_percentage / ramp_up_check, self.slow_speed / 100)
+            elif tick_percentage > ramp_down_check:
+                left_motor_speed *= max((1 - tick_percentage) / ramp_up_check, self.slow_speed / 100)
+                right_motor_speed *= max((1 - tick_percentage) / ramp_up_check, self.slow_speed / 100)
 
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
