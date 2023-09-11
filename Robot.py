@@ -269,7 +269,10 @@ class Robot:
         initial_pose = deepcopy(self.pose)
 
         # Continuously check if the turn has less than 10 degrees of the turn remaining
-        self.tick_check_and_speed_control(turn_ticks, self.max_speed, is_turning)
+        if angle < (15 * math.pi / 180):
+            self.tick_check_and_speed_control(turn_ticks, 30, is_turning)
+        else:
+            self.tick_check_and_speed_control(turn_ticks, self.max_speed, is_turning)
 
         # Stop the motors
         self.left_motor.stop()
