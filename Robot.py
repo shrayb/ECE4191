@@ -317,7 +317,10 @@ class Robot:
         initial_pose = deepcopy(self.pose)
 
         # Continuously check if the robot has driven most of the way
-        self.tick_check_and_speed_control(drive_ticks, self.max_speed, 0)
+        if distance < 0.05:  # 5 cm
+            self.tick_check_and_speed_control(drive_ticks, self.slow_speed, 0)
+        else:
+            self.tick_check_and_speed_control(drive_ticks, self.max_speed, 0)
 
         # Stop the motors
         self.left_motor.stop()

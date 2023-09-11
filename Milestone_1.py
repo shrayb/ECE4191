@@ -63,6 +63,9 @@ def loop():
                  Pose(0.3, 0.6, 0)
                 ]
 
+    robot.left_motor.stop()
+    robot.right_motor.stop()
+
     while True:
         # Loop and travel to each waypoint
         sleep(1)
