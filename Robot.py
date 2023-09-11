@@ -52,7 +52,7 @@ class Robot:
         self.wheel_radius = 0.05391  # Metres
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
         self.max_speed = 30  # Upper percentage for maximum speed
-        self.slow_speed = 100  # Upper percentage for slower speed
+        self.slow_speed = 20  # Upper percentage for slower speed
         self.PID_gain = 1.3  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_size = (1.9, 1.9)
         self.sensor_readings = set_default_sensor_readings()  # 5 Sensors by 6 columns
@@ -140,7 +140,7 @@ class Robot:
             waypoint_error_angle = calculate_angle_difference(angle1=self.pose.theta, angle2=self.current_goal.theta)
             print("Drive error:", waypoint_error_distance * 100, "cm")
             print("Angle error:", waypoint_error_angle * 180 / math.pi, "degrees")
-            if waypoint_error_distance < 0.03 and waypoint_error_angle < (3 * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 3 degree accuracy
+            if waypoint_error_distance < 0.03 and waypoint_error_angle < (2 * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 2 degree accuracy
                 self.current_goal = None
 
     def encoder_update_loop(self):
@@ -231,7 +231,7 @@ class Robot:
                 measured_angle = distance_turned / self.turn_radius
                 self.pose.theta = initial_pose.theta + is_turning * measured_angle
 
-    def do_turn(self, angle):
+    def do_turn(self, angle, max_speed):
         # Reset encoders
         self.left_motor.reset_encoder()
         self.right_motor.reset_encoder()
@@ -259,7 +259,11 @@ class Robot:
         initial_pose = deepcopy(self.pose)
 
         # Continuously check if the turn has less than 10 degrees of the turn remaining
-        self.tick_check_and_speed_control(turn_ticks, self.max_speed, is_turning)
+        if max_speed is None:
+            self.tick_check_and_speed_control(turn_ticks, self.max_speed, is_turning)
+        else:
+            self.tick_check_and_speed_control(turn_ticks, max_speed, is_turning)
+
 
         # Stop the motors
         self.left_motor.stop()
@@ -356,7 +360,7 @@ class Robot:
                 angle_difference = angle_difference - 2 * math.pi
             elif angle_difference < -math.pi:
                 angle_difference = angle_difference + 2 * math.pi
-            self.do_turn(angle_difference)
+            self.do_turn(angle_difference, self.slow_speed)
 
         sleep(0.1)
 
