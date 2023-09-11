@@ -137,6 +137,7 @@ class Robot:
 
             # If drive was successful check error from waypoint
             waypoint_error = calculate_distance_between_points(self.pose, self.current_goal)
+            print("Drive error:", waypoint_error * 10, "cm")
             if waypoint_error < 0.05 and not self.is_impending_collision:  # 5 cm accuracy
                 self.current_goal = None
 

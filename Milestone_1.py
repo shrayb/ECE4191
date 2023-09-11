@@ -45,8 +45,8 @@ robot.front_right_ultrasonic = front_right_sonic
 encoder_thread = Thread(target=robot.encoder_update_loop)
 encoder_thread.start()
 
-# ultrasonic_thread = Thread(target=robot.ultrasonic_update_loop)
-# ultrasonic_thread.start()
+ultrasonic_thread = Thread(target=robot.ultrasonic_update_loop)
+ultrasonic_thread.start()
 
 drive_thread = Thread(target=robot.follow_path)
 drive_thread.start()
@@ -71,8 +71,7 @@ def loop():
 
     print("WAYPOINTS COMPLETED")
     print("Final pose:", robot.pose.x, robot.pose.y, robot.pose.theta * 180 / math.pi)
-    while True:
-        sleep(1)
+    sleep(1)
 
 
 if __name__ == "__main__":
