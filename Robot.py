@@ -104,28 +104,39 @@ class Robot:
         # THREAD FUNCTION
         # Will drive to whatever waypoints are in the path queue variable in order and remove them
         while True:
-            sleep(0.05)
+            sleep(0.1)
 
             # Check if there is an impending collision
             if self.current_goal is None:
                 continue
+
+            # Update sensor readings which includes a detection flag for collisions
+            self.detect_impending_collision(self.front_left_ultrasonic)
+            self.detect_impending_collision(self.front_right_ultrasonic)
+
+            # Check if any sensors detect an impending collision
+            if not self.is_impending_collision and not self.safe_reversing:
+                for index in range(2):
+                    if self.sensor_readings[index][0]:
+                        self.is_impending_collision = True
 
             if self.is_impending_collision:
                 if not self.time_flag:
                     self.time_flag = True
                     self.stopping_time = time()
 
-                # Check all sensors for if there is still an obstacle in the way
+                # Update all sensors if there is an object in its vision now that its stopped
                 for index in range(2):
                     is_vision_blocked = self.is_vision_blocked(index)
                     self.sensor_readings[index][0] = is_vision_blocked
 
-                # Check all sensor flags
+                # Check all sensor reading flags and if any are true, then the robot will stay still
                 should_it_stay = False
                 for index in range(2):
                     if self.sensor_readings[index][0]:
                         should_it_stay = True
 
+                # Once 5 seconds of being stopped waiting for the obstacle to move
                 if time() > self.stopping_time + 5:
                     self.time_flag = False
                     self.safe_reversing = True
@@ -162,7 +173,7 @@ class Robot:
         while True:
             sleep(0.1)
 
-            # Update impending collision array
+            # Update sensor readings which includes a detection flag for collisions
             self.detect_impending_collision(self.front_left_ultrasonic)
             self.detect_impending_collision(self.front_right_ultrasonic)
 
@@ -171,7 +182,6 @@ class Robot:
                 for index in range(2):
                     if self.sensor_readings[index][0]:
                         self.is_impending_collision = True
-                        print("Object detected from sensor:", self.ultrasonic_names[index])
 
     def deposit_package(self):
         # Deposit the next package
