@@ -205,6 +205,7 @@ class Robot:
             # Calculate the left tick advantage and tick sum
             left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
             tick_sum = self.left_motor.ticks + self.right_motor.ticks
+            tick_percentage = tick_sum / max_ticks
 
             # Every two ticks slow down the leading motor by 1 speed
             if left_tick_advantage > 0:
@@ -217,13 +218,15 @@ class Robot:
                 left_motor_speed = max_speed
                 right_motor_speed = max_speed
 
+            left_motor_speed *= min(100 - tick_percentage*100, self.slow_speed)
+            right_motor_speed *= min(100 - tick_percentage * 100, self.slow_speed)
+
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
 
             # During this while loop, continuously update the pose of the robot
             if is_turning == 0:  # 0 = Driving
-                distance_fraction = tick_sum / max_ticks
-                current_distance = distance_total * distance_fraction
+                current_distance = distance_total * tick_percentage
                 self.pose.x = initial_pose.x + current_distance * math.cos(initial_pose.theta)
                 self.pose.y = initial_pose.y + current_distance * math.sin(initial_pose.theta)
             else:  # 1 = Turning counterclockwise, -1 = Turning clockwise
@@ -231,7 +234,7 @@ class Robot:
                 measured_angle = distance_turned / self.turn_radius
                 self.pose.theta = initial_pose.theta + is_turning * measured_angle
 
-    def do_turn(self, angle, max_speed=None):
+    def do_turn(self, angle):
         # Reset encoders
         self.left_motor.reset_encoder()
         self.right_motor.reset_encoder()
@@ -259,11 +262,7 @@ class Robot:
         initial_pose = deepcopy(self.pose)
 
         # Continuously check if the turn has less than 10 degrees of the turn remaining
-        if max_speed is None:
-            self.tick_check_and_speed_control(turn_ticks, self.max_speed, is_turning)
-        else:
-            self.tick_check_and_speed_control(turn_ticks, max_speed, is_turning)
-
+        self.tick_check_and_speed_control(turn_ticks, self.max_speed, is_turning)
 
         # Stop the motors
         self.left_motor.stop()
@@ -360,7 +359,7 @@ class Robot:
                 angle_difference = angle_difference - 2 * math.pi
             elif angle_difference < -math.pi:
                 angle_difference = angle_difference + 2 * math.pi
-            self.do_turn(angle_difference, self.slow_speed)
+            self.do_turn(angle_difference)
 
         sleep(0.1)
 
