@@ -218,8 +218,8 @@ class Robot:
                 left_motor_speed = max_speed
                 right_motor_speed = max_speed
 
-            left_motor_speed *= min((1 - tick_percentage) * 100, self.slow_speed)
-            right_motor_speed *= min((1 - tick_percentage) * 100, self.slow_speed)
+            left_motor_speed *= max((1 - tick_percentage) * 100, self.slow_speed)
+            right_motor_speed *= max((1 - tick_percentage) * 100, self.slow_speed)
 
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
