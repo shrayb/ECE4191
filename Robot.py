@@ -55,19 +55,12 @@ class Robot:
         self.slow_speed = 100  # Upper percentage for slower speed
         self.PID_gain = 1.3  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_size = (1.9, 1.9)
-        self.sensor_readings = self.set_default_sensor_readings()  # 5 Sensors by 6 columns
+        self.sensor_readings = set_default_sensor_readings()  # 5 Sensors by 6 columns
         self.drive_success = False
         self.time_flag = False
         self.stopping_time = None
         self.safe_reversing = False
         self.ultrasonic_names = ["Front Left", "Front Right"]
-
-    def set_default_sensor_readings(self):
-        sensor_readings = []
-        for index in range(5):  # 5 ultrasonics
-            sensor_readings.append([0] * 6)
-
-        return sensor_readings
 
     def get_current_goal(self):
         if self.package is not None:
@@ -104,21 +97,11 @@ class Robot:
         # THREAD FUNCTION
         # Will drive to whatever waypoints are in the path queue variable in order and remove them
         while True:
-            sleep(0.1)
+            sleep(0.05)
 
             # Check if there is an impending collision
             if self.current_goal is None:
                 continue
-
-            # Update sensor readings which includes a detection flag for collisions
-            self.detect_impending_collision(self.front_left_ultrasonic)
-            self.detect_impending_collision(self.front_right_ultrasonic)
-
-            # Check if any sensors detect an impending collision
-            if not self.is_impending_collision and not self.safe_reversing:
-                for index in range(2):
-                    if self.sensor_readings[index][0]:
-                        self.is_impending_collision = True
 
             if self.is_impending_collision:
                 if not self.time_flag:
@@ -152,8 +135,9 @@ class Robot:
             # Drive to current goal
             self.drive_to_coordinate(self.current_goal)
 
-            # If drive was successful, remove the current goal
-            if not self.is_impending_collision:
+            # If drive was successful check error from waypoint
+            waypoint_error = calculate_distance_between_points(self.pose, self.current_goal)
+            if waypoint_error < 0.05 and not self.is_impending_collision:  # 5 cm accuracy
                 self.current_goal = None
 
     def encoder_update_loop(self):
@@ -459,3 +443,10 @@ def object_getting_closer(array):
             return False
 
     return True
+
+def set_default_sensor_readings():
+    sensor_readings = []
+    for index in range(5):  # 5 ultrasonics
+        sensor_readings.append([0] * 6)
+
+    return sensor_readings
