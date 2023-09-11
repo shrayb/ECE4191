@@ -66,6 +66,8 @@ def loop():
     robot.left_motor.stop()
     robot.right_motor.stop()
 
+    sleep(2)
+
     while True:
         # Loop and travel to each waypoint
         sleep(1)
