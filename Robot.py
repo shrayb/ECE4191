@@ -54,13 +54,14 @@ class Robot:
         self.max_speed = 90  # Upper percentage for maximum speed
         self.slow_speed = 40  # Upper percentage for slower speed
         self.PID_gain = 1.3  # Raise to make the PID more sensitive, lower to make the PID less sensitive
-        self.map_size = (1.2, 1.2)
+        self.map_size = (2, 2)
         self.sensor_readings = set_default_sensor_readings()  # 5 Sensors by 6 columns
         self.drive_success = False
         self.time_flag = False
         self.stopping_time = None
         self.safe_reversing = False
-        self.ultrasonic_names = ["Front Left", "Front Right"]
+        self.ramp_up_percent = 0.2
+        self.ramp_down_percent = 0.8
 
     def get_current_goal(self):
         if self.package is not None:
@@ -197,8 +198,6 @@ class Robot:
         initial_pose = deepcopy(self.pose)
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
-        ramp_up_check = 0.2
-        ramp_down_check = 0.8
         while tick_sum < max_ticks:
             # Check if there will be a collision
             if self.is_impending_collision:
@@ -221,12 +220,12 @@ class Robot:
                 right_motor_speed = max_speed
 
             # At the start ramp up speed slowly, then near the end slow it down slowly. Increases final pose accuracy
-            if tick_percentage < ramp_up_check:
-                left_motor_speed *= max(min(tick_percentage / ramp_up_check, self.max_speed), self.slow_speed / 100)
-                right_motor_speed *= max(min(tick_percentage / ramp_up_check, self.max_speed), self.slow_speed / 100)
-            elif tick_percentage > ramp_down_check:
-                left_motor_speed *= max(min((1 - tick_percentage) / (1 - ramp_down_check), self.max_speed), self.slow_speed / 100)
-                right_motor_speed *= max(min((1 - tick_percentage) / (1 - ramp_down_check), self.max_speed), self.slow_speed / 100)
+            if tick_percentage < self.ramp_up_percent:
+                left_motor_speed *= max(min(tick_percentage / self.ramp_up_percent, self.max_speed), self.slow_speed / 100)
+                right_motor_speed *= max(min(tick_percentage / self.ramp_up_percent, self.max_speed), self.slow_speed / 100)
+            elif tick_percentage > self.ramp_down_percent:
+                left_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), self.max_speed), self.slow_speed / 100)
+                right_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), self.max_speed), self.slow_speed / 100)
 
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
@@ -268,7 +267,7 @@ class Robot:
         # Initial pose
         initial_pose = deepcopy(self.pose)
 
-        # Continuously check if the turn has less than 10 degrees of the turn remaining
+        # Continuously check if the turn has less than 15 degrees of the turn remaining
         if angle < (15 * math.pi / 180):
             self.tick_check_and_speed_control(turn_ticks, self.slow_speed, is_turning)
         else:
