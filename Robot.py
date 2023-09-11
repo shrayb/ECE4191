@@ -139,8 +139,8 @@ class Robot:
             waypoint_error_distance = calculate_distance_between_points(self.pose, self.current_goal)
             waypoint_error_angle = calculate_angle_difference(angle1=self.pose.theta, angle2=self.current_goal.theta)
             print("Drive error:", waypoint_error_distance * 100, "cm")
-            print("Angle difference:", waypoint_error_angle * 180 / math.pi, "degrees")
-            if waypoint_error_distance < 0.03 and not self.is_impending_collision:  # 5 cm accuracy and 1 degree accuracy
+            print("Angle error:", waypoint_error_angle * 180 / math.pi, "degrees")
+            if waypoint_error_distance < 0.03 and waypoint_error_angle < (3 * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 3 degree accuracy
                 self.current_goal = None
 
     def encoder_update_loop(self):
@@ -275,6 +275,9 @@ class Robot:
             self.pose.theta = initial_pose.theta + measured_angle
         else:
             self.pose.theta = initial_pose.theta - measured_angle
+
+        # Clamp angle from [pi to -pi)
+        self.pose.theta = math.atan2(math.sin(self.pose.theta), math.cos(self.pose.theta))
 
     def do_drive(self, distance):
         # Reset encoders
@@ -459,16 +462,7 @@ def calculate_angle_difference(angle1=None, angle2=None):
         return 0
 
     pointA = Pose(math.cos(angle1), math.sin(angle1))
-    pointB = Pose(0, 0)
-    pointC = Pose(math.cos(angle2), math.sin(angle2))
-    return angle_between_points(pointA, pointB, pointC)
+    pointB = Pose(math.cos(angle2), math.sin(angle2))
 
-def angle_between_points(pointA=None, pointB=None, pointC=None):
-    AB = Pose(pointB.x - pointA.x, pointB.y - pointA.y)
-    BC = Pose(pointC.x - pointB.x, pointC.y - pointB.y)
-    if AB.dot(BC) / (AB.magnitude() * BC.magnitude()) > 1 or AB.dot(BC) / (AB.magnitude() * BC.magnitude()) < -1:
-        angle = math.pi
-        return angle
-
-    angle = math.acos(AB.dot(BC) / (AB.magnitude() * BC.magnitude()))
-    return angle + math.pi
+    theta = math.acos(pointA.dot(pointB) / (pointA.magnitude() * pointB.magnitude()))
+    return theta
