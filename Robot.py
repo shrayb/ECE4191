@@ -136,9 +136,11 @@ class Robot:
             self.drive_to_coordinate(self.current_goal)
 
             # If drive was successful check error from waypoint
-            waypoint_error = calculate_distance_between_points(self.pose, self.current_goal)
-            print("Drive error:", waypoint_error * 100, "cm")
-            if waypoint_error < 0.01 and not self.is_impending_collision:  # 5 cm accuracy
+            waypoint_error_distance = calculate_distance_between_points(self.pose, self.current_goal)
+            waypoint_error_angle = calculate_angle_difference(angle1=self.pose.theta, angle2=self.current_goal.theta)
+            print("Drive error:", waypoint_error_distance * 100, "cm")
+            print("Angle difference:", waypoint_error_angle * 180 / math.pi, "degrees")
+            if waypoint_error_distance < 0.01 and waypoint_error_angle < (1 * math.pi / 180) and not self.is_impending_collision:  # 5 cm accuracy and 1 degree accuracy
                 self.current_goal = None
 
     def encoder_update_loop(self):
@@ -451,3 +453,22 @@ def set_default_sensor_readings():
         sensor_readings.append([0] * 6)
 
     return sensor_readings
+
+def calculate_angle_difference(angle1=None, angle2=None):
+    if angle2 is None:
+        return 0
+
+    pointA = Pose(math.cos(angle1), math.sin(angle1))
+    pointB = Pose(0, 0)
+    pointC = Pose(math.cos(angle2), math.sin(angle2))
+    return angle_between_points(pointA, pointB, pointC)
+
+def angle_between_points(pointA=None, pointB=None, pointC=None):
+    AB = Pose(pointB.x - pointA.x, pointB.y - pointA.y)
+    BC = Pose(pointC.x - pointB.x, pointC.y - pointB.y)
+    if AB.dot(BC) / (AB.magnitude() * BC.magnitude()) > 1 or AB.dot(BC) / (AB.magnitude() * BC.magnitude()) < -1:
+        angle = math.pi
+        return angle
+
+    angle = math.acos(AB.dot(BC) / (AB.magnitude() * BC.magnitude()))
+    return angle + math.pi

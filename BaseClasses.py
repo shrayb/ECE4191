@@ -92,6 +92,18 @@ class Pose:
         else:
             return False
 
+    def magnitude(self, point=None):
+        if point is None:
+            return math.sqrt(self.x ** 2 + self.y ** 2)
+        else:
+            return math.sqrt(point.x ** 2 + point.y ** 2)
+
+    def dot(self, point_2):
+        return self.x * point_2.x + self.y * point_2.y
+
+    def multiply(self, scalar):
+        return Pose(self.x * scalar, self.y * scalar)
+
 class Segment:
     def __init__(self, start_point=None, end_point=None):
         self.start = start_point
