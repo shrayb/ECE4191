@@ -270,7 +270,7 @@ class Robot:
 
         # Continuously check if the turn has less than 10 degrees of the turn remaining
         if angle < (15 * math.pi / 180):
-            self.tick_check_and_speed_control(turn_ticks, 30, is_turning)
+            self.tick_check_and_speed_control(turn_ticks, self.slow_speed, is_turning)
         else:
             self.tick_check_and_speed_control(turn_ticks, self.max_speed, is_turning)
 
