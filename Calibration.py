@@ -55,9 +55,10 @@ def loop():
     while True:
         try:
             # Loop and travel to each waypoint
-            robot.do_turn(math.pi * 2 * 10)
+            robot.do_drive(2)
             while True:
                 sleep(1)
+                print("Total ticks:", (robot.left_motor.ticks + robot.right_motor.ticks) / 2)
 
         except KeyboardInterrupt:
             robot.left_motor.speed = 0
