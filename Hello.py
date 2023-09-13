@@ -54,13 +54,13 @@ drive_thread.start()
 def loop():
     # Define waypoints to go to in order
     waypoints = [[],
-                 Pose(0.8, 0.2),
-                 Pose(0.8, 0.8),
-                 Pose(0.3, 0.8),
+                 Pose(0.7, 0.2),
+                 Pose(0.7, 0.7),
+                 Pose(0.3, 0.7),
                  Pose(0.3, 0.2),
-                 Pose(0.8, 0.2),
-                 Pose(0.8, 0.8),
-                 Pose(0.3, 0.8),
+                 Pose(0.7, 0.2),
+                 Pose(0.7, 0.7),
+                 Pose(0.3, 0.7),
                  Pose(0.3, 0.2)
                 ]
 
