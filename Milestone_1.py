@@ -55,13 +55,13 @@ def loop():
     # Define waypoints to go to in order
     waypoints = [[],
                  Pose(0.6, 0.6),
-                 Pose(0.3, 0.6, -math.pi/2)
+                 Pose(0.3, 0.6),
+                 Pose(0.6, 0.6),
+                 Pose(0.3, 0.6, -math.pi / 2)
                 ]
 
     robot.left_motor.stop()
     robot.right_motor.stop()
-
-    sleep(2)
 
     try:
         while True:
