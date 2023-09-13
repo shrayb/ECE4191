@@ -366,6 +366,15 @@ class Robot:
             self.do_turn(angle_difference)
             sleep(0.1)
 
+            goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
+            angle_difference = goal_angle - self.pose.theta
+            if angle_difference > math.pi:
+                angle_difference = angle_difference - 2 * math.pi
+            elif angle_difference < -math.pi:
+                angle_difference = angle_difference + 2 * math.pi
+            self.do_turn(angle_difference)
+            sleep(0.1)
+
             # Find distance to drive
             distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
             self.do_drive(distance)
