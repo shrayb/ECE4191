@@ -221,11 +221,11 @@ class Robot:
 
             # At the start ramp up speed slowly, then near the end slow it down slowly. Increases final pose accuracy
             if tick_percentage < self.ramp_up_percent:
-                left_motor_speed *= max(min(tick_percentage / self.ramp_up_percent, max_speed), self.slow_speed / 100)
-                right_motor_speed *= max(min(tick_percentage / self.ramp_up_percent, max_speed), self.slow_speed / 100)
+                left_motor_speed *= max(min(tick_percentage / self.ramp_up_percent, max_speed / 100), self.slow_speed / 100)
+                right_motor_speed *= max(min(tick_percentage / self.ramp_up_percent, max_speed / 100), self.slow_speed / 100)
             elif tick_percentage > self.ramp_down_percent:
-                left_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed), self.slow_speed / 100)
-                right_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed), self.slow_speed / 100)
+                left_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
+                right_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
 
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
@@ -270,6 +270,7 @@ class Robot:
         # Continuously check if the turn has less than 15 degrees of the turn remaining
         if abs(angle) < (15 * math.pi / 180):
             self.tick_check_and_speed_control(turn_ticks, self.slow_speed, is_turning)
+            print("USE SLOW SPEED")
         else:
             self.tick_check_and_speed_control(turn_ticks, self.max_speed, is_turning)
 
