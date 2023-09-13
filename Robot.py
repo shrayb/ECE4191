@@ -49,11 +49,11 @@ class Robot:
         self.rear_left_ultrasonic = None  # Rear left ultrasonic sensor class
         self.rear_right_ultrasonic = None  # Rear right ultrasonic sensor class
         self.colour_sensor = None  # ColourSensor class for the colour sensor
-        self.turn_radius = 0.131367155  # Metres
+        self.turn_radius = 0.1263  # Metres
         self.wheel_radius = 0.053761959  # Metres
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
-        self.max_speed = 40  # Upper percentage for maximum speed
-        self.slow_speed = 30  # Upper percentage for slower speed
+        self.max_speed = 45  # Upper percentage for maximum speed
+        self.slow_speed = 35  # Upper percentage for slower speed
         self.PID_gain = 0.8  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_size = (2, 2)
         self.sensor_readings = set_default_sensor_readings()  # 5 Sensors by 6 columns
@@ -63,6 +63,7 @@ class Robot:
         self.safe_reversing = False
         self.ramp_up_percent = 0.2
         self.ramp_down_percent = 0.65
+        self.turn_accuracy_count = 0
 
     def get_current_goal(self):
         if self.package is not None:
@@ -142,8 +143,14 @@ class Robot:
             waypoint_error_angle = calculate_angle_difference(angle1=self.pose.theta, angle2=self.current_goal.theta)
             print("Drive error:", waypoint_error_distance * 100, "cm")
             print("Angle error:", waypoint_error_angle * 180 / math.pi, "degrees")
-            if waypoint_error_distance < 0.03 and waypoint_error_angle < (2 * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 2 degree accuracy
+            if waypoint_error_distance < 0.03 and waypoint_error_angle < (5 * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 5 degree accuracy
                 self.current_goal = None
+                self.turn_accuracy_count = 0
+            if waypoint_error_distance < 0.03 and waypoint_error_angle >= (5 * math.pi / 180) and self.turn_accuracy_count < 5:
+                self.turn_accuracy_count += 1
+            else:
+                self.current_goal = None
+                self.turn_accuracy_count = 0
 
     def encoder_update_loop(self):
         while True:
@@ -222,11 +229,11 @@ class Robot:
 
             # At the start ramp up speed slowly, then near the end slow it down slowly. Increases final pose accuracy
             if tick_percentage < self.ramp_up_percent:
-                left_motor_speed *= max(min(tick_percentage / self.ramp_up_percent, self.max_speed), self.slow_speed / 100)
-                right_motor_speed *= max(min(tick_percentage / self.ramp_up_percent, self.max_speed), self.slow_speed / 100)
+                left_motor_speed *= max(min(tick_percentage / self.ramp_up_percent, max_speed / 100), self.slow_speed / 100)
+                right_motor_speed *= max(min(tick_percentage / self.ramp_up_percent, max_speed / 100), self.slow_speed / 100)
             elif tick_percentage > self.ramp_down_percent:
-                left_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), self.max_speed), self.slow_speed / 100)
-                right_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), self.max_speed), self.slow_speed / 100)
+                left_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
+                right_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
 
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
@@ -269,7 +276,7 @@ class Robot:
         initial_pose = deepcopy(self.pose)
 
         # Continuously check if the turn has less than 15 degrees of the turn remaining
-        if angle < (15 * math.pi / 180):
+        if abs(angle) < (15 * math.pi / 180):
             self.tick_check_and_speed_control(turn_ticks, self.slow_speed, is_turning)
         else:
             self.tick_check_and_speed_control(turn_ticks, self.max_speed, is_turning)
