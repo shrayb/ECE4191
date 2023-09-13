@@ -1,4 +1,5 @@
 import math
+import socket
 from time import sleep, time
 
 import numpy as np
@@ -457,6 +458,49 @@ class Robot:
 
         # Object not getting closer
         self.sensor_readings[ultrasonic_unit.reading_index][0] = False
+
+    def establish_connection_to_send():
+        server_ip = '118.138.20.161'  # Replace with the actual IP address of the receiving computer
+        server_port = 137  # Use the same port number as the server
+    
+        # Create a socket object and connect to the server
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket.connect((server_ip, server_port))
+
+        return client_socket
+
+    def establish_connection_to_receive():
+        # Define the server IP address and port
+        server_ip = '118.138.20.161'  # Replace with the actual IP address of the receiving computer
+        server_port = 137  # Use the same port number as the server
+
+        # Create a socket object and bind it to the server address
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.bind((server_ip, server_port))
+
+        # Accept a connection from a client
+        client_socket,client_address = server_socket.accept()
+        print(f"Accepted connection from {client_address}")
+        return server_socket
+
+    def close_connection(client_socket, server_socket):
+        # Close the client and server sockets
+        client_socket.close()
+        server_socket.close()
+
+    def send_robot_position(self,client_socket):
+        # Send text data to the server
+        data = str(self.pose.x) + ' ' + str(self.pose.y) + ' ' + str(self.pose.theta)
+        client_socket.send(data.encode())
+        print("sent position" , data)
+
+
+    def receive_robot_position(self,client_socket):
+        # Receive and print data from the client
+        data = client_socket.recv(1024).decode()
+        print(f"Received: {data}")
+        return data
+
 
 def object_getting_closer(array):
     # Check if all elements of array are descending from 1st index to end

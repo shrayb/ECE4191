@@ -8,6 +8,10 @@ from threading import Thread
 from BaseClasses import Motor, Pose, Pose, Ultrasonic
 from Robot import Robot
 
+import socket
+import bluetooth
+import argparse
+
 motor_right_positive = 18
 motor_right_negative = 15
 motor_right_enable = 14
@@ -52,6 +56,12 @@ drive_thread = Thread(target=robot.follow_path)
 drive_thread.start()
 
 def loop():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--ip", metavar='', type=str, default='localhost')
+    parser.add_argument("--port", metavar='', type=int, default=40000)
+    parser.add_argument("--wifi", action='store_true')
+    args, _ = parser.parse_known_args()
+
     # Define waypoints to go to in order
     waypoints = [[],
                  Pose(0.6, 0.6),
