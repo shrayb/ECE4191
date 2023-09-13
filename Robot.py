@@ -370,7 +370,7 @@ class Robot:
                 sleep(0.1)
                 self.max_tick_factor *= 0.8
 
-            self.max_tick_factor = 0.9
+            self.max_tick_factor = 0.8
             # Find distance to drive
             distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
             self.do_drive(distance)
