@@ -457,7 +457,7 @@ class Robot:
         coords = create_point(ultra_coords, sonic_distance, ultrasonic_unit.theta + self.pose.theta)
 
         # Check if coordinate is a wall, if so return none
-        if coords.x < 0.05 or coords.x > self.map_size[0] - 0.05 or coords.y < 0.05 or coords.y > self.map_size[1] - 0.05:
+        if coords.x < 0.1 or coords.x > self.map_size[0] - 0.01 or coords.y < 0.01 or coords.y > self.map_size[1] - 0.01:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
             self.sensor_readings[ultrasonic_unit.reading_index].append(100)
