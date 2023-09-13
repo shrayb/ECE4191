@@ -63,8 +63,8 @@ def loop():
 
     sleep(2)
 
-    while True:
-        try:
+    try:
+        while True:
             # Loop and travel to each waypoint
             sleep(1)
             if robot.current_goal is None:
@@ -77,11 +77,11 @@ def loop():
             print("WAYPOINTS COMPLETED")
             print("Final pose:", robot.pose.x, robot.pose.y, robot.pose.theta * 180 / math.pi)
             sleep(1)
-        except KeyboardInterrupt:
-            robot.left_motor.speed = 0
-            robot.right_motor.speed = 0
-            robot.left_motor.stop()
-            robot.right_motor.stop()
+    except KeyboardInterrupt:
+        robot.left_motor.speed = 0
+        robot.right_motor.speed = 0
+        robot.left_motor.stop()
+        robot.right_motor.stop()
 
 
 
