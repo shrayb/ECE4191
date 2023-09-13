@@ -35,7 +35,7 @@ right_motor = Motor(motor_right_enable, motor_right_positive, motor_right_negati
 front_left_sonic = Ultrasonic(echo_pin=front_left_sonic_echo, trig_pin=front_left_sonic_trig, x_offset=0.155, y_offset=0.0585, theta=0, reading_index=0, maximum_read_distance=0.15)
 front_right_sonic = Ultrasonic(echo_pin=front_right_sonic_echo, trig_pin=front_right_sonic_trig, x_offset=0.155, y_offset=-0.0585, theta=0, reading_index=1, maximum_read_distance=0.15)
 
-pose = Pose(0.3, 0.2, 0)
+pose = Pose(0.31, 0.564, 0)
 robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
@@ -54,14 +54,12 @@ drive_thread.start()
 def loop():
     # Define waypoints to go to in order
     waypoints = [[],
-                 Pose(0.7, 0.2),
-                 Pose(0.7, 0.7),
-                 Pose(0.3, 0.7),
-                 Pose(0.3, 0.2),
-                 Pose(0.7, 0.2),
-                 Pose(0.7, 0.7),
-                 Pose(0.3, 0.7),
-                 Pose(0.3, 0.2)
+                 Pose(1.2 - 0.20, 0.16, -20 * math.pi / 180),
+                 Pose(0.65, 0.564, 0),
+                 Pose(1.2 - 0.20, 0.605, 0),
+                 Pose(0.65, 0.564, 0),
+                 Pose(1.2 - 0.20, 1.2 - 0.16, 20 * math.pi / 180),
+                 Pose(0.31, 0.564, 0)
                 ]
 
     robot.left_motor.stop()
