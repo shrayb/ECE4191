@@ -52,19 +52,18 @@ drive_thread = Thread(target=robot.follow_path)
 drive_thread.start()
 
 def loop():
-    while True:
-        try:
-            # Loop and travel to each waypoint
-            robot.do_drive(2)
-            while True:
-                sleep(1)
-                print("Total ticks:", (robot.left_motor.ticks + robot.right_motor.ticks) / 2)
+    try:
+        # Loop and travel to each waypoint
+        robot.do_drive(1.5)
+        while True:
+            sleep(1)
+            print("Total ticks:", (robot.left_motor.ticks + robot.right_motor.ticks) / 2)
 
-        except KeyboardInterrupt:
-            robot.left_motor.speed = 0
-            robot.right_motor.speed = 0
-            robot.left_motor.stop()
-            robot.right_motor.stop()
+    except KeyboardInterrupt:
+        robot.left_motor.speed = 0
+        robot.right_motor.speed = 0
+        robot.left_motor.stop()
+        robot.right_motor.stop()
 
 
 
