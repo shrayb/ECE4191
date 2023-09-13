@@ -167,7 +167,7 @@ class Robot:
     def ultrasonic_update_loop(self):
         while True:
             sleep(0.1)
-
+            
             # Update sensor readings which includes a detection flag for collisions
             self.detect_impending_collision(self.front_left_ultrasonic)
             self.detect_impending_collision(self.front_right_ultrasonic)
