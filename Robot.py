@@ -375,14 +375,14 @@ class Robot:
                 sleep(0.1)
                 self.max_tick_factor *= 0.8
 
-            self.max_tick_factor = 0.9
-            for index in range(4):
+            self.max_tick_factor = 0.7
+            for index in range(3):
                 # Find distance to drive
                 distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
                 self.do_drive(distance)
-                print("\t\tDrive complete")
-                self.max_tick_factor *= 0.8
+                self.max_tick_factor *= 0.9
                 sleep(0.1)
+                print("\t\tDrive complete")
 
             self.max_tick_factor = 0.9
 
