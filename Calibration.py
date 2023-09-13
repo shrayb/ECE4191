@@ -54,7 +54,7 @@ drive_thread.start()
 def loop():
     try:
         # Loop and travel to each waypoint
-        robot.do_turn(3 * 2 * math.pi)
+        robot.do_turn(5 * 2 * math.pi)
         while True:
             sleep(1)
             print("Total ticks:", (robot.left_motor.ticks + robot.right_motor.ticks) / 2)
