@@ -356,7 +356,7 @@ class Robot:
 
         # Check if the robot is already there
         distance_error = calculate_distance_between_points(self.pose, coordinate)
-        if distance_error > 0.03:  # 3 cm away
+        if distance_error > 0.013:  # 3 cm away
 
             for index in range(4):
                 # Find angle to turn
