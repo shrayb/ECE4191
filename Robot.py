@@ -363,33 +363,32 @@ class Robot:
         distance_error = calculate_distance_between_points(self.pose, coordinate)
         if distance_error > 0.03:  # 3 cm away
 
-            # Find angle to turn
-            goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
-            angle_difference = goal_angle - self.pose.theta
-            if angle_difference > math.pi:
-                angle_difference = angle_difference - 2 * math.pi
-            elif angle_difference < -math.pi:
-                angle_difference = angle_difference + 2 * math.pi
-            self.do_turn(angle_difference)
-            sleep(0.1)
+            for index in range(4):
+                # Find angle to turn
+                goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
+                angle_difference = goal_angle - self.pose.theta
+                if angle_difference > math.pi:
+                    angle_difference = angle_difference - 2 * math.pi
+                elif angle_difference < -math.pi:
+                    angle_difference = angle_difference + 2 * math.pi
+                self.do_turn(angle_difference)
+                sleep(0.1)
+                self.max_tick_factor *= 0.8
 
-            goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
-            angle_difference = goal_angle - self.pose.theta
-            if angle_difference > math.pi:
-                angle_difference = angle_difference - 2 * math.pi
-            elif angle_difference < -math.pi:
-                angle_difference = angle_difference + 2 * math.pi
-            self.do_turn(angle_difference)
-            sleep(0.1)
+            self.max_tick_factor = 0.9
+            for index in range(4):
+                # Find distance to drive
+                distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
+                self.do_drive(distance)
+                print("\t\tDrive complete")
+                self.max_tick_factor *= 0.8
+                sleep(0.1)
 
-            # Find distance to drive
-            distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
-            self.do_drive(distance)
-            print("\t\tDrive complete")
-            sleep(0.1)
+            self.max_tick_factor = 0.9
 
+        drive_pose_accuracy = calculate_distance_between_points(self.pose, self.current_goal)
         # If there is an end orientation face it
-        if coordinate.theta is not None and self.pose.theta != coordinate.theta:
+        if coordinate.theta is not None and self.pose.theta != coordinate.theta and drive_pose_accuracy < 0.03:
             angle_difference = coordinate.theta - self.pose.theta
             if angle_difference > math.pi:
                 angle_difference = angle_difference - 2 * math.pi
