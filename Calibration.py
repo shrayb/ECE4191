@@ -49,7 +49,7 @@ robot.limit_switch = limit_switch
 encoder_thread = Thread(target=robot.encoder_thread)
 encoder_thread.start()
 
-ultrasonic_thread = Thread(target=robot.ultrasonic_update_loop)
+ultrasonic_thread = Thread(target=robot.ultrasonic_thread)
 ultrasonic_thread.start()
 
 drive_thread = Thread(target=robot.drive_thread)
