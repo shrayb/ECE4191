@@ -52,8 +52,8 @@ class Robot:
         self.turn_radius = 0.1263  # Metres
         self.wheel_radius = 0.053761959  # Metres
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
-        self.max_speed = 45  # Upper percentage for maximum speed
-        self.slow_speed = 38  # Upper percentage for slower speed
+        self.max_speed = 35  # Upper percentage for maximum speed
+        self.slow_speed = 33  # Upper percentage for slower speed
         self.PID_gain = 0.8  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_size = (1.2, 1.2)
         self.sensor_readings = set_default_sensor_readings()  # 5 Sensors by 6 columns
@@ -61,8 +61,8 @@ class Robot:
         self.time_flag = False
         self.stopping_time = None
         self.safe_reversing = False
-        self.ramp_up_percent = 0.2
-        self.ramp_down_percent = 0.65
+        self.ramp_up_percent = 0.4
+        self.ramp_down_percent = 0.6
         self.turn_accuracy_count = 0
         self.max_tick_factor = 0.8
         self.do_localise = False
