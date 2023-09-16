@@ -111,6 +111,7 @@ class Robot:
 
         # Set y pose
         self.pose.y = self.limit_switch.distance
+        self.pose.theta = -math.pi / 2
 
         # Drive backwards 10 cm
         self.do_drive(-0.1)
