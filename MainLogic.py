@@ -95,7 +95,7 @@ def handle_delivering_and_returning(robot=None, arena_map=None):
             robot.is_moving = True
 
             # Start thread to control movement
-            global_thread_list["movement"] = Thread(target=robot.follow_path)
+            global_thread_list["movement"] = Thread(target=robot.drive_thread)
             global_thread_list["movement"].start()
         elif not robot.is_moving and robot.movement_complete:
             # Reset movement complete flag

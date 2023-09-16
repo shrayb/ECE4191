@@ -42,24 +42,18 @@ robot.right_motor = right_motor
 robot.front_left_ultrasonic = front_left_sonic
 robot.front_right_ultrasonic = front_right_sonic
 
-encoder_thread = Thread(target=robot.encoder_update_loop)
+encoder_thread = Thread(target=robot.encoder_thread)
 encoder_thread.start()
 
-ultrasonic_thread = Thread(target=robot.ultrasonic_update_loop)
+ultrasonic_thread = Thread(target=robot.ultrasonic_thread)
 ultrasonic_thread.start()
 
-drive_thread = Thread(target=robot.follow_path)
+drive_thread = Thread(target=robot.drive_thread)
 drive_thread.start()
 
 def loop():
     # Define waypoints to go to in order
-    waypoints = [[],
-                 Pose(1.2 - 0.25, 0.25, 0),
-                 Pose(0.65, 0.564, 0),
-                 Pose(1.2 - 0.25, 0.564, 0),
-                 Pose(0.65, 0.564, 0),
-                 Pose(1.2 - 0.25, 1.2 - 0.25, 0),
-                 Pose(0.31, 0.564, 0)
+    waypoints = [[]
                 ]
 
     robot.left_motor.stop()

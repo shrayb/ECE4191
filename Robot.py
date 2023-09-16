@@ -65,6 +65,8 @@ class Robot:
         self.ramp_down_percent = 0.65
         self.turn_accuracy_count = 0
         self.max_tick_factor = 0.8
+        self.do_localise = False
+        self.limit_switch = False
 
     def get_current_goal(self):
         if self.package is not None:
@@ -97,11 +99,37 @@ class Robot:
         colour_reading = self.colour_sensor.read_colour()
         return colour_reading
 
-    def follow_path(self):
+    def re_localise(self):
+        # Face
+
+        # Drive forward slowly until limit switch is triggered
+        self.do_drive(2, max_speed=10)
+
+        # Set x pose
+
+
+        # Drive backwards 10 cm
+
+
+        # Turn towards the close wall
+
+
+        # Drive forward slowly until limit switch is triggered
+
+
+        # Set y pose
+
+
+    def drive_thread(self):
         # THREAD FUNCTION
         # Will drive to whatever waypoints are in the path queue variable in order and remove them
         while True:
             sleep(0.05)
+
+            # Check if we want to relocalise the robot
+            if self.do_localise:
+                self.re_localise()
+                self.do_localise = False
 
             # Check if there is an impending collision
             if self.current_goal is None:
@@ -153,7 +181,7 @@ class Robot:
                 self.current_goal = None
                 self.max_tick_factor = 0.8
 
-    def encoder_update_loop(self):
+    def encoder_thread(self):
         while True:
             self.left_motor.update_encoder()
             self.right_motor.update_encoder()
@@ -166,7 +194,7 @@ class Robot:
 
         return False
 
-    def ultrasonic_update_loop(self):
+    def ultrasonic_thread(self):
         while True:
             sleep(0.1)
             
@@ -210,7 +238,7 @@ class Robot:
         max_ticks *= self.max_tick_factor
         while tick_sum < max_ticks:
             # Check if there will be a collision
-            if self.is_impending_collision:
+            if self.is_impending_collision or self.limit_switch:
                 break
 
             # Calculate the left tick advantage and tick sum
@@ -231,8 +259,8 @@ class Robot:
 
             # At the start ramp up speed slowly, then near the end slow it down slowly. Increases final pose accuracy
             if tick_percentage < self.ramp_up_percent:
-                left_motor_speed *= max(min(tick_percentage / self.ramp_up_percent, max_speed / 100), self.slow_speed / 100)
-                right_motor_speed *= max(min(tick_percentage / self.ramp_up_percent, max_speed / 100), self.slow_speed / 100)
+                left_motor_speed *= max(min((tick_percentage / self.ramp_up_percent) + 1, max_speed / 100), self.slow_speed / 100)
+                right_motor_speed *= max(min((tick_percentage / self.ramp_up_percent) + 1, max_speed / 100), self.slow_speed / 100)
             elif tick_percentage > self.ramp_down_percent:
                 left_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
                 right_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
@@ -301,7 +329,10 @@ class Robot:
         # Clamp angle from [pi to -pi)
         self.pose.theta = math.atan2(math.sin(self.pose.theta), math.cos(self.pose.theta))
 
-    def do_drive(self, distance):
+    def do_drive(self, distance, max_speed=None):
+        if max_speed is None:
+            max_speed = self.max_speed
+
         # Reset encoders
         self.left_motor.reset_encoder()
         self.right_motor.reset_encoder()
@@ -329,7 +360,7 @@ class Robot:
         if distance < 0.05:  # 5 cm
             self.tick_check_and_speed_control(drive_ticks, self.slow_speed, 0)
         else:
-            self.tick_check_and_speed_control(drive_ticks, self.max_speed, 0)
+            self.tick_check_and_speed_control(drive_ticks, max_speed, 0)
 
         # Stop the motors
         self.left_motor.stop()
@@ -438,6 +469,8 @@ class Robot:
             self.sensor_readings[ultrasonic_unit.reading_index].append(100)
             return None
 
+        print("Distance measured:", sonic_distance, "metres")
+
         # Create coordinate for ultrasonic
         angle_robot_ultra = math.atan2(ultrasonic_unit.y_offset, ultrasonic_unit.x_offset) + self.pose.theta
         ultra_coords = create_point(self.pose, ultrasonic_unit.hypot, angle_robot_ultra)
@@ -445,7 +478,6 @@ class Robot:
         coords = create_point(ultra_coords, sonic_distance, ultrasonic_unit.theta + self.pose.theta)
 
         # Check if coordinate is a wall, if so return none
-        print("Object coords:", coords.x, coords.y)
         if coords.x < 0.1 or coords.x > self.map_size[0] - 0.1 or coords.y < 0.1 or coords.y > self.map_size[1] - 0.1:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
@@ -498,7 +530,6 @@ class Robot:
         data = str(self.pose.x) + ' ' + str(self.pose.y) + ' ' + str(self.pose.theta)
         client_socket.send(data.encode())
         print("sent position" , data)
-
 
     def receive_robot_position(self,client_socket):
         # Receive and print data from the client

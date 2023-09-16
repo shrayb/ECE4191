@@ -83,7 +83,7 @@ robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
 
-encoder_thread = Thread(target=robot.encoder_update_loop)
+encoder_thread = Thread(target=robot.encoder_thread)
 encoder_thread.start()
 
 scanner_thread = Thread(target=detect_obstacle)
