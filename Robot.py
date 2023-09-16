@@ -314,7 +314,7 @@ class Robot:
         self.left_motor.stop()
         self.right_motor.stop()
 
-        sleep(0.08)
+        sleep(0.06)
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         distance_turned = 0.5 * tick_sum * self.distance_per_tick
@@ -364,7 +364,7 @@ class Robot:
         # Stop the motors
         self.left_motor.stop()
         self.right_motor.stop()
-        sleep(0.1)
+        sleep(0.06)
 
         # Use the tick count to estimate where the robot is
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
@@ -397,14 +397,12 @@ class Robot:
                 elif angle_difference < -math.pi:
                     angle_difference = angle_difference + 2 * math.pi
                 self.do_turn(angle_difference)
-                sleep(0.07)
                 self.max_tick_factor *= 0.8
 
             self.max_tick_factor = 0.8
             # Find distance to drive
             distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
             self.do_drive(distance)
-            sleep(0.1)
             print("\t\tDrive complete")
 
         drive_pose_accuracy = calculate_distance_between_points(self.pose, coordinate)
