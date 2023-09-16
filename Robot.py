@@ -67,8 +67,8 @@ class Robot:
         self.max_tick_factor = 0.8
         self.do_localise = False
         self.limit_switch = None
-        self.distance_error = 0.01
-        self.angle_error = 1
+        self.distance_error = 0.005
+        self.angle_error = 0.5
 
     def get_current_goal(self):
         if self.package is not None:
@@ -314,7 +314,7 @@ class Robot:
         self.left_motor.stop()
         self.right_motor.stop()
 
-        sleep(0.06)
+        sleep(0.12)
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         distance_turned = 0.5 * tick_sum * self.distance_per_tick
