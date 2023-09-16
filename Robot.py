@@ -122,6 +122,7 @@ class Robot:
             new_pose = Pose(self.pose.x, self.pose.y, math.pi)
         else:
             new_pose = Pose(self.pose.x, self.pose.y, 0)
+        print("Drive to coords")
         self.drive_to_coordinate(new_pose)
 
         # Drive forward slowly until limit switch is triggered
