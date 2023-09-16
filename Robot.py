@@ -410,7 +410,7 @@ class Robot:
         drive_pose_accuracy = calculate_distance_between_points(self.pose, coordinate)
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta and drive_pose_accuracy < self.distance_error:
-            self.max_tick_factor = 0.8
+            self.max_tick_factor = 0.9
             for index in range(4):
                 angle_difference = coordinate.theta - self.pose.theta
                 if angle_difference > math.pi:
