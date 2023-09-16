@@ -364,7 +364,7 @@ class Robot:
         # Stop the motors
         self.left_motor.stop()
         self.right_motor.stop()
-        sleep(0.06)
+        sleep(0.12)
 
         # Use the tick count to estimate where the robot is
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
@@ -403,6 +403,14 @@ class Robot:
             for index in range(4):
                 # Find distance to drive
                 distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
+                goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
+                angle_difference = goal_angle - self.pose.theta
+                if angle_difference > math.pi:
+                    angle_difference = angle_difference - 2 * math.pi
+                elif angle_difference < -math.pi:
+                    angle_difference = angle_difference + 2 * math.pi
+                if abs(angle_difference) >= math.pi / 2:
+                    distance *= -1
                 self.do_drive(distance)
                 print("\t\tDrive complete")
                 self.max_tick_factor *= 0.9
