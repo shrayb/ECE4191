@@ -5,7 +5,7 @@ from time import time, sleep
 
 from threading import Thread
 
-from BaseClasses import Motor, Pose, Pose, Ultrasonic
+from BaseClasses import *
 from Robot import Robot
 
 motor_right_positive = 18
@@ -35,26 +35,31 @@ right_motor = Motor(motor_right_enable, motor_right_positive, motor_right_negati
 front_left_sonic = Ultrasonic(echo_pin=front_left_sonic_echo, trig_pin=front_left_sonic_trig, x_offset=0.155, y_offset=0.0585, theta=0, reading_index=0, maximum_read_distance=0.25)
 front_right_sonic = Ultrasonic(echo_pin=front_right_sonic_echo, trig_pin=front_right_sonic_trig, x_offset=0.155, y_offset=-0.0585, theta=0, reading_index=1, maximum_read_distance=0.25)
 
+limit_switch = LimitSwitch(distance=0.15486+0.03617)
+
 pose = Pose(0.5, 0.5, 0)
 robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
 robot.front_left_ultrasonic = front_left_sonic
 robot.front_right_ultrasonic = front_right_sonic
+robot.limit_switch = limit_switch
+
 
 encoder_thread = Thread(target=robot.encoder_thread)
 encoder_thread.start()
 
-# ultrasonic_thread = Thread(target=robot.ultrasonic_update_loop)
-# ultrasonic_thread.start()
+ultrasonic_thread = Thread(target=robot.ultrasonic_update_loop)
+ultrasonic_thread.start()
 
 drive_thread = Thread(target=robot.drive_thread)
 drive_thread.start()
 
+
 def loop():
     try:
         # Loop and travel to each waypoint
-        robot.do_turn(1* 2 * math.pi)
+        robot.do_drive(0.75)
         while True:
             sleep(1)
             print("Total ticks:", (robot.left_motor.ticks + robot.right_motor.ticks) / 2)
