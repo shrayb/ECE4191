@@ -52,8 +52,8 @@ class Robot:
         self.turn_radius = 0.1263  # Metres
         self.wheel_radius = 0.053761959  # Metres
         self.distance_per_tick = (self.wheel_radius * 2 * math.pi) / (74.83 * 48)  # Distance per tick in metres
-        self.max_speed = 36  # Upper percentage for maximum speed
-        self.slow_speed = 33  # Upper percentage for slower speed
+        self.max_speed = 45  # Upper percentage for maximum speed
+        self.slow_speed = 38  # Upper percentage for slower speed
         self.PID_gain = 0.8  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_size = (1.2, 1.2)
         self.sensor_readings = set_default_sensor_readings()  # 5 Sensors by 6 columns
@@ -105,7 +105,7 @@ class Robot:
         self.drive_to_coordinate(new_pose)
 
         # Drive forward slowly until limit switch is triggered
-        self.do_drive(0.20, max_speed=10)
+        self.do_drive(0.20, max_speed=35)
 
         # Set y pose
         self.pose.y = self.limit_switch.distance
@@ -121,7 +121,7 @@ class Robot:
         self.drive_to_coordinate(new_pose)
 
         # Drive forward slowly until limit switch is triggered
-        self.do_drive(0.2, max_speed=10)
+        self.do_drive(0.2, max_speed=35)
 
         # Set x pose
         self.pose.x = self.limit_switch.distance
@@ -269,11 +269,11 @@ class Robot:
 
             # At the start ramp up speed slowly, then near the end slow it down slowly. Increases final pose accuracy
             if tick_percentage < self.ramp_up_percent:
-                left_motor_speed *= max(min((tick_percentage / self.ramp_up_percent) + 0.05, max_speed / 100), self.slow_speed / 100)
-                right_motor_speed *= max(min((tick_percentage / self.ramp_up_percent) + 0.05, max_speed / 100), self.slow_speed / 100)
+                left_motor_speed *= max(min((tick_percentage / self.ramp_up_percent), max_speed / 100), self.slow_speed / 100)
+                right_motor_speed *= max(min((tick_percentage / self.ramp_up_percent), max_speed / 100), self.slow_speed / 100)
             elif tick_percentage > self.ramp_down_percent:
-                left_motor_speed *= max(min(((1 - tick_percentage) / (1 - self.ramp_down_percent)) + 0.05, max_speed / 100), self.slow_speed / 100)
-                right_motor_speed *= max(min(((1 - tick_percentage) / (1 - self.ramp_down_percent)) + 0.05, max_speed / 100), self.slow_speed / 100)
+                left_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
+                right_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
 
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
