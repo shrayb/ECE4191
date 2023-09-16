@@ -78,12 +78,10 @@ def loop():
 
         print("WAYPOINTS COMPLETED")
         print("Final pose:", robot.pose.x, robot.pose.y, robot.pose.theta * 180 / math.pi)
-        sleep(5)
         robot.left_motor.speed = 0
         robot.right_motor.speed = 0
         robot.left_motor.stop()
         robot.right_motor.stop()
-        robot.do_localise = True
     except KeyboardInterrupt:
         robot.left_motor.speed = 0
         robot.right_motor.speed = 0

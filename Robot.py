@@ -314,7 +314,7 @@ class Robot:
         self.left_motor.stop()
         self.right_motor.stop()
 
-        sleep(0.12)
+        sleep(0.25)
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         distance_turned = 0.5 * tick_sum * self.distance_per_tick
@@ -364,7 +364,7 @@ class Robot:
         # Stop the motors
         self.left_motor.stop()
         self.right_motor.stop()
-        sleep(0.12)
+        sleep(0.25)
 
         # Use the tick count to estimate where the robot is
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
@@ -388,7 +388,7 @@ class Robot:
         distance_error = calculate_distance_between_points(self.pose, coordinate)
         if distance_error > self.distance_error:  # 3 cm away
 
-            for index in range(8):
+            for index in range(4):
                 # Find angle to turn
                 goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
                 angle_difference = goal_angle - self.pose.theta
@@ -400,7 +400,7 @@ class Robot:
                 self.max_tick_factor *= 0.8
 
             self.max_tick_factor = 0.8
-            for index in range(8):
+            for index in range(4):
                 # Find distance to drive
                 distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
                 goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
@@ -419,7 +419,7 @@ class Robot:
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta and drive_pose_accuracy < self.distance_error:
             self.max_tick_factor = 0.9
-            for index in range(8):
+            for index in range(4):
                 angle_difference = coordinate.theta - self.pose.theta
                 if angle_difference > math.pi:
                     angle_difference = angle_difference - 2 * math.pi
