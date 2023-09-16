@@ -379,6 +379,7 @@ class Robot:
         else:
             self.tick_check_and_speed_control(drive_ticks, max_speed, 0)
 
+        print("Stop speed")
         # Stop the motors
         self.left_motor.stop()
         self.right_motor.stop()
