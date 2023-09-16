@@ -67,7 +67,7 @@ class Robot:
         self.max_tick_factor = 0.8
         self.do_localise = False
         self.limit_switch = None
-        self.distance_error = 0.05
+        self.distance_error = 0.01
         self.angle_error = 1
 
     def get_current_goal(self):
