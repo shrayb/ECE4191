@@ -5,7 +5,7 @@ from time import time, sleep
 
 from threading import Thread
 
-from BaseClasses import Motor, Pose, Pose, Ultrasonic
+from BaseClasses import *
 from Robot import Robot
 
 motor_right_positive = 18
