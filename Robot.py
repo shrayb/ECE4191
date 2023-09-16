@@ -267,8 +267,8 @@ class Robot:
             #     left_motor_speed *= max_speed / 100
             #     right_motor_speed *= max_speed / 100
 
-            left_motor_speed *= self.slow_speed / 100
-            right_motor_speed *= self.slow_speed / 100
+            left_motor_speed *= self.max_speed / 100
+            right_motor_speed *= self.max_speed / 100
 
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
