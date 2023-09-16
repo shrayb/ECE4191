@@ -363,7 +363,7 @@ class Robot:
         # Stop the motors
         self.left_motor.stop()
         self.right_motor.stop()
-        sleep(0.3)
+        sleep(0.1)
 
         # Use the tick count to estimate where the robot is
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
@@ -388,6 +388,7 @@ class Robot:
         if distance_error > self.distance_error:  # 3 cm away
 
             for index in range(4):
+                print("Doing turn")
                 # Find angle to turn
                 goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
                 angle_difference = goal_angle - self.pose.theta
@@ -396,7 +397,7 @@ class Robot:
                 elif angle_difference < -math.pi:
                     angle_difference = angle_difference + 2 * math.pi
                 self.do_turn(angle_difference)
-                sleep(0.1)
+                sleep(0.07)
                 self.max_tick_factor *= 0.8
 
             self.max_tick_factor = 0.8
