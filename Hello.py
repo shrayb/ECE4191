@@ -57,7 +57,7 @@ drive_thread.start()
 def loop():
     # Define waypoints to go to in order
     waypoints = [[],
-                 Pose(0.6, 0.3)
+                 Pose(0.65, 0.4, -math.pi/2)
                 ]
 
     robot.left_motor.stop()

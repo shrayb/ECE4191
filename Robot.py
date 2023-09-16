@@ -107,14 +107,12 @@ class Robot:
         self.drive_to_coordinate(new_pose)
 
         # Drive forward slowly until limit switch is triggered
-        print("Do drive")
         self.do_drive(0.20, max_speed=35)
 
         # Set y pose
         self.pose.y = self.limit_switch.distance
 
         # Drive backwards 10 cm
-        print("drive backward")
         self.do_drive(-0.1)
 
         # Turn towards the close wall
@@ -122,11 +120,9 @@ class Robot:
             new_pose = Pose(self.pose.x, self.pose.y, math.pi)
         else:
             new_pose = Pose(self.pose.x, self.pose.y, 0)
-        print("Drive to coords")
         self.drive_to_coordinate(new_pose)
 
         # Drive forward slowly until limit switch is triggered
-        print("Do drive again")
         self.do_drive(0.2, max_speed=35)
 
         # Set x pose
@@ -134,7 +130,6 @@ class Robot:
         self.pose.theta = new_pose.theta
 
         # Drive back 10 cm to safety
-        print("Drive backward again")
         self.do_drive(-0.1)
 
     def drive_thread(self):
@@ -183,20 +178,6 @@ class Robot:
 
             # Drive to current goal
             self.drive_to_coordinate(self.current_goal)
-
-            # If drive was successful check error from waypoint
-            waypoint_error_distance = calculate_distance_between_points(self.pose, self.current_goal)
-            waypoint_error_angle = calculate_angle_difference(angle1=self.pose.theta, angle2=self.current_goal.theta)
-            print("Drive error:", waypoint_error_distance * 100, "cm")
-            print("Angle error:", waypoint_error_angle * 180 / math.pi, "degrees")
-            if waypoint_error_distance < self.distance_error and waypoint_error_angle < (self.angle_error * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 5 degree accuracy
-                self.current_goal = None
-                self.max_tick_factor = 0.8
-            elif waypoint_error_distance < self.distance_error and waypoint_error_angle >= (self.angle_error * math.pi / 180) and not self.is_impending_collision:
-                self.max_tick_factor *= 0.8
-            if self.max_tick_factor < 0.3:
-                self.current_goal = None
-                self.max_tick_factor = 0.8
 
     def encoder_thread(self):
         while True:
@@ -373,14 +354,12 @@ class Robot:
         # Initial pose
         initial_pose = deepcopy(self.pose)
 
-        print("Start speed")
         # Continuously check if the robot has driven most of the way
         if distance < 0.05:  # 5 cm
             self.tick_check_and_speed_control(drive_ticks, self.slow_speed, 0)
         else:
             self.tick_check_and_speed_control(drive_ticks, max_speed, 0)
 
-        print("Stop speed")
         # Stop the motors
         self.left_motor.stop()
         self.right_motor.stop()
@@ -389,8 +368,6 @@ class Robot:
         # Use the tick count to estimate where the robot is
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         measure_distance = 0.5 * tick_sum * self.distance_per_tick
-
-        print("Hello")
 
         if distance < 0:
             measure_distance *= -1
@@ -438,6 +415,20 @@ class Robot:
             elif angle_difference < -math.pi:
                 angle_difference = angle_difference + 2 * math.pi
             self.do_turn(angle_difference)
+
+        # If drive was successful check error from waypoint
+        waypoint_error_distance = calculate_distance_between_points(self.pose, self.current_goal)
+        waypoint_error_angle = calculate_angle_difference(angle1=self.pose.theta, angle2=self.current_goal.theta)
+        print("Drive error:", waypoint_error_distance * 100, "cm")
+        print("Angle error:", waypoint_error_angle * 180 / math.pi, "degrees")
+        if waypoint_error_distance < self.distance_error and waypoint_error_angle < (self.angle_error * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 5 degree accuracy
+            self.current_goal = None
+            self.max_tick_factor = 0.8
+        elif waypoint_error_distance < self.distance_error and waypoint_error_angle >= (self.angle_error * math.pi / 180) and not self.is_impending_collision:
+            self.max_tick_factor *= 0.8
+        if self.max_tick_factor < 0.3:
+            self.current_goal = None
+            self.max_tick_factor = 0.8
 
     def detect_obstacle(self, front_left_ultrasonic=None, front_right_ultrasonic=None):
         left_dist = front_left_ultrasonic.measure_dist()
