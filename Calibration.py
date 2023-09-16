@@ -69,7 +69,7 @@ def loop():
 
         robot.left_motor.forward()
         robot.right_motor.forward()
-        robot.tick_check_and_speed_control(6000, 45, 0)
+        robot.tick_check_and_speed_control(12000, 45, 0)
         robot.left_motor.stop()
         robot.right_motor.stop()
         while True:
