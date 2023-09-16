@@ -413,7 +413,7 @@ class Robot:
                     distance *= -1
                 self.do_drive(distance)
                 print("\t\tDrive complete")
-                self.max_tick_factor *= 0.9
+                self.max_tick_factor *= 0.7
 
         drive_pose_accuracy = calculate_distance_between_points(self.pose, coordinate)
         # If there is an end orientation face it
