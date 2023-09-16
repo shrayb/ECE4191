@@ -400,10 +400,12 @@ class Robot:
                 self.max_tick_factor *= 0.8
 
             self.max_tick_factor = 0.8
-            # Find distance to drive
-            distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
-            self.do_drive(distance)
-            print("\t\tDrive complete")
+            for index in range(4):
+                # Find distance to drive
+                distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
+                self.do_drive(distance)
+                print("\t\tDrive complete")
+                self.max_tick_factor *= 0.9
 
         drive_pose_accuracy = calculate_distance_between_points(self.pose, coordinate)
         # If there is an end orientation face it
