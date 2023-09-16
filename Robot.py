@@ -373,6 +373,7 @@ class Robot:
         # Initial pose
         initial_pose = deepcopy(self.pose)
 
+        print("Start speed")
         # Continuously check if the robot has driven most of the way
         if distance < 0.05:  # 5 cm
             self.tick_check_and_speed_control(drive_ticks, self.slow_speed, 0)
