@@ -313,7 +313,7 @@ class Robot:
         self.left_motor.stop()
         self.right_motor.stop()
 
-        sleep(0.16)
+        sleep(0.08)
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         distance_turned = 0.5 * tick_sum * self.distance_per_tick
@@ -417,8 +417,8 @@ class Robot:
             self.do_turn(angle_difference)
 
         # If drive was successful check error from waypoint
-        waypoint_error_distance = calculate_distance_between_points(self.pose, self.current_goal)
-        waypoint_error_angle = calculate_angle_difference(angle1=self.pose.theta, angle2=self.current_goal.theta)
+        waypoint_error_distance = calculate_distance_between_points(self.pose, coordinate)
+        waypoint_error_angle = calculate_angle_difference(angle1=self.pose.theta, angle2=coordinate.theta)
         print("Drive error:", waypoint_error_distance * 100, "cm")
         print("Angle error:", waypoint_error_angle * 180 / math.pi, "degrees")
         if waypoint_error_distance < self.distance_error and waypoint_error_angle < (self.angle_error * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 5 degree accuracy
