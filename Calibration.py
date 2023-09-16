@@ -59,20 +59,7 @@ drive_thread.start()
 def loop():
     try:
         # Loop and travel to each waypoint
-        # Reset encoders
-        robot.left_motor.reset_encoder()
-        robot.right_motor.reset_encoder()
-
-        # Set motor speeds to 0
-        robot.left_motor.set_speed(0)
-        robot.right_motor.set_speed(0)
-
-        robot.left_motor.forward()
-        robot.right_motor.forward()
-        robot.max_tick_factor = 1
-        robot.tick_check_and_speed_control(12000, 45, 0)
-        robot.left_motor.stop()
-        robot.right_motor.stop()
+        robot.do_drive(0.5)
         while True:
             sleep(1)
             print("Total ticks:", (robot.left_motor.ticks + robot.right_motor.ticks) / 2)
