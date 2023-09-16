@@ -58,7 +58,6 @@ def loop():
     # Define waypoints to go to in order
     waypoints = [[],
                  Pose(0.65, 0.4, -math.pi/2),
-                 Pose(0.8, 0.8, 3 * math.pi /4),
                  Pose(0.6, 0.3, math.pi/2)
                 ]
 
