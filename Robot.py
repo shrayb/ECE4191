@@ -389,7 +389,6 @@ class Robot:
         if distance_error > self.distance_error:  # 3 cm away
 
             for index in range(4):
-                print("Doing turn")
                 # Find angle to turn
                 goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
                 angle_difference = goal_angle - self.pose.theta
@@ -411,12 +410,15 @@ class Robot:
         drive_pose_accuracy = calculate_distance_between_points(self.pose, coordinate)
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta and drive_pose_accuracy < self.distance_error:
-            angle_difference = coordinate.theta - self.pose.theta
-            if angle_difference > math.pi:
-                angle_difference = angle_difference - 2 * math.pi
-            elif angle_difference < -math.pi:
-                angle_difference = angle_difference + 2 * math.pi
-            self.do_turn(angle_difference)
+            self.max_tick_factor = 0.8
+            for index in range(4):
+                angle_difference = coordinate.theta - self.pose.theta
+                if angle_difference > math.pi:
+                    angle_difference = angle_difference - 2 * math.pi
+                elif angle_difference < -math.pi:
+                    angle_difference = angle_difference + 2 * math.pi
+                self.do_turn(angle_difference)
+                self.max_tick_factor *= 0.8
 
         # If drive was successful check error from waypoint
         waypoint_error_distance = calculate_distance_between_points(self.pose, coordinate)
