@@ -107,12 +107,14 @@ class Robot:
         self.drive_to_coordinate(new_pose)
 
         # Drive forward slowly until limit switch is triggered
+        print("Do drive")
         self.do_drive(0.20, max_speed=35)
 
         # Set y pose
         self.pose.y = self.limit_switch.distance
 
         # Drive backwards 10 cm
+        print("drive backward")
         self.do_drive(-0.1)
 
         # Turn towards the close wall
@@ -123,6 +125,7 @@ class Robot:
         self.drive_to_coordinate(new_pose)
 
         # Drive forward slowly until limit switch is triggered
+        print("Do drive again")
         self.do_drive(0.2, max_speed=35)
 
         # Set x pose
@@ -130,6 +133,7 @@ class Robot:
         self.pose.theta = new_pose.theta
 
         # Drive back 10 cm to safety
+        print("Drive backward again")
         self.do_drive(-0.1)
 
     def drive_thread(self):
