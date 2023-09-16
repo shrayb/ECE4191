@@ -418,7 +418,7 @@ class Robot:
             sleep(0.1)
             print("\t\tDrive complete")
 
-        drive_pose_accuracy = calculate_distance_between_points(self.pose, self.current_goal)
+        drive_pose_accuracy = calculate_distance_between_points(self.pose, coordinate)
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta and drive_pose_accuracy < 0.013:
             angle_difference = coordinate.theta - self.pose.theta
