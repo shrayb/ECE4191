@@ -67,6 +67,8 @@ class Robot:
         self.max_tick_factor = 0.8
         self.do_localise = False
         self.limit_switch = None
+        self.distance_error = 0.05
+        self.angle_error = 1
 
     def get_current_goal(self):
         if self.package is not None:
@@ -182,10 +184,10 @@ class Robot:
             waypoint_error_angle = calculate_angle_difference(angle1=self.pose.theta, angle2=self.current_goal.theta)
             print("Drive error:", waypoint_error_distance * 100, "cm")
             print("Angle error:", waypoint_error_angle * 180 / math.pi, "degrees")
-            if waypoint_error_distance < 0.013 and waypoint_error_angle < (1 * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 5 degree accuracy
+            if waypoint_error_distance < self.distance_error and waypoint_error_angle < (self.angle_error * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 5 degree accuracy
                 self.current_goal = None
                 self.max_tick_factor = 0.8
-            elif waypoint_error_distance < 0.013 and waypoint_error_angle >= (1 * math.pi / 180) and not self.is_impending_collision:
+            elif waypoint_error_distance < self.distance_error and waypoint_error_angle >= (self.angle_error * math.pi / 180) and not self.is_impending_collision:
                 self.max_tick_factor *= 0.8
             if self.max_tick_factor < 0.3:
                 self.current_goal = None
@@ -397,7 +399,7 @@ class Robot:
 
         # Check if the robot is already there
         distance_error = calculate_distance_between_points(self.pose, coordinate)
-        if distance_error > 0.013:  # 3 cm away
+        if distance_error > self.distance_error:  # 3 cm away
 
             for index in range(4):
                 # Find angle to turn
@@ -420,7 +422,7 @@ class Robot:
 
         drive_pose_accuracy = calculate_distance_between_points(self.pose, coordinate)
         # If there is an end orientation face it
-        if coordinate.theta is not None and self.pose.theta != coordinate.theta and drive_pose_accuracy < 0.013:
+        if coordinate.theta is not None and self.pose.theta != coordinate.theta and drive_pose_accuracy < self.distance_error:
             angle_difference = coordinate.theta - self.pose.theta
             if angle_difference > math.pi:
                 angle_difference = angle_difference - 2 * math.pi
