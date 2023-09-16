@@ -370,3 +370,8 @@ class Ultrasonic:
         distance = pulse_duration * 171.50  # Speed of sound in m/s
 
         return distance
+
+class LimitSwitch:
+    def __init__(self, distance=None):
+        self.distance = distance
+        self.triggered = False

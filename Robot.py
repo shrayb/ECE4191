@@ -66,7 +66,7 @@ class Robot:
         self.turn_accuracy_count = 0
         self.max_tick_factor = 0.8
         self.do_localise = False
-        self.limit_switch = False
+        self.limit_switch = None
 
     def get_current_goal(self):
         if self.package is not None:
@@ -101,24 +101,34 @@ class Robot:
 
     def re_localise(self):
         # Face
+        new_pose = Pose(self.pose.x, self.pose.y, -math.pi / 2)
+        self.drive_to_coordinate(new_pose)
+
+        # Drive forward slowly until limit switch is triggered
+        self.do_drive(2, max_speed=10)
+
+        # Set y pose
+        self.pose.y = self.limit_switch.distance
+
+        # Drive backwards 10 cm
+        self.do_drive(-0.1)
+
+        # Turn towards the close wall
+        if self.pose.x < 0.6:
+            new_pose = Pose(self.pose.x, self.pose.y, math.pi)
+        else:
+            new_pose = Pose(self.pose.x, self.pose.y, 0)
+        self.drive_to_coordinate(new_pose)
 
         # Drive forward slowly until limit switch is triggered
         self.do_drive(2, max_speed=10)
 
         # Set x pose
+        self.pose.x = self.limit_switch.distance
+        self.pose.theta = new_pose.theta
 
-
-        # Drive backwards 10 cm
-
-
-        # Turn towards the close wall
-
-
-        # Drive forward slowly until limit switch is triggered
-
-
-        # Set y pose
-
+        # Drive back 10 cm to safety
+        self.do_drive(-0.1)
 
     def drive_thread(self):
         # THREAD FUNCTION
@@ -238,7 +248,7 @@ class Robot:
         max_ticks *= self.max_tick_factor
         while tick_sum < max_ticks:
             # Check if there will be a collision
-            if self.is_impending_collision or self.limit_switch:
+            if self.is_impending_collision or self.limit_switch.triggered:
                 break
 
             # Calculate the left tick advantage and tick sum
@@ -468,8 +478,6 @@ class Robot:
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
             self.sensor_readings[ultrasonic_unit.reading_index].append(100)
             return None
-
-        print("Distance measured:", sonic_distance, "metres")
 
         # Create coordinate for ultrasonic
         angle_robot_ultra = math.atan2(ultrasonic_unit.y_offset, ultrasonic_unit.x_offset) + self.pose.theta
