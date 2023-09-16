@@ -256,15 +256,19 @@ class Robot:
                 left_motor_speed = max_speed
                 right_motor_speed = max_speed
 
-            # At the start ramp up speed slowly, then near the end slow it down slowly. Increases final pose accuracy
-            if tick_percentage < self.ramp_up_percent:
-                left_motor_speed *= max(min((tick_percentage / self.ramp_up_percent), max_speed / 100), self.slow_speed / 100)
-                right_motor_speed *= max(min((tick_percentage / self.ramp_up_percent), max_speed / 100), self.slow_speed / 100)
-            elif tick_percentage > self.ramp_down_percent:
-                left_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
-                right_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
-            else:
-                left_motor_speed *= max_speed / 100
+            # # At the start ramp up speed slowly, then near the end slow it down slowly. Increases final pose accuracy
+            # if tick_percentage < self.ramp_up_percent:
+            #     left_motor_speed *= max(min((tick_percentage / self.ramp_up_percent), max_speed / 100), self.slow_speed / 100)
+            #     right_motor_speed *= max(min((tick_percentage / self.ramp_up_percent), max_speed / 100), self.slow_speed / 100)
+            # elif tick_percentage > self.ramp_down_percent:
+            #     left_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
+            #     right_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
+            # else:
+            #     left_motor_speed *= max_speed / 100
+            #     right_motor_speed *= max_speed / 100
+
+            left_motor_speed *= self.slow_speed / 100
+            right_motor_speed *= self.slow_speed / 100
 
             self.left_motor.set_speed(left_motor_speed)
             self.right_motor.set_speed(right_motor_speed)
