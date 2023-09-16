@@ -37,7 +37,7 @@ front_right_sonic = Ultrasonic(echo_pin=front_right_sonic_echo, trig_pin=front_r
 
 limit_switch = LimitSwitch(distance=0.15486+0.03617)
 
-pose = Pose(0.31, 0.564, 0)
+pose = Pose(0.6, 0.6, -math.pi/2)
 robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
@@ -56,7 +56,8 @@ drive_thread.start()
 
 def loop():
     # Define waypoints to go to in order
-    waypoints = [[]
+    waypoints = [[],
+                 Pose(0.6, 0.3)
                 ]
 
     robot.left_motor.stop()
@@ -73,6 +74,7 @@ def loop():
                 # Travel to next waypoint
                 robot.current_goal = waypoints[0]
 
+        robot.do_localise = True
         print("WAYPOINTS COMPLETED")
         print("Final pose:", robot.pose.x, robot.pose.y, robot.pose.theta * 180 / math.pi)
         sleep(1)
