@@ -388,6 +388,8 @@ class Robot:
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         measure_distance = 0.5 * tick_sum * self.distance_per_tick
 
+        print("Hello")
+
         if distance < 0:
             measure_distance *= -1
 
