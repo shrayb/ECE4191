@@ -63,7 +63,7 @@ def mainloop():
             if robot.current_goal is None and not robot.delivering:
                 # Re-localise the robot with a corner
                 robot.do_localise = True
-
+                print("Start scan")
                 # Scan for a new package
                 robot.continuous_scan()
 
