@@ -278,9 +278,13 @@ class ColourSensor:
         self.num_of_cycles = 10
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.s0, GPIO.OUT)
+        GPIO.setup(self.s0, GPIO.LOW)
         GPIO.setup(self.s1, GPIO.OUT)
+        GPIO.setup(self.s1, GPIO.LOW)
         GPIO.setup(self.s2, GPIO.OUT)
+        GPIO.setup(self.s2, GPIO.LOW)
         GPIO.setup(self.s3, GPIO.OUT)
+        GPIO.setup(self.s3, GPIO.LOW)
         GPIO.setup(self.signal, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     def read_colour(self):
