@@ -376,7 +376,7 @@ class Ultrasonic:
         return distance
 
 class LimitSwitch:
-    def __init__(self, distance,switch_pin = None):
+    def __init__(self, distance, switch_pin = None):
         self.distance = distance
         self.triggered = False
         self.pin = switch_pin
@@ -384,8 +384,9 @@ class LimitSwitch:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin, GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
+    def detect(self):
         if GPIO.input(self.pin) == GPIO.LOW:
             print("Switch pressed")
         else:
             pass
-        time.sleep(0.1)
+        sleep(0.1)
