@@ -83,6 +83,7 @@ def loop():
         robot.left_motor.stop()
         robot.right_motor.stop()
         print("Final pose:", robot.pose.x, robot.pose.y, robot.pose.theta * 180 / math.pi)
+        print("Complete")
 
 
 
