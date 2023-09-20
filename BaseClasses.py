@@ -280,7 +280,7 @@ class ColourSensor:
         GPIO.setup(self.s1, GPIO.OUT)
         GPIO.setup(self.s2, GPIO.OUT)
         GPIO.setup(self.s3, GPIO.OUT)
-        GPIO.setup(self.signal, GPIO.IN)
+        GPIO.setup(self.signal, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     def read_colour(self):
         red_count = 0
