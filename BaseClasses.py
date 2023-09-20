@@ -294,11 +294,12 @@ class ColourSensor:
         for index in range(5):
             # Read each colour sensor
             self.read_red()
+            print("Read red")
             red_reading = self.single_reading()
-
+            print("Read green")
             self.read_green()
             green_reading = self.single_reading()
-
+            print("Read blue")
             self.read_blue()
             blue_reading = self.single_reading()
 
