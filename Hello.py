@@ -66,7 +66,7 @@ def loop():
 
     try:
         robot.max_tick_factor = 1.0
-        robot.do_drive(0.5)
+        robot.do_turn(2*math.pi)
         #robot.do_localise = True
         while True:
             sleep(1)
