@@ -83,7 +83,7 @@ class Robot:
         self.drive_to_coordinate(new_pose)
 
         # Drive forward slowly until limit switch is triggered
-        self.do_drive(0.20, max_speed=35)
+        self.do_drive(2, max_speed=35)
 
         # Set y pose
         self.pose.y = self.limit_switch.distance
@@ -100,7 +100,7 @@ class Robot:
         self.drive_to_coordinate(new_pose)
 
         # Drive forward slowly until limit switch is triggered
-        self.do_drive(0.2, max_speed=35)
+        self.do_drive(2, max_speed=35)
 
         # Set x pose
         self.pose.x = self.limit_switch.distance
