@@ -332,7 +332,9 @@ class ColourSensor:
     def single_reading(self):
         start_time = time()
         for impulse_count in range(self.num_of_cycles):
+            print("Wait for edeg")
             GPIO.wait_for_edge(self.signal, GPIO.FALLING)
+            print("Edge complete")
         signal_duration = time() - start_time
         reading_value = self.num_of_cycles / signal_duration
         return reading_value
