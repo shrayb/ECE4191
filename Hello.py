@@ -87,7 +87,7 @@ def loop():
         while True:
             # Loop and travel to each waypoint
             sleep(1)
-            if robot.current_goal is None:
+            if robot.current_goal is None and not robot.do_localise:
                 waypoints.pop(0)
                 if len(waypoints) == 0:
                     break
