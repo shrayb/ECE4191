@@ -316,9 +316,6 @@ class Robot:
         distance_turned = 0.5 * tick_sum * self.distance_per_tick
         measured_angle = distance_turned / self.turn_radius
 
-        print("Measured angle:", measured_angle)
-        print("Initial pose:", initial_pose.theta)
-
         if angle > 0:
             self.pose.theta = initial_pose.theta + measured_angle
         else:
@@ -326,8 +323,6 @@ class Robot:
 
         # Clamp angle from [pi to -pi)
         self.pose.theta = math.atan2(math.sin(self.pose.theta), math.cos(self.pose.theta))
-
-        print("Final pose:", self.pose.theta)
 
     def do_drive(self, distance, max_speed=None):
         if max_speed is None:
