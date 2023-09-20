@@ -83,7 +83,6 @@ class Robot:
         new_pose = Pose(self.pose.x, self.pose.y, -math.pi / 2)
         self.drive_to_coordinate(new_pose)
 
-        print("Drive forwards first")
         # Drive forward slowly until limit switch is triggered
         self.max_tick_factor = 1.0
         self.do_drive(2, max_speed=50)
@@ -93,12 +92,10 @@ class Robot:
         self.pose.theta = -math.pi / 2
 
         self.limit_switch.triggered = False
-        print("Drive backwards first")
         # Drive backwards 10 cm
         self.max_tick_factor = 1.0
         self.do_drive(-0.1)
 
-        print("Turn towards closest wall")
         # Turn towards the close wall
         if self.pose.x < 0.6:
             new_pose = Pose(self.pose.x, self.pose.y, math.pi)

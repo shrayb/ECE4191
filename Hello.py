@@ -74,6 +74,7 @@ def loop():
                 if len(waypoints) == 0:
                     break
                 # Travel to next waypoint
+                print("Added:", waypoints[0].x, waypoints[1].y, "to goal")
                 robot.current_goal = waypoints[0]
             # Loop and travel to each waypoint
 
