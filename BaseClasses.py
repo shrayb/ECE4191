@@ -276,6 +276,11 @@ class ColourSensor:
         self.s3 = s3
         self.signal = signal
         self.num_of_cycles = 10
+        GPIO.setup(self.s0, GPIO.OUT)
+        GPIO.setup(self.s1, GPIO.OUT)
+        GPIO.setup(self.s2, GPIO.OUT)
+        GPIO.setup(self.s3, GPIO.OUT)
+        GPIO.setup(self.signal, GPIO.IN)
 
     def read_colour(self):
         red_count = 0
