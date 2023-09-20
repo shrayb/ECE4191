@@ -108,7 +108,10 @@ class Robot:
         self.do_drive(2, max_speed=50)
 
         # Set x pose
-        self.pose.x = self.limit_switch.distance
+        if self.pose.x < 0.6:
+            self.pose.x = self.limit_switch.distance
+        else:
+            self.pose.x = self.map_size[0] - self.limit_switch.distance
         self.pose.theta = new_pose.theta
 
         self.limit_switch.triggered = False
