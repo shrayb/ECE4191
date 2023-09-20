@@ -85,7 +85,8 @@ class Robot:
 
         print("Drive forwards first")
         # Drive forward slowly until limit switch is triggered
-        self.do_drive(2, max_speed=35)
+        self.max_tick_factor = 1.0
+        self.do_drive(2, max_speed=self.slow_speed)
 
         # Set y pose
         self.pose.y = self.limit_switch.distance
@@ -94,6 +95,7 @@ class Robot:
         self.limit_switch.triggered = False
         print("Drive backwards first")
         # Drive backwards 10 cm
+        self.max_tick_factor = 1.0
         self.do_drive(-0.1)
 
         print("Turn towards closest wall")
@@ -105,7 +107,8 @@ class Robot:
         self.drive_to_coordinate(new_pose)
 
         # Drive forward slowly until limit switch is triggered
-        self.do_drive(2, max_speed=35)
+        self.max_tick_factor = 1.0
+        self.do_drive(2, max_speed=self.slow_speed)
 
         # Set x pose
         self.pose.x = self.limit_switch.distance
@@ -113,6 +116,7 @@ class Robot:
 
         self.limit_switch.triggered = False
         # Drive back 10 cm to safety
+        self.max_tick_factor = 1.0
         self.do_drive(-0.1)
 
     def drive_thread(self):
