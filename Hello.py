@@ -65,7 +65,8 @@ def loop():
     robot.right_motor.stop()
 
     try:
-        robot.do_turn(math.pi / 2)
+        robot.max_tick_factor = 1.0
+        robot.do_drive(0.5)
         #robot.do_localise = True
         while True:
             sleep(1)
