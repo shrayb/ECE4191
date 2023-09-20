@@ -3,14 +3,14 @@ import socket
 # Set up a socket using AF_INET interface, streaming protocol (TCP)
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-host_address = '49.127.70.134'  # Replace this with your actual IP Address, otherwise you will only accept local communciations
+host_address = '192.168.1.5'  # Replace this with your actual IP Address, otherwise you will only accept local communciations
 port = 12345  # Replace with a suitable port
 
 # Try to connect to server
 s.connect((host_address, port))
 while True:
     # Ask user to enter text to send
-    text = "Team_13"
+    text = "Team 13 :)"
     if text == 'quit':
         break
 
