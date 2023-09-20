@@ -61,7 +61,7 @@ def mainloop():
         # Check colour sensor for package
         if robot.current_goal is None and not robot.delivering:
             # Re-localise the robot with a corner
-            robot.re_localise()
+            robot.do_localise = True
 
             # Scan for a new package
             robot.continuous_scan()
