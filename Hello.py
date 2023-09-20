@@ -65,9 +65,9 @@ def loop():
     robot.right_motor.stop()
 
     try:
-        robot.max_tick_factor = 1.0
-        robot.do_turn(2*math.pi)
-        #robot.do_localise = True
+        # robot.max_tick_factor = 1.0
+        # robot.do_turn(2*math.pi)
+        robot.do_localise = True
         while True:
             sleep(1)
             # Loop and travel to each waypoint

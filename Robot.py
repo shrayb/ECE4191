@@ -216,6 +216,11 @@ class Robot:
         """
         distance_total = 0.5 * max_ticks * self.distance_per_tick
         initial_pose = deepcopy(self.pose)
+        if is_turning:
+            PID_GAIN = self.PID_turning
+        else:
+            PID_GAIN = self.PID_gain
+
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         max_ticks *= self.max_tick_factor
@@ -231,11 +236,11 @@ class Robot:
 
             # Every two ticks slow down the leading motor by 1 speed
             if left_tick_advantage > 0:
-                left_motor_speed = max(max_speed - math.floor(left_tick_advantage / (2 / self.PID_gain)), 0)
+                left_motor_speed = max(max_speed - math.floor(left_tick_advantage / (2 / PID_GAIN)), 0)
                 right_motor_speed = max_speed
             elif left_tick_advantage < 0:
                 left_motor_speed = max_speed
-                right_motor_speed = max(max_speed + math.ceil(left_tick_advantage / (2 / self.PID_gain)), 0)
+                right_motor_speed = max(max_speed + math.ceil(left_tick_advantage / (2 / PID_GAIN)), 0)
             else:
                 left_motor_speed = max_speed
                 right_motor_speed = max_speed
