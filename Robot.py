@@ -10,34 +10,9 @@ import random
 class Robot:
     def __init__(self, pose=None, state="waiting"):
         self.pose = pose
-        self.state = state  # Current state of robot:
-        # "waiting": Robot is waiting for the start button to be pressed
-        # "idle": Robot is stationary, waiting for package to be placed on top of it
-        # "scanning": Package has been placed on robot and now attempts to scan it
-        # "delivering": Package is being delivered to a destination
-        # "returning": Robot is returning to package pickup location
-        # "finished": Robot has delivered all packages
-        self.sub_state = None  # Sub-state of robots current state
-        # Sub-states of "waiting":
-        #   "waiting": Robot is waiting for user to press start button on the robot.
-        #   "ready": User has pressed the start button on the robot
-        # Sub-states of "idle":
-        #   "checking": Robot is checking the package detecting sensors
-        #   "found": Robot has found a package on top of the scanner
-        # Sub-states of "scanning":
-        #   "scanning": A scanning attempt is being made
-        #   "success": Scanning succeeded and tag has been decoded
         self.scanning_flag = False
-        # Sub-states of "delivering" and "returning":
-        #   "planning": Robot is planning its route through an arena. This will happen at the beginning and anytime an obstacle interferes with the current route
-        #   "moving": Robot is moving along its planned route
         self.is_impending_collision = False  # Goes True if the robot detects something in front of it whilst moving
         self.is_moving = False  # Boolean for if the robot is moving
-        #   "stuck": Robot is stuck and has nowhere to travel
-        #   "positioned": Robot has arrived to its destination
-        #   "completed": Robot has completed the state task
-        # Sub-states of "delivering"
-        #   "depositing": The robot is depositing the package into the destination
         self.current_goal = None  # Current coordinate the robot wants to end at
         self.package = None  # Package class that was currently scanned
         self.depositing = False  # Flag for when the conveyor motor is depositing a package
@@ -69,6 +44,7 @@ class Robot:
         self.limit_switch = None
         self.distance_error = 0.005  # Metres accurate
         self.angle_error = 0.5  # Degrees accurate
+        self.delivering = False
 
     def get_current_goal(self):
         if self.package is not None:
@@ -76,7 +52,7 @@ class Robot:
 
     def continuous_scan(self):
         """
-        Run this in a thread I reckon. Rotates the conveyor belt and scans constantly until a colour is returned then stops the thread.
+        Rotates the conveyor belt and scans constantly until a colour is returned then stops the thread.
         """
         # Turn motor on
         self.conveyor_motor.set_speed(75)
@@ -524,7 +500,13 @@ class Robot:
         # Object not getting closer
         self.sensor_readings[ultrasonic_unit.reading_index][0] = False
 
-    def establish_connection_to_send():
+    def mum_im_scared_pick_me_up(self):
+        """
+        Find the way home so we can pick him up
+        """
+        pass
+
+    def establish_connection_to_send(self):
         server_ip = '118.138.20.161'  # Replace with the actual IP address of the receiving computer
         server_port = 137  # Use the same port number as the server
     
@@ -534,7 +516,7 @@ class Robot:
 
         return client_socket
 
-    def establish_connection_to_receive():
+    def establish_connection_to_receive(self):
         # Define the server IP address and port
         server_ip = '118.138.20.161'  # Replace with the actual IP address of the receiving computer
         server_port = 137  # Use the same port number as the server
@@ -548,18 +530,18 @@ class Robot:
         print(f"Accepted connection from {client_address}")
         return server_socket
 
-    def close_connection(client_socket, server_socket):
+    def close_connection(self, client_socket, server_socket):
         # Close the client and server sockets
         client_socket.close()
         server_socket.close()
 
-    def send_robot_position(self,client_socket):
+    def send_robot_position(self, client_socket):
         # Send text data to the server
         data = str(self.pose.x) + ' ' + str(self.pose.y) + ' ' + str(self.pose.theta)
         client_socket.send(data.encode())
         print("sent position" , data)
 
-    def receive_robot_position(self,client_socket):
+    def receive_robot_position(self, client_socket):
         # Receive and print data from the client
         data = client_socket.recv(1024).decode()
         print(f"Received: {data}")

@@ -201,15 +201,19 @@ class Package:
     def __init__(self, colour=None):
         self.colour = colour  # A unique id number for a destination e.g: "red", "green", "blue"
         self.destination_pose = None
-        self.identify_destination()
+        self.return_destination = None
+        self.identify_destinations()
 
-    def identify_destination(self):
+    def identify_destinations(self):
         if self.colour == "red":
             self.destination_pose = Pose(x=0.25, y=1.3, theta=math.pi/2)
+            self.return_destination = Pose(x=0.25, y=0.2)
         if self.colour == "green":
             self.destination_pose = Pose(x=0.75, y=1.3, theta=math.pi/2)
+            self.return_destination = Pose(x=0.75, y=0.2)
         if self.colour == "blue":
             self.destination_pose = Pose(x=1.25, y=1.3, theta=math.pi/2)
+            self.return_destination = Pose(x=1.25, y=0.2)
 
 class Motor:
     def __init__(self, enable_pin=None, input_a=None, input_b=None, encoder_a=None, encoder_b=None, speed=100):
