@@ -2,11 +2,11 @@ import RPi.GPIO as GPIO
 from time import time, sleep
 from BaseClasses import ColourSensor
 
-s0 = 17
-s1 = 27
-s2 = 23
-s3 = 24
-signal = 25
+s0 = 20
+s1 = 16
+s2 = 7
+s3 = 8
+signal = 1
 
 def setup():
     GPIO.setmode(GPIO.BCM)
