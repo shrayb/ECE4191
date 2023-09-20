@@ -6,7 +6,6 @@ import numpy as np
 
 from BaseClasses import *
 from copy import deepcopy
-import random
 class Robot:
     def __init__(self, pose=None, state="waiting"):
         self.pose = pose
@@ -26,7 +25,7 @@ class Robot:
         self.colour_sensor = None  # ColourSensor class for the colour sensor
         self.turn_radius = 0.12355  # Metres make bigger to go more make smaller to go less
         self.wheel_radius = 0.05408  # Metres
-        self.distance_per_tick = 0.00012265 # Distance per tick in metres make bigger to go less make smaller to go more
+        self.distance_per_tick = 0.00012265  # Distance per tick in metres make bigger to go less make smaller to go more
         self.max_speed = 45  # Upper percentage for maximum speed
         self.slow_speed = 45  # Upper percentage for slower speed
         self.PID_gain = 4  # Raise to make the PID more sensitive, lower to make the PID less sensitive
@@ -56,12 +55,14 @@ class Robot:
         Rotates the conveyor belt and scans constantly until a colour is returned then stops the thread.
         """
         # Turn motor on
-        self.conveyor_motor.set_speed(75)
-        self.conveyor_motor.forward()
+        # self.conveyor_motor.set_speed(75)
+        # self.conveyor_motor.forward()
 
         while True:
             # Do a scan attempt
             scan_result = self.scan_attempt()
+            sleep(1)
+            print("Scan result:", scan_result)
 
             if scan_result is not None:
                 # Add this package to the packages variable
@@ -69,7 +70,7 @@ class Robot:
                 break
 
         # Turn motor off
-        self.conveyor_motor.stop()
+        # self.conveyor_motor.stop()
 
     def scan_attempt(self):
         """

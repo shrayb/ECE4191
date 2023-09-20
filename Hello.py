@@ -36,6 +36,7 @@ front_left_sonic = Ultrasonic(echo_pin=front_left_sonic_echo, trig_pin=front_lef
 front_right_sonic = Ultrasonic(echo_pin=front_right_sonic_echo, trig_pin=front_right_sonic_trig, x_offset=0.155, y_offset=-0.0585, theta=0, reading_index=1, maximum_read_distance=0.15)
 
 limit_switch = LimitSwitch(distance=0.15, switch_pin=21)
+colour_sensor = ColourSensor(s0=20, s1=16, s3=8, s2=7, signal=1)
 
 pose = Pose(0.3, 0.2, 0)
 robot = Robot(pose)
@@ -44,6 +45,7 @@ robot.right_motor = right_motor
 robot.front_left_ultrasonic = front_left_sonic
 robot.front_right_ultrasonic = front_right_sonic
 robot.limit_switch = limit_switch
+robot.colour_sensor = colour_sensor
 
 encoder_thread = Thread(target=robot.encoder_thread)
 encoder_thread.start()
