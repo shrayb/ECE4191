@@ -67,6 +67,7 @@ def mainloop():
                 # Scan for a new package
                 robot.continuous_scan()
 
+                print("Scan complete")
                 # Make the current goal the package delivery position
                 robot.current_goal = robot.package.destination_pose
                 robot.delivering = True
