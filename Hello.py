@@ -65,10 +65,10 @@ def loop():
     robot.right_motor.stop()
 
     try:
+        robot.do_localise = True
         while True:
-            # Loop and travel to each waypoint
-            robot.re_localise()
             sleep(1)
+            # Loop and travel to each waypoint
 
         print("WAYPOINTS COMPLETED")
         print("Final pose:", robot.pose.x, robot.pose.y, robot.pose.theta * 180 / math.pi)
