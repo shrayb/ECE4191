@@ -24,7 +24,7 @@ class Robot:
         self.rear_left_ultrasonic = None  # Rear left ultrasonic sensor class
         self.rear_right_ultrasonic = None  # Rear right ultrasonic sensor class
         self.colour_sensor = None  # ColourSensor class for the colour sensor
-        self.turn_radius = 0.13  # Metres
+        self.turn_radius = 0.14  # Metres
         self.wheel_radius = 0.05408  # Metres
         self.distance_per_tick = 0.000095  # Distance per tick in metres
         self.max_speed = 45  # Upper percentage for maximum speed
