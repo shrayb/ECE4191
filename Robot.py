@@ -78,7 +78,7 @@ class Robot:
         return colour_reading
 
     def re_localise(self):
-        # Face
+        # Face the robot towards the wall in the negative y direction
         new_pose = Pose(self.pose.x, self.pose.y, -math.pi / 2)
         self.drive_to_coordinate(new_pose)
 
@@ -171,8 +171,10 @@ class Robot:
 
     def ultrasonic_thread(self):
         while True:
-            sleep(0.1)
-            
+            sleep(0.03)
+            # Update limit switch reading
+            self.limit_switch.detect()
+
             # Update sensor readings which includes a detection flag for collisions
             self.detect_impending_collision(self.front_left_ultrasonic)
             self.detect_impending_collision(self.front_right_ultrasonic)

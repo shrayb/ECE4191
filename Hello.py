@@ -67,7 +67,7 @@ def loop():
     try:
         while True:
             # Loop and travel to each waypoint
-            robot.limit_switch.detect()
+            robot.re_localise()
             sleep(1)
 
         print("WAYPOINTS COMPLETED")
