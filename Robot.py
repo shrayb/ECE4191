@@ -311,7 +311,7 @@ class Robot:
         measured_angle = distance_turned / self.turn_radius
 
         print("Measured angle:", measured_angle)
-        print("Initial pose:", self.pose.theta)
+        print("Initial pose:", initial_pose.theta)
 
         if angle > 0:
             self.pose.theta = initial_pose.theta + measured_angle
