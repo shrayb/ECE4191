@@ -90,6 +90,7 @@ class Robot:
         self.pose.y = self.limit_switch.distance
         self.pose.theta = -math.pi / 2
 
+        self.limit_switch.triggered = False
         print("Drive backwards first")
         # Drive backwards 10 cm
         self.do_drive(-0.1)
@@ -109,6 +110,7 @@ class Robot:
         self.pose.x = self.limit_switch.distance
         self.pose.theta = new_pose.theta
 
+        self.limit_switch.triggered = False
         # Drive back 10 cm to safety
         self.do_drive(-0.1)
 

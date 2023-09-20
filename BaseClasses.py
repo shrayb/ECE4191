@@ -389,4 +389,4 @@ class LimitSwitch:
             self.triggered = True
             print("Switch pressed")
         else:
-            pass
+            self.triggered = False
