@@ -29,7 +29,7 @@ class Robot:
         self.distance_per_tick = 0.000107  # Distance per tick in metres
         self.max_speed = 45  # Upper percentage for maximum speed
         self.slow_speed = 45  # Upper percentage for slower speed
-        self.PID_gain = 1.5  # Raise to make the PID more sensitive, lower to make the PID less sensitive
+        self.PID_gain = 1  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.map_size = (1.2, 1.2)
         self.sensor_readings = set_default_sensor_readings()  # 5 Sensors by 6 columns
         self.drive_success = False
