@@ -35,7 +35,7 @@ right_motor = Motor(motor_right_enable, motor_right_positive, motor_right_negati
 front_left_sonic = Ultrasonic(echo_pin=front_left_sonic_echo, trig_pin=front_left_sonic_trig, x_offset=0.155, y_offset=0.0585, theta=0, reading_index=0, maximum_read_distance=0.15)
 front_right_sonic = Ultrasonic(echo_pin=front_right_sonic_echo, trig_pin=front_right_sonic_trig, x_offset=0.155, y_offset=-0.0585, theta=0, reading_index=1, maximum_read_distance=0.15)
 
-limit_switch = LimitSwitch(distance=0.15486+0.03617, switch_pin=21)
+limit_switch = LimitSwitch(distance=0.15, switch_pin=21)
 
 pose = Pose(0, 0, 0)
 robot = Robot(pose)
