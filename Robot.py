@@ -414,6 +414,7 @@ class Robot:
                     angle_difference = angle_difference - 2 * math.pi
                 elif angle_difference < -math.pi:
                     angle_difference = angle_difference + 2 * math.pi
+                print("Angle difference:", angle_difference)
                 self.do_turn(angle_difference)
                 self.max_tick_factor *= 0.8
 
