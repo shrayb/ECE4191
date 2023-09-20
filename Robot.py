@@ -176,7 +176,7 @@ class Robot:
 
     def ultrasonic_thread(self):
         while True:
-            sleep(0.03)
+            sleep(0.1)
             # Update limit switch reading
             self.limit_switch.detect()
 
