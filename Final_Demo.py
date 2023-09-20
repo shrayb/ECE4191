@@ -58,23 +58,24 @@ drive_thread.start()
 
 def mainloop():
     try:
-        # Check colour sensor for package
-        if robot.current_goal is None and not robot.delivering:
-            # Re-localise the robot with a corner
-            robot.do_localise = True
+        while True:
+            # Check colour sensor for package
+            if robot.current_goal is None and not robot.delivering:
+                # Re-localise the robot with a corner
+                robot.do_localise = True
 
-            # Scan for a new package
-            robot.continuous_scan()
+                # Scan for a new package
+                robot.continuous_scan()
 
-            # Make the current goal the package delivery position
-            robot.current_goal = robot.package.destination_pose
-            robot.delivering = True
+                # Make the current goal the package delivery position
+                robot.current_goal = robot.package.destination_pose
+                robot.delivering = True
 
-        # If the robot is at the deposit zone and ready to deposit
-        if robot.current_goal is None and robot.delivering:
-            robot.deposit_package()
-            robot.current_goal = robot.package.return_destination
-            robot.delivering = False
+            # If the robot is at the deposit zone and ready to deposit
+            if robot.current_goal is None and robot.delivering:
+                robot.deposit_package()
+                robot.current_goal = robot.package.return_destination
+                robot.delivering = False
 
     # Handle Control-C to stop motors
     except KeyboardInterrupt:
