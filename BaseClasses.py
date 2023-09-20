@@ -269,7 +269,7 @@ class Motor:
             self.ticks += 1
 
 class ColourSensor:
-    def __init__(self, s0, s1, s2, s3, signal):
+    def __init__(self, s0=None, s1=None, s2=None, s3=None, signal=None):
         self.s0 = s0
         self.s1 = s1
         self.s2 = s2
