@@ -65,7 +65,7 @@ class Robot:
 
             if scan_result is not None:
                 # Add this package to the packages variable
-                print("Scan result:", scan_result)
+                print("Scan complete. Result:", scan_result)
                 self.package = Package(scan_result)
                 break
         # Turn motor off
@@ -385,51 +385,55 @@ class Robot:
 
         return True
 
+    def calculate_angle_difference(self, coordinate):
+        goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
+        angle_difference = goal_angle - self.pose.theta
+        if angle_difference > math.pi:
+            angle_difference = angle_difference - 2 * math.pi
+        elif angle_difference < -math.pi:
+            angle_difference = angle_difference + 2 * math.pi
+        return angle_difference
+
     def drive_to_coordinate(self, coordinate):
         print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
 
         # Check if the robot is already there
         distance_error = calculate_distance_between_points(self.pose, coordinate)
         if distance_error > self.distance_error:  # 3 cm away
-
+            # Do multiple decreasing length turns to dial in to the desired angle
             for index in range(4):
                 # Find angle to turn
-                goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
-                angle_difference = goal_angle - self.pose.theta
-                if angle_difference > math.pi:
-                    angle_difference = angle_difference - 2 * math.pi
-                elif angle_difference < -math.pi:
-                    angle_difference = angle_difference + 2 * math.pi
+                angle_difference = calculate_angle_difference(coordinate)
                 self.do_turn(angle_difference)
                 self.max_tick_factor *= 0.8
 
+            # Set max tick factor back to 0.8 and do multiple decreasing length drives to dial in the desired position
             self.max_tick_factor = 0.8
             for index in range(4):
                 # Find distance to drive
                 distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
-                goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
-                angle_difference = goal_angle - self.pose.theta
-                if angle_difference > math.pi:
-                    angle_difference = angle_difference - 2 * math.pi
-                elif angle_difference < -math.pi:
-                    angle_difference = angle_difference + 2 * math.pi
+
+                # Find out if you have to drive backwards or forwards to get closer
+                angle_difference = calculate_angle_difference(coordinate)
                 if abs(angle_difference) >= math.pi / 2:
                     distance *= -1
                 self.do_drive(distance)
-                print("\t\tDrive complete")
                 self.max_tick_factor *= 0.7
+            print("\t\tDrive complete")
 
         drive_pose_accuracy = calculate_distance_between_points(self.pose, coordinate)
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta and drive_pose_accuracy < self.distance_error:
+            print("Facing final pose:", coordinate.theta * 180 / math.pi)
             self.max_tick_factor = 0.9
+
+            # Do multiple decreasing length turns to dial in on the final angle
             for index in range(4):
                 angle_difference = coordinate.theta - self.pose.theta
                 if angle_difference > math.pi:
                     angle_difference = angle_difference - 2 * math.pi
                 elif angle_difference < -math.pi:
                     angle_difference = angle_difference + 2 * math.pi
-                print("Angle difference:", angle_difference)
                 self.do_turn(angle_difference)
                 self.max_tick_factor *= 0.8
 
@@ -439,11 +443,6 @@ class Robot:
         print("Drive error:", waypoint_error_distance * 100, "cm")
         print("Angle error:", waypoint_error_angle * 180 / math.pi, "degrees")
         if waypoint_error_distance < self.distance_error and waypoint_error_angle < (self.angle_error * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 5 degree accuracy
-            self.current_goal = None
-            self.max_tick_factor = 0.8
-        elif waypoint_error_distance < self.distance_error and waypoint_error_angle >= (self.angle_error * math.pi / 180) and not self.is_impending_collision:
-            self.max_tick_factor *= 0.8
-        if self.max_tick_factor < 0.3:
             self.current_goal = None
             self.max_tick_factor = 0.8
 
