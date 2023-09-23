@@ -208,13 +208,13 @@ class Package:
 
     def identify_destinations(self):
         if self.colour == "red":
-            self.destination_pose = Pose(x=0.25, y=1.3, theta=math.pi/2)
+            self.destination_pose = Pose(x=0.25, y=0.6, theta=math.pi/2)
             self.return_destination = Pose(x=0.25, y=0.2)
         if self.colour == "green":
-            self.destination_pose = Pose(x=0.75, y=1.3, theta=math.pi/2)
+            self.destination_pose = Pose(x=0.75, y=0.6, theta=math.pi/2)
             self.return_destination = Pose(x=0.75, y=0.2)
         if self.colour == "blue":
-            self.destination_pose = Pose(x=1.25, y=1.3, theta=math.pi/2)
+            self.destination_pose = Pose(x=1.25, y=0.6, theta=math.pi/2)
             self.return_destination = Pose(x=1.25, y=0.2)
 
 class Motor:
