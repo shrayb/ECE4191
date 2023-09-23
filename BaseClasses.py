@@ -314,7 +314,7 @@ class ColourSensor:
                 detected_colour = None
                 for rbg_val in range(3):
                     difference = readings[rbg_val] - colour_range[rbg_val]
-                    if abs(difference) > 2000:
+                    if abs(difference) > self.tolerance:
                         detected_colour = "no colour"
                 if detected_colour == "no colour":
                     continue
