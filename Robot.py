@@ -401,6 +401,7 @@ class Robot:
         distance_error = calculate_distance_between_points(self.pose, coordinate)
         if distance_error > self.distance_error:  # 3 cm away
             # Do multiple decreasing length turns to dial in to the desired angle
+            self.max_tick_factor = 0.8
             for index in range(4):
                 # Find angle to turn
                 angle_difference = self.calculate_angle_difference(coordinate)
@@ -428,7 +429,7 @@ class Robot:
             self.max_tick_factor = 0.9
 
             # Do multiple decreasing length turns to dial in on the final angle
-            for index in range(4):
+            for index in range(6):
                 angle_difference = coordinate.theta - self.pose.theta
                 if angle_difference > math.pi:
                     angle_difference = angle_difference - 2 * math.pi
