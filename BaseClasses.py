@@ -282,12 +282,12 @@ class ColourSensor:
         GPIO.setup(self.signal, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         self.ranges = [[26941.617602294355, 15562.607762464017, 19013.0047605836], [26072.7390668036, 27591.750180240673, 22031.09314818905], [14118.954902785583, 16542.50374898507, 20465.22456194277]]  # R G B
         self.colours = ["red", "green", "blue"]
-        self.tolerance = 1500
+        self.tolerance = 2500
 
     def read_colour(self):
         colour_counts = {"red": 0, "green": 0, "blue": 0}
 
-        for index in range(10):
+        for index in range(5):
             # Read each colour sensor
             self.read_red()
             red_reading = self.single_reading()
@@ -297,13 +297,13 @@ class ColourSensor:
             blue_reading = self.single_reading()
 
             readings = [red_reading, green_reading, blue_reading]
-            # print("RGB:", red_reading, green_reading, blue_reading)
             for colour_index, colour_range in enumerate(self.ranges):
                 detected_colour = None
                 for rbg_val in range(3):
                     difference = readings[rbg_val] - colour_range[rbg_val]
                     if abs(difference) > self.tolerance:
                         detected_colour = "no colour"
+                        break
                 if detected_colour == "no colour":
                     continue
                 detected_colour = self.colours[colour_index]
@@ -311,7 +311,7 @@ class ColourSensor:
                 break
 
         max_colour = max(colour_counts, key=colour_counts.get)
-        if colour_counts[max_colour] > 7:
+        if colour_counts[max_colour] > 4:
             return max_colour
         else:
             return None
