@@ -271,16 +271,12 @@ class Motor:
             self.ticks += 1
 
 class ColourSensor:
-    def __init__(self, s0=None, s1=None, s2=None, s3=None, signal=None):
-        # self.s0 = s0
-        # self.s1 = s1
+    def __init__(self, s2=None, s3=None, signal=None):
         self.s2 = s2
         self.s3 = s3
         self.signal = signal
         self.num_of_cycles = 10
         GPIO.setmode(GPIO.BCM)
-        # GPIO.setup(self.s0, GPIO.OUT)
-        # GPIO.setup(self.s1, GPIO.OUT)
         GPIO.setup(self.s2, GPIO.OUT)
         GPIO.setup(self.s3, GPIO.OUT)
         GPIO.setup(self.signal, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -296,7 +292,7 @@ class ColourSensor:
         white_count = 0
         colour_counts = {"red": 0, "green": 0, "blue": 0}
 
-        for index in range(10):
+        for index in range(5):
             # Read each colour sensor
             self.read_red()
             sleep(0.01)
@@ -323,7 +319,7 @@ class ColourSensor:
                 break
 
         max_colour = max(colour_counts, key=colour_counts.get)
-        if colour_counts[max_colour] > 8:
+        if colour_counts[max_colour] > 3:
             return max_colour
         else:
             return None
