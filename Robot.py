@@ -45,6 +45,7 @@ class Robot:
         self.distance_error = 0.005  # Metres accurate
         self.angle_error = 0.5  # Degrees accurate
         self.delivering = False
+        self.end_thread = False
 
     def get_current_goal(self):
         if self.package is not None:
@@ -124,7 +125,8 @@ class Robot:
         # Will drive to whatever waypoints are in the path queue variable in order and remove them
         while True:
             sleep(0.05)
-
+            if self.end_thread:
+                break
             # Check if we want to relocalise the robot
             if self.do_localise:
                 self.re_localise()
@@ -168,6 +170,8 @@ class Robot:
 
     def encoder_thread(self):
         while True:
+            if self.end_thread:
+                break
             self.left_motor.update_encoder()
             self.right_motor.update_encoder()
 
@@ -181,6 +185,8 @@ class Robot:
 
     def ultrasonic_thread(self):
         while True:
+            if self.end_thread:
+                break
             sleep(0.01)
             # Update limit switch reading
             self.limit_switch.detect()

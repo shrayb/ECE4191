@@ -47,13 +47,13 @@ robot.front_right_ultrasonic = front_right_sonic
 robot.limit_switch = limit_switch
 robot.colour_sensor = colour_sensor
 
-# encoder_thread = Thread(target=robot.encoder_thread)
+encoder_thread = Thread(target=robot.encoder_thread)
 # encoder_thread.start()
-#
-# ultrasonic_thread = Thread(target=robot.ultrasonic_thread)
+
+ultrasonic_thread = Thread(target=robot.ultrasonic_thread)
 # ultrasonic_thread.start()
-#
-# drive_thread = Thread(target=robot.drive_thread)
+
+drive_thread = Thread(target=robot.drive_thread)
 # drive_thread.start()
 
 def mainloop():
@@ -63,6 +63,7 @@ def mainloop():
             if robot.current_goal is None and not robot.delivering:
                 # Re-localise the robot with a corner
                 # robot.do_localise = True
+                robot.end_thread = True
                 print("Start scan")
                 # Scan for a new package
                 robot.continuous_scan()
@@ -71,6 +72,10 @@ def mainloop():
                 # Make the current goal the package delivery position
                 robot.current_goal = robot.package.destination_pose
                 robot.delivering = True
+                robot.end_thread = False
+                encoder_thread.start()
+                ultrasonic_thread.start()
+                drive_thread.start()
 
             # If the robot is at the deposit zone and ready to deposit
             if robot.current_goal is None and robot.delivering:
