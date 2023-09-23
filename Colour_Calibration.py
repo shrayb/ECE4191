@@ -59,6 +59,7 @@ def red_calibration():
     red_averages[1] /= 100
     red_averages[2] /= 100
     print("red average:", red_averages)
+    return red_averages
 
 def green_calibration():
     green_average = [0, 0, 0]
@@ -72,6 +73,7 @@ def green_calibration():
     green_average[1] /= 100
     green_average[2] /= 100
     print("green average:", green_average)
+    return green_average
 
 def blue_calibration():
     blue_average = [0, 0, 0]
@@ -85,23 +87,27 @@ def blue_calibration():
     blue_average[1] /= 100
     blue_average[2] /= 100
     print("blue average:", blue_average)
+    return blue_average
 
 def mainloop():
     try:
         while True:
             # Wait for input
             x = input("Press enter to scan red")
-            red_calibration()
+            red = red_calibration()
 
             # Wait for input
             x = input("Press enter to scan green")
-            green_calibration()
+            green = green_calibration()
 
             # Wait for input
             x = input("Press enter to scan blue")
-            blue_calibration()
+            blue = blue_calibration()
 
             break
+
+        print("Calibrated settings:")
+        print([red, green, blue])
 
     # Handle Control-C to stop motors
     except KeyboardInterrupt:
