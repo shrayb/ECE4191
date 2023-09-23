@@ -386,6 +386,8 @@ class Robot:
         return True
 
     def calculate_angle_difference(self, coordinate):
+        print("Pose:", self.pose.x, self.pose.y, self.pose.theta)
+        print("Coordinate:", coordinate.x, coordinate.y, coordinate.theta)
         goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
         angle_difference = goal_angle - self.pose.theta
         if angle_difference > math.pi:
