@@ -81,9 +81,18 @@ class Robot:
         return colour_reading
 
     def re_localise(self):
+        # Kill ultrasonic and limit switch thread
+        self.end_ultrasonic_thread = True
+        sleep(0.1)
+
         # Face the robot towards the wall in the negative y direction
         new_pose = Pose(self.pose.x, self.pose.y, -math.pi / 2)
         self.drive_to_coordinate(new_pose)
+
+        # Start ultrasonic and limit switch thread
+        self.end_ultrasonic_thread = False
+        ultrasonic_thread = Thread(target=self.ultrasonic_thread)
+        ultrasonic_thread.start()
 
         # Drive forward slowly until limit switch is triggered
         self.max_tick_factor = 1.0
@@ -94,6 +103,11 @@ class Robot:
         self.pose.theta = -math.pi / 2
 
         self.limit_switch.triggered = False
+
+        # Kill ultrasonic and limit switch thread
+        self.end_ultrasonic_thread = True
+        sleep(0.1)
+
         # Drive backwards 10 cm
         self.max_tick_factor = 1.0
         self.do_drive(-0.1)
@@ -104,6 +118,11 @@ class Robot:
         else:
             new_pose = Pose(self.pose.x, self.pose.y, 0)
         self.drive_to_coordinate(new_pose)
+
+        # Start ultrasonic and limit switch thread
+        self.end_ultrasonic_thread = False
+        ultrasonic_thread = Thread(target=self.ultrasonic_thread)
+        ultrasonic_thread.start()
 
         # Drive forward slowly until limit switch is triggered
         self.max_tick_factor = 1.0
@@ -117,6 +136,11 @@ class Robot:
         self.pose.theta = new_pose.theta
 
         self.limit_switch.triggered = False
+
+        # Kill ultrasonic and limit switch thread
+        self.end_ultrasonic_thread = True
+        sleep(0.1)
+
         # Drive back 10 cm to safety
         self.max_tick_factor = 1.0
         self.do_drive(-0.1)
@@ -130,17 +154,9 @@ class Robot:
                 break
             # Check if we want to re-localise the robot
             if self.do_localise:
-                # Start ultrasonic and limit switch thread
-                self.end_ultrasonic_thread = False
-                ultrasonic_thread = Thread(target=self.ultrasonic_thread)
-                ultrasonic_thread.start()
-
                 # Localise the robot
                 self.re_localise()
                 self.do_localise = False
-
-                # Kill ultrasonic and limit switch thread
-                self.end_ultrasonic_thread = True
 
             # Check if there is an impending collision
             if self.current_goal is None:
