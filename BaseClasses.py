@@ -272,15 +272,15 @@ class Motor:
 
 class ColourSensor:
     def __init__(self, s0=None, s1=None, s2=None, s3=None, signal=None):
-        self.s0 = s0
-        self.s1 = s1
+        # self.s0 = s0
+        # self.s1 = s1
         self.s2 = s2
         self.s3 = s3
         self.signal = signal
         self.num_of_cycles = 10
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.s0, GPIO.OUT)
-        GPIO.setup(self.s1, GPIO.OUT)
+        # GPIO.setup(self.s0, GPIO.OUT)
+        # GPIO.setup(self.s1, GPIO.OUT)
         GPIO.setup(self.s2, GPIO.OUT)
         GPIO.setup(self.s3, GPIO.OUT)
         GPIO.setup(self.signal, GPIO.IN, pull_up_down=GPIO.PUD_UP)
