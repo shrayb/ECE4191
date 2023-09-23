@@ -72,7 +72,7 @@ def mainloop():
                 print("Robot localised at: (", robot.pose.x, robot.pose.y, ")")
 
                 # End all the threads to prepare for scanning
-                robot.end_thread = True
+                robot.end_all_threads = True
 
                 # Scan for a new package
                 print("Scanning for new package...")
@@ -81,7 +81,7 @@ def mainloop():
                 # Make the current goal the package delivery position and tell the robot its now delivering
                 robot.current_goal = robot.package.destination_pose
                 robot.delivering = True
-                robot.end_thread = False
+                robot.end_all_threads = False
 
                 # Start threads
                 encoder_thread = Thread(target=robot.encoder_thread)

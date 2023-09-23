@@ -1,5 +1,6 @@
 import math
 import socket
+from threading import Thread
 from time import sleep, time
 
 import numpy as np
@@ -45,7 +46,8 @@ class Robot:
         self.distance_error = 0.005  # Metres accurate
         self.angle_error = 0.5  # Degrees accurate
         self.delivering = False
-        self.end_thread = False
+        self.end_all_threads = False
+        self.end_ultrasonic_thread = False
 
     def get_current_goal(self):
         if self.package is not None:
@@ -124,12 +126,21 @@ class Robot:
         # Will drive to whatever waypoints are in the path queue variable in order and remove them
         while True:
             sleep(0.05)
-            if self.end_thread:
+            if self.end_all_threads:
                 break
-            # Check if we want to relocalise the robot
+            # Check if we want to re-localise the robot
             if self.do_localise:
+                # Start ultrasonic and limit switch thread
+                self.end_ultrasonic_thread = False
+                ultrasonic_thread = Thread(target=self.ultrasonic_thread)
+                ultrasonic_thread.start()
+
+                # Localise the robot
                 self.re_localise()
                 self.do_localise = False
+
+                # Kill ultrasonic and limit switch thread
+                self.end_ultrasonic_thread = True
 
             # Check if there is an impending collision
             if self.current_goal is None:
@@ -169,7 +180,7 @@ class Robot:
 
     def encoder_thread(self):
         while True:
-            if self.end_thread:
+            if self.end_all_threads:
                 break
             self.left_motor.update_encoder()
             self.right_motor.update_encoder()
@@ -184,9 +195,10 @@ class Robot:
 
     def ultrasonic_thread(self):
         while True:
-            if self.end_thread:
+            if self.end_all_threads or self.end_ultrasonic_thread:
                 break
-            sleep(0.01)
+            sleep(0.02)
+
             # Update limit switch reading
             self.limit_switch.detect()
 
@@ -397,6 +409,11 @@ class Robot:
                 self.do_turn(angle_difference)
                 self.max_tick_factor *= 0.8
 
+            # Turn ultrasonic thread back on for driving forwards or backwards
+            self.end_ultrasonic_thread = False
+            ultrasonic_thread = Thread(target=self.ultrasonic_thread)
+            ultrasonic_thread.start()
+
             # Set max tick factor back to 0.8 and do multiple decreasing length drives to dial in the desired position
             self.max_tick_factor = 0.8
             for index in range(4):
@@ -411,6 +428,10 @@ class Robot:
                 self.max_tick_factor *= 0.7
             print("\t\tDrive complete")
 
+            # End ultrasonic thread again now that driving is complete
+            self.end_ultrasonic_thread = True
+            sleep(0.1)  # Wait for thread to die
+
         drive_pose_accuracy = calculate_distance_between_points(self.pose, coordinate)
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta and drive_pose_accuracy < self.distance_error:
@@ -419,7 +440,6 @@ class Robot:
 
             # Do multiple decreasing length turns to dial in on the final angle
             for index in range(6):
-                print("\tTick factor:", self.max_tick_factor)
                 angle_difference = coordinate.theta - self.pose.theta
                 if angle_difference > math.pi:
                     angle_difference = angle_difference - 2 * math.pi
