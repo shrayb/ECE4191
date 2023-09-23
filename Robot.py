@@ -26,8 +26,8 @@ class Robot:
         self.turn_radius = 0.12355  # Metres make bigger to go more make smaller to go less
         self.wheel_radius = 0.05408  # Metres
         self.distance_per_tick = 0.00012265  # Distance per tick in metres make bigger to go less make smaller to go more
-        self.max_speed = 45  # Upper percentage for maximum speed
-        self.slow_speed = 45  # Upper percentage for slower speed
+        self.max_speed = 75  # Upper percentage for maximum speed
+        self.slow_speed = 75  # Upper percentage for slower speed
         self.PID_gain = 4  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.PID_turning = 1
         self.map_size = (1.2, 1.2)
@@ -85,7 +85,7 @@ class Robot:
 
         # Drive forward slowly until limit switch is triggered
         self.max_tick_factor = 1.0
-        self.do_drive(2, max_speed=75)
+        self.do_drive(2, max_speed=self.slow_speed)
 
         # Set y pose
         self.pose.y = self.limit_switch.distance
@@ -105,7 +105,7 @@ class Robot:
 
         # Drive forward slowly until limit switch is triggered
         self.max_tick_factor = 1.0
-        self.do_drive(2, max_speed=75)
+        self.do_drive(2, max_speed=self.slow_speed)
 
         # Set x pose
         if self.pose.x < 0.6:
