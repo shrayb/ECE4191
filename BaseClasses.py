@@ -296,7 +296,7 @@ class ColourSensor:
         white_count = 0
         colour_counts = {"red": 0, "green": 0, "blue": 0}
 
-        for index in range(5):
+        for index in range(10):
             # Read each colour sensor
             self.read_red()
             sleep(0.01)
@@ -323,7 +323,7 @@ class ColourSensor:
                 break
 
         max_colour = max(colour_counts, key=colour_counts.get)
-        if colour_counts[max_colour] > 3:
+        if colour_counts[max_colour] > 8:
             return max_colour
         else:
             return None
