@@ -95,12 +95,14 @@ def mainloop():
 
             # If the robot is at the deposit zone and ready to deposit
             if robot.current_goal is None and robot.delivering:
+                print("Depositing package...")
                 robot.deposit_package()
-                print("Package delivered. Returning home...")
+                print("Package delivered.")
                 robot.delivering = False
 
                 # Return to pre calibration coordinate
                 robot.current_goal = robot.package.return_destination
+                print("Returning to pre localisation pose...")
 
     # Handle Control-C to stop motors
     except KeyboardInterrupt:
