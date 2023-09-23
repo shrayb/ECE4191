@@ -293,16 +293,16 @@ class ColourSensor:
         red_count = 0
         green_count = 0
         blue_count = 0
-        for index in range(3):
+        for index in range(5):
             # Read each colour sensor
             self.read_red()
-            sleep(0.1)
+            sleep(0.2)
             red_reading = self.single_reading()
             self.read_green()
-            sleep(0.1)
+            sleep(0.2)
             green_reading = self.single_reading()
             self.read_blue()
-            sleep(0.1)
+            sleep(0.2)
             blue_reading = self.single_reading()
 
             print("RGB:", red_reading, green_reading, blue_reading)
@@ -315,7 +315,7 @@ class ColourSensor:
                 if blue_reading > green_reading and blue_reading > red_reading:
                     blue_count += 1
 
-        if red_count == 0 and blue_count == 0 and green_count == 0:
+        if red_count < 3 and blue_count < 3 and green_count < 3:
             return None
 
         # Find which colour shows up most
