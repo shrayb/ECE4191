@@ -293,13 +293,10 @@ class ColourSensor:
             # Read each colour sensor
             self.read_red()
             sleep(0.3)
-            print("Read red")
             red_reading = self.single_reading()
-            print("Read green")
             self.read_green()
             sleep(0.3)
             green_reading = self.single_reading()
-            print("Read blue")
             self.read_blue()
             sleep(0.3)
             blue_reading = self.single_reading()
