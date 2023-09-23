@@ -386,8 +386,6 @@ class Robot:
         return True
 
     def calculate_angle_difference(self, coordinate):
-        print("Pose:", self.pose.x, self.pose.y, self.pose.theta)
-        print("Coordinate:", coordinate.x, coordinate.y, coordinate.theta)
         goal_angle = math.atan2(coordinate.y - self.pose.y, coordinate.x - self.pose.x)
         angle_difference = goal_angle - self.pose.theta
         if angle_difference > math.pi:
@@ -401,13 +399,11 @@ class Robot:
 
         # Check if the robot is already there
         distance_error = calculate_distance_between_points(self.pose, coordinate)
-        print("Initial distance error:", distance_error, "metres")
         if distance_error > self.distance_error:  # 3 cm away
             # Do multiple decreasing length turns to dial in to the desired angle
             for index in range(4):
                 # Find angle to turn
-                angle_difference = calculate_angle_difference(coordinate)
-                print("Angle difference:", angle_difference)
+                angle_difference = self.calculate_angle_difference(coordinate)
                 self.do_turn(angle_difference)
                 self.max_tick_factor *= 0.8
 
@@ -418,7 +414,7 @@ class Robot:
                 distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
 
                 # Find out if you have to drive backwards or forwards to get closer
-                angle_difference = calculate_angle_difference(coordinate)
+                angle_difference = self.calculate_angle_difference(coordinate)
                 if abs(angle_difference) >= math.pi / 2:
                     distance *= -1
                 self.do_drive(distance)
