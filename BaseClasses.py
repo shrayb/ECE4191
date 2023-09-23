@@ -284,6 +284,21 @@ class ColourSensor:
         GPIO.setup(self.s2, GPIO.OUT)
         GPIO.setup(self.s3, GPIO.OUT)
         GPIO.setup(self.signal, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        self.red_max = 33635
+        self.green_max = 35040
+        self.blue_max = 37820
+        self.minimum = (self.red_max + self.green_max + self.blue_max) / 3
+
+    def translate(self, value, leftMin, leftMax, rightMin, rightMax):
+        # Figure out how 'wide' each range is
+        leftSpan = leftMax - leftMin
+        rightSpan = rightMax - rightMin
+
+        # Convert the left range into a 0-1 range (float)
+        valueScaled = float(value - leftMin) / float(leftSpan)
+
+        # Convert the 0-1 range into a value in the right range.
+        return rightMin + (valueScaled * rightSpan)
 
     def read_colour(self):
         red_count = 0
@@ -293,13 +308,13 @@ class ColourSensor:
             # Read each colour sensor
             self.read_red()
             sleep(0.1)
-            red_reading = self.single_reading()
+            red_reading = self.translate(self.single_reading(), self.minimum, self.red_max, 255, 0)
             self.read_green()
             sleep(0.1)
-            green_reading = self.single_reading()
+            green_reading = self.translate(self.single_reading(), self.minimum, self.green_max, 255, 0)
             self.read_blue()
             sleep(0.1)
-            blue_reading = self.single_reading()
+            blue_reading = self.translate(self.single_reading(), self.minimum, self.blue_max, 255, 0)
 
             print("RGB:", red_reading, green_reading, blue_reading)
             if red_reading > 20000 or green_reading > 20000 or blue_reading > 20000:
