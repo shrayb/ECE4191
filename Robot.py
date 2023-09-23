@@ -223,16 +223,17 @@ class Robot:
         """
         Runs the motors until max ticks are reached, also applies PID control to match speed
         """
-        distance_total = 0.5 * max_ticks * self.distance_per_tick
         initial_pose = deepcopy(self.pose)
         if is_turning:
             PID_GAIN = self.PID_turning
         else:
             PID_GAIN = self.PID_gain
 
+        # Factor max ticks then calculate the estimated total travel distance
+        max_ticks *= self.max_tick_factor
+        distance_total = 0.5 * max_ticks * self.distance_per_tick
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
-        max_ticks *= self.max_tick_factor
         while tick_sum < max_ticks:
             # Check if there will be a collision
             if self.is_impending_collision or self.limit_switch.triggered:
@@ -253,17 +254,6 @@ class Robot:
             else:
                 left_motor_speed = max_speed
                 right_motor_speed = max_speed
-
-            # # At the start ramp up speed slowly, then near the end slow it down slowly. Increases final pose accuracy
-            # if tick_percentage < self.ramp_up_percent:
-            #     left_motor_speed *= max(min((tick_percentage / self.ramp_up_percent), max_speed / 100), self.slow_speed / 100)
-            #     right_motor_speed *= max(min((tick_percentage / self.ramp_up_percent), max_speed / 100), self.slow_speed / 100)
-            # elif tick_percentage > self.ramp_down_percent:
-            #     left_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
-            #     right_motor_speed *= max(min((1 - tick_percentage) / (1 - self.ramp_down_percent), max_speed / 100), self.slow_speed / 100)
-            # else:
-            #     left_motor_speed *= max_speed / 100
-            #     right_motor_speed *= max_speed / 100
 
             left_motor_speed *= self.max_speed / 100
             right_motor_speed *= self.max_speed / 100
@@ -429,6 +419,7 @@ class Robot:
 
             # Do multiple decreasing length turns to dial in on the final angle
             for index in range(6):
+                print("\tTick factor:", self.max_tick_factor)
                 angle_difference = coordinate.theta - self.pose.theta
                 if angle_difference > math.pi:
                     angle_difference = angle_difference - 2 * math.pi
