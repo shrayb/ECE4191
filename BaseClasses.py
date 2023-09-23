@@ -316,7 +316,7 @@ class ColourSensor:
                     difference = readings[rbg_val] - colour_range[rbg_val]
                     if abs(difference) > 2000:
                         detected_colour = "no colour"
-                if detected_colour is "no colour":
+                if detected_colour == "no colour":
                     continue
                 detected_colour = self.colours[colour_index]
                 colour_counts[detected_colour] += 1
