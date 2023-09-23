@@ -395,11 +395,10 @@ class Robot:
         return angle_difference
 
     def drive_to_coordinate(self, coordinate):
-        print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
-
         # Check if the robot is already there
         distance_error = calculate_distance_between_points(self.pose, coordinate)
         if distance_error > self.distance_error:  # 3 cm away
+            print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
             # Do multiple decreasing length turns to dial in to the desired angle
             self.max_tick_factor = 0.8
             for index in range(4):
@@ -425,7 +424,7 @@ class Robot:
         drive_pose_accuracy = calculate_distance_between_points(self.pose, coordinate)
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta and drive_pose_accuracy < self.distance_error:
-            print("Facing final pose:", coordinate.theta * 180 / math.pi)
+            print("Turning to face:", coordinate.theta * 180 / math.pi, "degrees...")
             self.max_tick_factor = 0.9
 
             # Do multiple decreasing length turns to dial in on the final angle
@@ -441,11 +440,10 @@ class Robot:
         # If drive was successful check error from waypoint
         waypoint_error_distance = calculate_distance_between_points(self.pose, coordinate)
         waypoint_error_angle = calculate_angle_difference(angle1=self.pose.theta, angle2=coordinate.theta)
-        print("Drive error:", waypoint_error_distance * 100, "cm")
-        print("Angle error:", waypoint_error_angle * 180 / math.pi, "degrees")
+        # print("Drive error:", waypoint_error_distance * 100, "cm")
+        # print("Angle error:", waypoint_error_angle * 180 / math.pi, "degrees")
         if waypoint_error_distance < self.distance_error and waypoint_error_angle < (self.angle_error * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 5 degree accuracy
             self.current_goal = None
-            self.max_tick_factor = 0.8
 
     def detect_obstacle(self, front_left_ultrasonic=None, front_right_ultrasonic=None):
         left_dist = front_left_ultrasonic.measure_dist()
