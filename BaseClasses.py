@@ -284,14 +284,18 @@ class ColourSensor:
         GPIO.setup(self.s2, GPIO.OUT)
         GPIO.setup(self.s3, GPIO.OUT)
         GPIO.setup(self.signal, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        self.ranges = [[25000, 18000, 23700], [19200, 23200, 16300], [17300, 21000, 25500]]  # R G B
-        self.colours = ["red", "green", "blue"]
+        self.ranges = [[25000, 18000, 23700], [19200, 23200, 16300], [17300, 21000, 25500], [30000, 28000, 17000]]  # R G B Y
+        self.colours = ["red", "green", "blue", "yellow", "white"]
         self.tolerance = 2000
 
     def read_colour(self):
         red_count = 0
         green_count = 0
         blue_count = 0
+        yellow_count = 0
+        white_count = 0
+        colour_counts = {"red": 0, "green": 0, "blue": 0, "yellow": 0, "white": 0}
+
         for index in range(5):
             # Read each colour sensor
             self.read_red()
@@ -315,24 +319,14 @@ class ColourSensor:
                 if detected_colour is "no colour":
                     continue
                 detected_colour = self.colours[colour_index]
-                if detected_colour == "red":
-                    red_count += 1
-                elif detected_colour == "green":
-                    green_count += 1
-                elif detected_colour == "blue":
-                    blue_count += 1
+                colour_counts[detected_colour] += 1
                 break
 
-        if red_count < 3 and blue_count < 3 and green_count < 3:
-            return None
-
-        # Find which colour shows up most
-        if red_count > green_count and red_count > blue_count:
-            return "red"
-        elif green_count > blue_count and green_count > red_count:
-            return "green"
+        max_colour = max(colour_counts, key=colour_counts.get)
+        if colour_counts[max_colour] > 3:
+            return max_colour
         else:
-            return "blue"
+            return None
 
     def read_red(self):
         GPIO.output(self.s2, GPIO.LOW)
