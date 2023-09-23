@@ -284,15 +284,15 @@ class ColourSensor:
         GPIO.setup(self.s2, GPIO.OUT)
         GPIO.setup(self.s3, GPIO.OUT)
         GPIO.setup(self.signal, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        self.red_max = 33635
-        self.green_max = 35040
-        self.blue_max = 37820
+        self.ranges = [[19500, 11000, 14000], [19200, 23200, 16300], [17300, 21000, 25500]]  # R G B
+        self.colours = ["red", "green", "blue"]
+        self.tolerance = 2000
 
     def read_colour(self):
         red_count = 0
         green_count = 0
         blue_count = 0
-        for index in range(100):
+        for index in range(5):
             # Read each colour sensor
             self.read_red()
             sleep(0.1)
@@ -304,15 +304,24 @@ class ColourSensor:
             sleep(0.1)
             blue_reading = self.single_reading()
 
+            readings = [red_reading, green_reading, blue_reading]
             print("RGB:", red_reading, green_reading, blue_reading)
-            if red_reading > 20000 or green_reading > 20000 or blue_reading > 20000:
-                # Find the largest
-                if red_reading > green_reading and red_reading > blue_reading:
+            for colour_index, colour_range in enumerate(self.ranges):
+                detected_colour = None
+                for rbg_val in range(3):
+                    difference = readings[rbg_val] - colour_range[rbg_val]
+                    if abs(difference) > 2000:
+                        detected_colour = "no colour"
+                if detected_colour is "no colour":
+                    continue
+                detected_colour = self.colours[colour_index]
+                if detected_colour == "red":
                     red_count += 1
-                if green_reading > red_reading and green_reading > blue_reading:
+                elif detected_colour == "green":
                     green_count += 1
-                if blue_reading > green_reading and blue_reading > red_reading:
+                elif detected_colour == "blue":
                     blue_count += 1
+                break
 
         if red_count < 3 and blue_count < 3 and green_count < 3:
             return None
