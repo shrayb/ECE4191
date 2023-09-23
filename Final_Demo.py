@@ -55,6 +55,10 @@ def mainloop():
                 # Re-localise the robot with a corner
                 robot.do_localise = True
 
+                # Wait until the robot has finished localising
+                while robot.do_localise:
+                    pass
+
                 # End all the threads to prepare for scanning
                 robot.end_thread = True
 
