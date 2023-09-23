@@ -301,6 +301,7 @@ class ColourSensor:
             self.read_blue()
             blue_reading = self.single_reading()
 
+            print("RGB:", red_reading, green_reading, blue_reading)
             if red_reading > 20000 or green_reading > 20000 or blue_reading > 20000:
                 # Find the largest
                 if red_reading > green_reading and red_reading > blue_reading:
