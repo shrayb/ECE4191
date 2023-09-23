@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 from time import time, sleep
-from BaseClasses import ColourSensor
+from BaseClasses import *
 
 s0 = 20
 s1 = 16
