@@ -287,13 +287,12 @@ class ColourSensor:
         self.red_max = 33635
         self.green_max = 35040
         self.blue_max = 37820
-        self.minimum = (self.red_max + self.green_max + self.blue_max) / 3
 
     def read_colour(self):
         red_count = 0
         green_count = 0
         blue_count = 0
-        for index in range(5):
+        for index in range(100):
             # Read each colour sensor
             self.read_red()
             sleep(0.1)
