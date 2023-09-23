@@ -462,7 +462,7 @@ class Robot:
                 elif angle_difference < -math.pi:
                     angle_difference = angle_difference + 2 * math.pi
                 self.do_turn(angle_difference)
-                self.max_tick_factor *= 0.8
+                self.max_tick_factor *= 0.7
 
         # If drive was successful check error from waypoint
         waypoint_error_distance = calculate_distance_between_points(self.pose, coordinate)
