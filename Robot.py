@@ -40,7 +40,7 @@ class Robot:
         self.ramp_up_percent = 0.4
         self.ramp_down_percent = 0.6
         self.turn_accuracy_count = 0
-        self.max_tick_factor = 0.8
+        self.max_tick_factor = 0.9
         self.do_localise = False
         self.limit_switch = None
         self.distance_error = 0.005  # Metres accurate
