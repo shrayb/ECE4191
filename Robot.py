@@ -62,13 +62,12 @@ class Robot:
         while True:
             # Do a scan attempt
             scan_result = self.scan_attempt()
-            print("Scan result:", scan_result)
 
             if scan_result is not None:
                 # Add this package to the packages variable
+                print("Scan result:", scan_result)
                 self.package = Package(scan_result)
                 break
-
         # Turn motor off
         # self.conveyor_motor.stop()
 
