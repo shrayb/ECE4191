@@ -62,14 +62,14 @@ def mainloop():
         while True:
             # Check colour sensor for package
             if robot.current_goal is None and not robot.delivering:
-                # Re-localise the robot with a corner
-                robot.do_localise = True
-
-                # Wait until the robot has finished localising
-                print("Robot re-localising...")
-                while robot.do_localise:
-                    pass
-                print("Robot localised at: (", robot.pose.x, robot.pose.y, ")")
+                # # Re-localise the robot with a corner
+                # robot.do_localise = True
+                #
+                # # Wait until the robot has finished localising
+                # print("Robot re-localising...")
+                # while robot.do_localise:
+                #     pass
+                # print("Robot localised at: (", robot.pose.x, robot.pose.y, ")")
 
                 # End all the threads to prepare for scanning
                 robot.end_all_threads = True
