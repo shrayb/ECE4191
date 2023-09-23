@@ -463,7 +463,7 @@ class Robot:
                     angle_difference = angle_difference + 2 * math.pi
 
                 # Check if angle difference is low enough for desired
-                if angle_difference < (self.angle_error * math.pi / 180):
+                if calculate_angle_difference(angle1=self.pose.theta, angle2=coordinate.theta) < (self.angle_error * math.pi / 180):
                     break
 
                 self.do_turn(angle_difference)
