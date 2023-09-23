@@ -283,11 +283,14 @@ class ColourSensor:
         self.ranges = [[26941.617602294355, 15562.607762464017, 19013.0047605836], [26072.7390668036, 27591.750180240673, 22031.09314818905], [14118.954902785583, 16542.50374898507, 20465.22456194277]]  # R G B
         self.colours = ["red", "green", "blue"]
         self.tolerance = 2500
+        self.sample_size = 5
+        self.minimum_percent = 0.8
+        self.minimum_correct = math.ceil(self.sample_size * self.minimum_percent)
 
     def read_colour(self):
         colour_counts = {"red": 0, "green": 0, "blue": 0}
 
-        for index in range(5):
+        for index in range(self.sample_size):
             # Read each colour sensor
             self.read_red()
             red_reading = self.single_reading()
@@ -311,7 +314,7 @@ class ColourSensor:
                 break
 
         max_colour = max(colour_counts, key=colour_counts.get)
-        if colour_counts[max_colour] > 4:
+        if colour_counts[max_colour] >= self.minimum_correct:
             return max_colour
         else:
             return None
