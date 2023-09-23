@@ -418,12 +418,12 @@ class Robot:
         if distance_error > self.distance_error:  # 3 cm away
             print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
             # Do multiple decreasing length turns to dial in to the desired angle
-            self.max_tick_factor = 0.8
+            self.max_tick_factor = 0.9
             for index in range(4):
                 # Find angle to turn
                 angle_difference = self.calculate_angle_difference(coordinate)
                 self.do_turn(angle_difference)
-                self.max_tick_factor *= 0.8
+                self.max_tick_factor *= 0.7
 
             # Turn ultrasonic thread back on for driving forwards or backwards
             self.end_ultrasonic_thread = False
