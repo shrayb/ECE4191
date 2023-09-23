@@ -399,6 +399,7 @@ class Robot:
 
         # Check if the robot is already there
         distance_error = calculate_distance_between_points(self.pose, coordinate)
+        print("Initial distance error:", distance_error, "metres")
         if distance_error > self.distance_error:  # 3 cm away
             # Do multiple decreasing length turns to dial in to the desired angle
             for index in range(4):
