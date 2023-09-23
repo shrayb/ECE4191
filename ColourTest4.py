@@ -25,8 +25,9 @@ def loop():
         start = time.time()
         for impulse_count in range(NUM_CYCLES):
             GPIO.wait_for_edge(signal, GPIO.FALLING)
-        duration = time.time() - start
-        red = NUM_CYCLES / duration
+        duration = time.time() - start  # seconds to run for loop
+        red = NUM_CYCLES / duration  # in Hz
+        print("red value - ", red)
 
         GPIO.output(s2, GPIO.LOW)
         GPIO.output(s3, GPIO.HIGH)
@@ -36,6 +37,7 @@ def loop():
             GPIO.wait_for_edge(signal, GPIO.FALLING)
         duration = time.time() - start
         blue = NUM_CYCLES / duration
+        print("blue value - ", blue)
 
         GPIO.output(s2, GPIO.HIGH)
         GPIO.output(s3, GPIO.HIGH)
@@ -45,19 +47,8 @@ def loop():
             GPIO.wait_for_edge(signal, GPIO.FALLING)
         duration = time.time() - start
         green = NUM_CYCLES / duration
-
-        if green < 7000 and blue < 7000 and red > 12000:
-            print("red")
-            temp = 1
-        elif red < 12000 and blue < 12000 and green > 12000:
-            print("green")
-            temp = 1
-        elif green < 7000 and red < 7000 and blue > 12000:
-            print("blue")
-            temp = 1
-        elif red > 10000 and green > 10000 and blue > 10000 and temp == 1:
-            print("place the object.....")
-            temp = 0
+        print("green value - ", green)
+        time.sleep(2)
 
 
 def endprogram():
