@@ -195,11 +195,11 @@ class Robot:
             self.drive_to_coordinate(self.current_goal)
 
     def encoder_thread(self):
-        while True:
-            if self.end_all_threads:
-                break
+        while not self.end_all_threads:
             self.left_motor.update_encoder()
             self.right_motor.update_encoder()
+            self.left_motor.apply_pending_updates()
+            self.right_motor.apply_pending_updates()
 
     def is_vision_blocked(self, sensor_index):
         # Check if any are 100
@@ -416,7 +416,7 @@ class Robot:
         # Check if the robot is already there
         distance_error = calculate_distance_between_points(self.pose, coordinate)
         if distance_error > self.distance_error:  # 3 cm away
-            print("Driving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
+            print("\tDriving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
             # Do multiple decreasing length turns to dial in to the desired angle
             self.max_tick_factor = 0.9
             for index in range(4):
@@ -451,7 +451,7 @@ class Robot:
         drive_pose_accuracy = calculate_distance_between_points(self.pose, coordinate)
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta and drive_pose_accuracy < self.distance_error:
-            print("Turning to face:", coordinate.theta * 180 / math.pi, "degrees...")
+            print("\tTurning from:", self.pose.theta, "degrees to:", coordinate.theta * 180 / math.pi, "degrees...")
             self.max_tick_factor = 0.9
 
             # Do multiple decreasing length turns to dial in on the final angle

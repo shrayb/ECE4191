@@ -233,7 +233,8 @@ class Motor:
         self.pwm = GPIO.PWM(self.enable_pin, 100)
         self.pwm.start(self.speed)
         self.ticks = 0
-        self.encoder_state = self.read_encoder()
+        self.encoder_a_state = GPIO.input(self.encoder_a)
+        self.encoder_b_state = GPIO.input(self.encoder_b)
 
     def set_speed(self, speed=None):
         self.speed = speed
@@ -251,23 +252,21 @@ class Motor:
         GPIO.output(self.input_a, GPIO.LOW)
         GPIO.output(self.input_b, GPIO.LOW)
 
-    def read_encoder(self):
-        encoder_a_reading = GPIO.input(self.encoder_a)
-        encoder_b_reading = GPIO.input(self.encoder_b)
-        new_state = (encoder_a_reading, encoder_b_reading)
-        return new_state
-
     def reset_encoder(self):
         self.ticks = 0
-        new_state = self.read_encoder()
-        self.encoder_state = new_state
+        self.encoder_a_state = GPIO.input(self.encoder_a)
+        self.encoder_b_state = GPIO.input(self.encoder_b)
 
     def update_encoder(self):
-        new_state = self.read_encoder()
+        new_encoder_a_state = GPIO.input(self.encoder_a)
+        new_encoder_b_state = GPIO.input(self.encoder_b)
 
-        # Compare states
-        if new_state != self.encoder_state:
-            self.encoder_state = new_state
+        if new_encoder_a_state != self.encoder_a_state:
+            self.encoder_a_state = new_encoder_a_state
+            self.ticks += 1
+
+        if new_encoder_b_state != self.encoder_b_state:
+            self.encoder_b_state = new_encoder_b_state
             self.ticks += 1
 
 class ColourSensor:
