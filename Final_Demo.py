@@ -47,14 +47,14 @@ robot.front_right_ultrasonic = front_right_sonic
 robot.limit_switch = limit_switch
 robot.colour_sensor = colour_sensor
 
-encoder_thread = Thread(target=robot.encoder_thread)
-encoder_thread.start()
-
-ultrasonic_thread = Thread(target=robot.ultrasonic_thread)
-ultrasonic_thread.start()
-
-drive_thread = Thread(target=robot.drive_thread)
-drive_thread.start()
+# encoder_thread = Thread(target=robot.encoder_thread)
+# encoder_thread.start()
+#
+# ultrasonic_thread = Thread(target=robot.ultrasonic_thread)
+# ultrasonic_thread.start()
+#
+# drive_thread = Thread(target=robot.drive_thread)
+# drive_thread.start()
 
 def mainloop():
     try:
