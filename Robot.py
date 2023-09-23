@@ -405,6 +405,7 @@ class Robot:
             for index in range(4):
                 # Find angle to turn
                 angle_difference = calculate_angle_difference(coordinate)
+                print("Angle difference:", angle_difference)
                 self.do_turn(angle_difference)
                 self.max_tick_factor *= 0.8
 
