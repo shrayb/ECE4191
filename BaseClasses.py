@@ -285,23 +285,18 @@ class ColourSensor:
         self.tolerance = 2500
 
     def read_colour(self):
-        red_count = 0
-        green_count = 0
-        blue_count = 0
-        yellow_count = 0
-        white_count = 0
         colour_counts = {"red": 0, "green": 0, "blue": 0}
 
         for index in range(5):
             # Read each colour sensor
             self.read_red()
-            sleep(0.01)
+            #sleep(0.01)
             red_reading = self.single_reading()
             self.read_green()
-            sleep(0.01)
+            #sleep(0.01)
             green_reading = self.single_reading()
             self.read_blue()
-            sleep(0.01)
+            #sleep(0.01)
             blue_reading = self.single_reading()
 
             readings = [red_reading, green_reading, blue_reading]
