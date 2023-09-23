@@ -455,12 +455,17 @@ class Robot:
             self.max_tick_factor = 0.9
 
             # Do multiple decreasing length turns to dial in on the final angle
-            for index in range(6):
+            for index in range(9):
                 angle_difference = coordinate.theta - self.pose.theta
                 if angle_difference > math.pi:
                     angle_difference = angle_difference - 2 * math.pi
                 elif angle_difference < -math.pi:
                     angle_difference = angle_difference + 2 * math.pi
+
+                # Check if angle difference is low enough for desired
+                if angle_difference < (self.angle_error * math.pi / 180):
+                    break
+
                 self.do_turn(angle_difference)
                 self.max_tick_factor *= 0.7
 
