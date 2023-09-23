@@ -61,7 +61,7 @@ class Robot:
         while True:
             # Do a scan attempt
             scan_result = self.scan_attempt()
-            sleep(1)
+            sleep(0.1)
             print("Scan result:", scan_result)
 
             if scan_result is not None:
