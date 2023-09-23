@@ -66,14 +66,16 @@ def mainloop():
                 robot.do_localise = True
 
                 # Wait until the robot has finished localising
+                print("Robot re-localising...")
                 while robot.do_localise:
                     pass
+                print("Robot localised at: (", robot.pose.x, robot.pose.y, ")")
 
                 # End all the threads to prepare for scanning
                 robot.end_thread = True
 
                 # Scan for a new package
-                print("Start scan")
+                print("Scanning for new package...")
                 robot.continuous_scan()
 
                 # Make the current goal the package delivery position and tell the robot its now delivering
@@ -94,6 +96,7 @@ def mainloop():
             # If the robot is at the deposit zone and ready to deposit
             if robot.current_goal is None and robot.delivering:
                 robot.deposit_package()
+                print("Package delivered. Returning home...")
                 robot.delivering = False
 
                 # Return to pre calibration coordinate
