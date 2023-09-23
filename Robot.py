@@ -198,8 +198,6 @@ class Robot:
         while not self.end_all_threads:
             self.left_motor.update_encoder()
             self.right_motor.update_encoder()
-            self.left_motor.apply_pending_updates()
-            self.right_motor.apply_pending_updates()
 
     def is_vision_blocked(self, sensor_index):
         # Check if any are 100
