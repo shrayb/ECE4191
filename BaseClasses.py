@@ -309,7 +309,7 @@ class ColourSensor:
             blue_reading = self.single_reading()
 
             readings = [red_reading, green_reading, blue_reading]
-            print("RGB:", red_reading, green_reading, blue_reading)
+            # print("RGB:", red_reading, green_reading, blue_reading)
             for colour_index, colour_range in enumerate(self.ranges):
                 detected_colour = None
                 for rbg_val in range(3):
