@@ -9,7 +9,9 @@ from BaseClasses import *
 from copy import deepcopy
 class Robot:
     def __init__(self, pose=None, state="waiting"):
+        # Robot crucial variables
         self.pose = pose
+        self.current_goal = None  # Current coordinate the robot wants to end at
 
         # Robot tunable parameters
         self.turn_radius = 0.12255  # Metres make bigger to turn more make smaller to turn less
@@ -32,17 +34,23 @@ class Robot:
         self.rear_left_ultrasonic = None  # Rear left ultrasonic sensor class
         self.rear_right_ultrasonic = None  # Rear right ultrasonic sensor class
         self.colour_sensor = None  # ColourSensor class for the colour sensor
+        self.limit_switch = None
 
-        # Movement flags
+        # Movement variables and flags
+        self.max_tick_factor = 0.9
         self.is_moving = False  # Boolean for if the robot is moving
         self.is_impending_collision = False  # Goes True if the robot detects something in front of it whilst moving
         self.drive_success = False
         self.safe_reversing = False
+        self.do_localise = False
 
         # Package delivering flags
         self.package = None  # Package class that was currently scanned
         self.delivering = False  # Flag for if the robot is currently driving to deliver a package
         self.depositing = False  # Flag for when the conveyor motor is depositing a package
+
+        # Ultrasonic variables and flags
+        self.sensor_readings = set_default_sensor_readings()  # 5 Sensors by 6 columns
 
         # Thread related flags
         self.end_all_threads = False
@@ -51,15 +59,9 @@ class Robot:
         # Package scanning flags
         self.scanning_flag = False
 
-        # Other
-        self.current_goal = None  # Current coordinate the robot wants to end at
-        self.sensor_readings = set_default_sensor_readings()  # 5 Sensors by 6 columns
+        # Time variables and flags
         self.time_flag = False
         self.stopping_time = None
-        self.turn_accuracy_count = 0
-        self.max_tick_factor = 0.9
-        self.do_localise = False
-        self.limit_switch = None
 
     def get_current_goal(self):
         if self.package is not None:
@@ -609,7 +611,6 @@ class Robot:
         data = client_socket.recv(1024).decode()
         print(f"Received: {data}")
         return data
-
 
 def object_getting_closer(array):
     # Check if all elements of array are descending from 1st index to end
