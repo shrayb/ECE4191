@@ -10,12 +10,20 @@ from copy import deepcopy
 class Robot:
     def __init__(self, pose=None, state="waiting"):
         self.pose = pose
-        self.scanning_flag = False
-        self.is_impending_collision = False  # Goes True if the robot detects something in front of it whilst moving
-        self.is_moving = False  # Boolean for if the robot is moving
-        self.current_goal = None  # Current coordinate the robot wants to end at
-        self.package = None  # Package class that was currently scanned
-        self.depositing = False  # Flag for when the conveyor motor is depositing a package
+
+        # Robot tunable parameters
+        self.turn_radius = 0.12255  # Metres make bigger to turn more make smaller to turn less
+        self.wheel_radius = 0.05408  # Metres
+        self.distance_per_tick = 0.00012265  # Distance per tick in metres make bigger to drive less make smaller to drive more
+        self.max_speed = 50  # Upper percentage for maximum speed
+        self.slow_speed = 50  # Upper percentage for slower speed
+        self.PID_gain = 4  # Raise to make the PID more sensitive, lower to make the PID less sensitive
+        self.PID_turning = 1
+        self.distance_error = 0.005  # Metres accurate
+        self.angle_error = 0.5  # Degrees accurate
+        self.map_size = (1.2, 1.2)
+
+        # Robot component classes
         self.left_motor = None  # Motor class for the left motor
         self.right_motor = None  # Motor class for the right motor
         self.conveyor_motor = None  # Motor class for the conveyor belt motor
@@ -24,30 +32,34 @@ class Robot:
         self.rear_left_ultrasonic = None  # Rear left ultrasonic sensor class
         self.rear_right_ultrasonic = None  # Rear right ultrasonic sensor class
         self.colour_sensor = None  # ColourSensor class for the colour sensor
-        self.turn_radius = 0.12255  # Metres make bigger to turn more make smaller to turn less
-        self.wheel_radius = 0.05408  # Metres
-        self.distance_per_tick = 0.00012265  # Distance per tick in metres make bigger to drive less make smaller to drive more
-        self.max_speed = 50  # Upper percentage for maximum speed
-        self.slow_speed = 50  # Upper percentage for slower speed
-        self.PID_gain = 4  # Raise to make the PID more sensitive, lower to make the PID less sensitive
-        self.PID_turning = 1
-        self.map_size = (1.2, 1.2)
-        self.sensor_readings = set_default_sensor_readings()  # 5 Sensors by 6 columns
+
+        # Movement flags
+        self.is_moving = False  # Boolean for if the robot is moving
+        self.is_impending_collision = False  # Goes True if the robot detects something in front of it whilst moving
         self.drive_success = False
+        self.safe_reversing = False
+
+        # Package delivering flags
+        self.package = None  # Package class that was currently scanned
+        self.delivering = False  # Flag for if the robot is currently driving to deliver a package
+        self.depositing = False  # Flag for when the conveyor motor is depositing a package
+
+        # Thread related flags
+        self.end_all_threads = False
+        self.end_ultrasonic_thread = False
+
+        # Package scanning flags
+        self.scanning_flag = False
+
+        # Other
+        self.current_goal = None  # Current coordinate the robot wants to end at
+        self.sensor_readings = set_default_sensor_readings()  # 5 Sensors by 6 columns
         self.time_flag = False
         self.stopping_time = None
-        self.safe_reversing = False
-        self.ramp_up_percent = 0.4
-        self.ramp_down_percent = 0.6
         self.turn_accuracy_count = 0
         self.max_tick_factor = 0.9
         self.do_localise = False
         self.limit_switch = None
-        self.distance_error = 0.005  # Metres accurate
-        self.angle_error = 0.5  # Degrees accurate
-        self.delivering = False
-        self.end_all_threads = False
-        self.end_ultrasonic_thread = False
 
     def get_current_goal(self):
         if self.package is not None:
@@ -560,7 +572,7 @@ class Robot:
     def establish_connection_to_send(self):
         server_ip = '118.138.20.161'  # Replace with the actual IP address of the receiving computer
         server_port = 137  # Use the same port number as the server
-    
+
         # Create a socket object and connect to the server
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect((server_ip, server_port))
