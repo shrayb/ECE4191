@@ -6,7 +6,7 @@ from copy import deepcopy
 class Robot:
     def __init__(self, pose=None):
         # Robot crucial variables
-        self.pose = pose  # Pose class x, y, theta, of the robot
+        self.pose = pose  # Pose class x, y, Theta, of the robot
         self.current_goal = None  # Current coordinate the robot wants to end at
 
         # Robot tunable parameters
