@@ -2,15 +2,14 @@ import math
 import socket
 from threading import Thread
 from time import sleep, time
-
 import numpy as np
-
 from BaseClasses import *
 from copy import deepcopy
+
 class Robot:
     def __init__(self, pose=None, state="waiting"):
         # Robot crucial variables
-        self.pose = pose
+        self.pose = pose  # Pose class x, y, theta, of the robot
         self.current_goal = None  # Current coordinate the robot wants to end at
 
         # Robot tunable parameters
@@ -20,10 +19,10 @@ class Robot:
         self.max_speed = 50  # Upper percentage for maximum speed
         self.slow_speed = 50  # Upper percentage for slower speed
         self.PID_gain = 4  # Raise to make the PID more sensitive, lower to make the PID less sensitive
-        self.PID_turning = 1
+        self.PID_turning = 1  # Gain for turning PID
         self.distance_error = 0.005  # Metres accurate
         self.angle_error = 0.5  # Degrees accurate
-        self.map_size = (1.2, 1.2)
+        self.map_size = (1.2, 1.2)  # Map size in xy metres, used to determine if an ultrasonic reading is a wall
 
         # Robot component classes
         self.left_motor = None  # Motor class for the left motor
@@ -33,16 +32,15 @@ class Robot:
         self.front_right_ultrasonic = None  # Front right ultrasonic sensor class
         self.rear_left_ultrasonic = None  # Rear left ultrasonic sensor class
         self.rear_right_ultrasonic = None  # Rear right ultrasonic sensor class
-        self.colour_sensor = None  # ColourSensor class for the colour sensor
-        self.limit_switch = None
+        self.colour_sensor = None  # Class for the colour sensor
+        self.limit_switch = None  # Class for the limit switch
 
         # Movement variables and flags
         self.max_tick_factor = 0.9
         self.is_moving = False  # Boolean for if the robot is moving
         self.is_impending_collision = False  # Goes True if the robot detects something in front of it whilst moving
-        self.drive_success = False
-        self.safe_reversing = False
-        self.do_localise = False
+        self.safe_reversing = False  # Goes true when the robot is reversing after being stuck with an object in front of it
+        self.do_localise = False  # Goes true when we want the robot to re-localise
 
         # Package delivering flags
         self.package = None  # Package class that was currently scanned
@@ -53,15 +51,92 @@ class Robot:
         self.sensor_readings = set_default_sensor_readings()  # 5 Sensors by 6 columns
 
         # Thread related flags
-        self.end_all_threads = False
-        self.end_ultrasonic_thread = False
-
-        # Package scanning flags
-        self.scanning_flag = False
+        self.end_all_threads = False  # When this is true, all threads (excluding the main thread) will end
+        self.end_ultrasonic_thread = False  # When this is true, the ultrasonic thread will end
 
         # Time variables and flags
-        self.time_flag = False
-        self.stopping_time = None
+        self.time_flag = False  # Goes true when time is being considered (when waiting 5 seconds to see if the obstacle moves)
+        self.stopping_time = None  # Saves the current time when the robot starts waiting 5 seconds
+
+    """THREADS"""
+
+    def drive_thread(self):
+        # DRIVE THREAD
+        # Will continuously attempt to drive to the current goal until desired accuracy is reached
+        while True:
+            sleep(0.05)
+            if self.end_all_threads:
+                break
+            # Check if we want to re-localise the robot
+            if self.do_localise:
+                # Localise the robot
+                self.re_localise()
+                self.do_localise = False
+
+            # Check if there is an impending collision
+            if self.current_goal is None:
+                continue
+
+            if self.is_impending_collision:
+                if not self.time_flag:
+                    self.time_flag = True
+                    self.stopping_time = time()
+
+                # Update all sensors if there is an object in its vision now that its stopped
+                for index in range(2):
+                    is_vision_blocked = self.is_vision_blocked(index)
+                    self.sensor_readings[index][0] = is_vision_blocked
+
+                # Check all sensor reading flags and if any are true, then the robot will stay still
+                should_it_stay = False
+                for index in range(2):
+                    if self.sensor_readings[index][0]:
+                        should_it_stay = True
+
+                # Once 5 seconds of being stopped waiting for the obstacle to move
+                if time() > self.stopping_time + 5:
+                    self.time_flag = False
+                    self.safe_reversing = True
+                    self.is_impending_collision = False
+                    self.do_drive(-0.1)  # Drive backwards 10 cm
+                    self.safe_reversing = False
+
+                if should_it_stay:
+                    continue
+
+                self.is_impending_collision = False
+
+            # Drive to current goal
+            self.drive_to_coordinate(self.current_goal)
+
+    def ultrasonic_thread(self):
+        # ULTRASONIC THREAD and limit switch
+        # Saves readings from ultrasonic sensors and limit switch
+        while True:
+            if self.end_all_threads or self.end_ultrasonic_thread:
+                break
+            sleep(0.02)
+
+            # Update limit switch reading
+            self.limit_switch.detect()
+
+            # Update sensor readings which includes a detection flag for collisions
+            self.detect_impending_collision(self.front_left_ultrasonic)
+            self.detect_impending_collision(self.front_right_ultrasonic)
+
+            # Check if any sensors detect an impending collision
+            if not self.safe_reversing:
+                for index in range(2):
+                    if self.sensor_readings[index][0]:
+                        self.is_impending_collision = True
+
+    def encoder_thread(self):
+        # Efficiently updates the encoder ticks based on the encoder states
+        while not self.end_all_threads:
+            self.left_motor.update_encoder()
+            self.right_motor.update_encoder()
+
+    """FUNCTIONS"""
 
     def get_current_goal(self):
         if self.package is not None:
@@ -159,60 +234,6 @@ class Robot:
         self.max_tick_factor = 1.0
         self.do_drive(-0.1)
 
-    def drive_thread(self):
-        # THREAD FUNCTION
-        # Will drive to whatever waypoints are in the path queue variable in order and remove them
-        while True:
-            sleep(0.05)
-            if self.end_all_threads:
-                break
-            # Check if we want to re-localise the robot
-            if self.do_localise:
-                # Localise the robot
-                self.re_localise()
-                self.do_localise = False
-
-            # Check if there is an impending collision
-            if self.current_goal is None:
-                continue
-
-            if self.is_impending_collision:
-                if not self.time_flag:
-                    self.time_flag = True
-                    self.stopping_time = time()
-
-                # Update all sensors if there is an object in its vision now that its stopped
-                for index in range(2):
-                    is_vision_blocked = self.is_vision_blocked(index)
-                    self.sensor_readings[index][0] = is_vision_blocked
-
-                # Check all sensor reading flags and if any are true, then the robot will stay still
-                should_it_stay = False
-                for index in range(2):
-                    if self.sensor_readings[index][0]:
-                        should_it_stay = True
-
-                # Once 5 seconds of being stopped waiting for the obstacle to move
-                if time() > self.stopping_time + 5:
-                    self.time_flag = False
-                    self.safe_reversing = True
-                    self.is_impending_collision = False
-                    self.do_drive(-0.1)  # Drive backwards 10 cm
-                    self.safe_reversing = False
-
-                if should_it_stay:
-                    continue
-
-                self.is_impending_collision = False
-
-            # Drive to current goal
-            self.drive_to_coordinate(self.current_goal)
-
-    def encoder_thread(self):
-        while not self.end_all_threads:
-            self.left_motor.update_encoder()
-            self.right_motor.update_encoder()
-
     def is_vision_blocked(self, sensor_index):
         # Check if any are 100
         for index in range(1, len(self.sensor_readings[sensor_index])):
@@ -220,25 +241,6 @@ class Robot:
                 return True
 
         return False
-
-    def ultrasonic_thread(self):
-        while True:
-            if self.end_all_threads or self.end_ultrasonic_thread:
-                break
-            sleep(0.02)
-
-            # Update limit switch reading
-            self.limit_switch.detect()
-
-            # Update sensor readings which includes a detection flag for collisions
-            self.detect_impending_collision(self.front_left_ultrasonic)
-            self.detect_impending_collision(self.front_right_ultrasonic)
-
-            # Check if any sensors detect an impending collision
-            if not self.safe_reversing:
-                for index in range(2):
-                    if self.sensor_readings[index][0]:
-                        self.is_impending_collision = True
 
     def deposit_package(self):
         # Deposit the next package
