@@ -119,7 +119,7 @@ class Robot:
 
             # Update sensor readings which includes a detection flag for collisions
             self.detect_impending_collision(self.front_left_ultrasonic)
-            # self.detect_impending_collision(self.front_right_ultrasonic)
+            self.detect_impending_collision(self.front_right_ultrasonic)
 
             # Check if any sensors detect an impending collision
             if not self.safe_reversing:
