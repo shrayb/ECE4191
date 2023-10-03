@@ -43,49 +43,16 @@ drive_thread.start()
 def mainloop():
     try:
         while True:
-            # Check colour sensor for package
-            if robot.current_goal is None and not robot.delivering:
-                # Re-localise the robot with a corner
-                robot.do_localise = True
+            robot.left_motor.reset_encoder()
+            robot.right_motor.reset_encoder()
+            robot.max_tick_factor = 1.0  # Set max tick to 1 to drive the whole metre
+            robot.do_drive(1)  # Drive a metre forwards
 
-                # Wait until the robot has finished localising
-                print("Robot re-localising...")
-                while robot.do_localise:
-                    pass
-                print("Robot localised at: (", robot.pose.x, robot.pose.y, ")")
-
-                # End all the threads to prepare for scanning
-                robot.end_all_threads = True
-
-                # Scan for a new package
-                print("Scanning for new package...")
-                robot.continuous_scan()
-
-                # Make the current goal the package delivery position and tell the robot its now delivering
-                robot.current_goal = robot.package.destination_pose
-                robot.delivering = True
-                robot.end_all_threads = False
-
-                # Start threads
-                encoder_thread = Thread(target=robot.encoder_thread)
-                encoder_thread.start()
-
-                ultrasonic_thread = Thread(target=robot.ultrasonic_thread)
-                ultrasonic_thread.start()
-
-                drive_thread = Thread(target=robot.drive_thread)
-                drive_thread.start()
-
-            # If the robot is at the deposit zone and ready to deposit
-            if robot.current_goal is None and robot.delivering:
-                print("\tDepositing package...")
-                robot.deposit_package()
-                print("\tPackage delivered.")
-                robot.delivering = False
-
-                # Return to pre calibration coordinate
-                robot.current_goal = robot.package.return_destination
-                print("Returning to pre localisation pose...")
+            while True:
+                sleep(1)
+                print("Ticks:", (robot.left_motor.ticks + robot.right_motor.ticks) / 2)
+                x = input("Press x to go again")
+                break
 
     # Handle Control-C to stop motors
     except KeyboardInterrupt:

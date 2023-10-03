@@ -1,13 +1,10 @@
-import math
 import socket
 from threading import Thread
-from time import sleep, time
-import numpy as np
 from BaseClasses import *
 from copy import deepcopy
 
 class Robot:
-    def __init__(self, pose=None, state="waiting"):
+    def __init__(self, pose=None):
         # Robot crucial variables
         self.pose = pose  # Pose class x, y, theta, of the robot
         self.current_goal = None  # Current coordinate the robot wants to end at
@@ -571,7 +568,15 @@ class Robot:
         """
         Find the way home so we can pick him up
         """
-        pass
+        # Stop driving
+        self.left_motor.stop()
+        self.right_motor.stop()
+        sleep(0.5)
+
+        # Turn right 60 degrees then drive until wall until limit switch is pressed
+        while not self.limit_switch.triggered:
+            self.do_turn(-60 * math.pi / 180)
+            self.do_drive(1)
 
     def establish_connection_to_send(self):
         server_ip = '118.138.20.161'  # Replace with the actual IP address of the receiving computer
