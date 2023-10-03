@@ -12,7 +12,7 @@ class Robot:
         # Robot tunable parameters
         self.turn_radius = 0.12255  # Metres make bigger to turn more make smaller to turn less
         self.wheel_radius = 0.05408  # Metres
-        self.distance_per_tick = 0.00012265  # Distance per tick in metres make bigger to drive less make smaller to drive more
+        self.distance_per_tick = (2 * math.pi * self.wheel_radius) / (74.83 * 48)  # 0.00012265  # Distance per tick in metres make bigger to drive less make smaller to drive more
         self.max_speed = 50  # Upper percentage for maximum speed
         self.slow_speed = 50  # Upper percentage for slower speed
         self.PID_gain = 4  # Raise to make the PID more sensitive, lower to make the PID less sensitive
