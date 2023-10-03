@@ -45,7 +45,7 @@ def mainloop():
         while True:
             robot.left_motor.reset_encoder()
             robot.right_motor.reset_encoder()
-            robot.max_tick_factor = 1.0  # Set max tick to 1 to drive the whole metre
+            robot.max_tick_factor = 10.0  # Set max tick to 1 to drive the whole metre
             robot.do_drive(1)  # Drive a metre forwards
 
             while True:
