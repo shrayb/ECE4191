@@ -13,8 +13,8 @@ class Robot:
         self.turn_radius = 0.12255  # Metres make bigger to turn more make smaller to turn less
         self.wheel_radius = 0.05408  # Metres
         self.distance_per_tick = (2 * math.pi * self.wheel_radius) / (74.83 * 24)  # 0.00012265  # Distance per tick in metres make bigger to drive less make smaller to drive more
-        self.max_speed = 90  # Upper percentage for maximum speed
-        self.slow_speed = 90  # Upper percentage for slower speed
+        self.max_speed = 50  # Upper percentage for maximum speed
+        self.slow_speed = 50  # Upper percentage for slower speed
         self.PID_gain = 4  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.PID_turning = 1  # Gain for turning PID
         self.distance_error = 0.005  # Metres accurate
@@ -118,8 +118,8 @@ class Robot:
             self.limit_switch.detect()
 
             # Update sensor readings which includes a detection flag for collisions
-            self.detect_impending_collision(self.front_left_ultrasonic)
-            self.detect_impending_collision(self.front_right_ultrasonic)
+            # self.detect_impending_collision(self.front_left_ultrasonic)
+            # self.detect_impending_collision(self.front_right_ultrasonic)
 
             # Check if any sensors detect an impending collision
             if not self.safe_reversing:
