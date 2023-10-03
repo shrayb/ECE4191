@@ -12,14 +12,14 @@ class Robot:
         # Robot tunable parameters
         self.turn_radius = 0.12255  # Metres make bigger to turn more make smaller to turn less
         self.wheel_radius = 0.05408  # Metres
-        self.distance_per_tick = (2 * math.pi * self.wheel_radius) / (74.83 * 48)  # 0.00012265  # Distance per tick in metres make bigger to drive less make smaller to drive more
+        self.distance_per_tick = (2 * math.pi * self.wheel_radius) / (74.83 * 24)  # 0.00012265  # Distance per tick in metres make bigger to drive less make smaller to drive more
         self.max_speed = 50  # Upper percentage for maximum speed
         self.slow_speed = 50  # Upper percentage for slower speed
         self.PID_gain = 4  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.PID_turning = 1  # Gain for turning PID
         self.distance_error = 0.005  # Metres accurate
         self.angle_error = 0.5  # Degrees accurate
-        self.map_size = (2, 2)  # Map size in xy metres, used to determine if an ultrasonic reading is a wall
+        self.map_size = (20, 20)  # Map size in xy metres, used to determine if an ultrasonic reading is a wall
 
         # Robot component classes
         self.left_motor = None  # Motor class for the left motor

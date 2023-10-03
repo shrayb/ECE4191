@@ -253,18 +253,12 @@ class Motor:
     def reset_encoder(self):
         self.ticks = 0
         self.encoder_a_state = GPIO.input(self.encoder_a)
-        self.encoder_b_state = GPIO.input(self.encoder_b)
 
     def update_encoder(self):
         new_encoder_a_state = GPIO.input(self.encoder_a)
-        new_encoder_b_state = GPIO.input(self.encoder_b)
 
         if new_encoder_a_state != self.encoder_a_state:
             self.encoder_a_state = new_encoder_a_state
-            self.ticks += 1
-
-        if new_encoder_b_state != self.encoder_b_state:
-            self.encoder_b_state = new_encoder_b_state
             self.ticks += 1
 
 class ColourSensor:
