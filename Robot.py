@@ -274,6 +274,7 @@ class Robot:
 
         tick_sum = self.left_motor.ticks + self.right_motor.ticks
         while tick_sum < max_ticks:
+            sleep(0.001)
             # Check if there will be a collision
             if self.is_impending_collision or self.limit_switch.triggered:
                 break
