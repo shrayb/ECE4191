@@ -10,7 +10,7 @@ class Robot:
         self.current_goal = None  # Current coordinate the robot wants to end at
 
         # Robot tunable parameters
-        self.turn_radius = 0.13100  # Metres make bigger to turn more make smaller to turn less
+        self.turn_radius = 0.13  # Metres make bigger to turn more make smaller to turn less
         self.wheel_radius = 0.05401 / 2  # Metres
         self.distance_per_tick = (2 * math.pi * self.wheel_radius) / (74.83 * 24)  # 0.00012265  # Distance per tick in metres make bigger to drive less make smaller to drive more
         self.max_speed = 50  # Upper percentage for maximum speed
