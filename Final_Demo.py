@@ -52,7 +52,6 @@ def mainloop():
                 print("Robot re-localising...")
                 while robot.do_localise:
                     sleep(0.1)
-                    pass
                 print("Robot localised at: (", robot.pose.x, robot.pose.y, ")")
 
                 # End all the threads to prepare for scanning
