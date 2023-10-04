@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from RPiGPIOIRQ import GPIO.IRQ
+from RPiGPIOIRQ import GPIO_IRQ
 from time import sleep, time
 import math
 
