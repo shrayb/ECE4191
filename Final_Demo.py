@@ -51,6 +51,7 @@ def mainloop():
                 # Wait until the robot has finished localising
                 print("Robot re-localising...")
                 while robot.do_localise:
+                    sleep(0.1)
                     pass
                 print("Robot localised at: (", robot.pose.x, robot.pose.y, ")")
 
@@ -86,6 +87,8 @@ def mainloop():
                 # Return to pre calibration coordinate
                 robot.current_goal = robot.package.return_destination
                 print("Returning to pre localisation pose...")
+
+            sleep(0.001)
 
     # Handle Control-C to stop motors
     except KeyboardInterrupt:
