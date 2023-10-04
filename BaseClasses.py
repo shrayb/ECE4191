@@ -383,7 +383,7 @@ class Ultrasonic:
                 return None
             pulse_end = time()
 
-        pulse_duration = pulse_end - pulse_start - 0.001
+        pulse_duration = pulse_end - pulse_start
         distance = pulse_duration * 171.50  # Speed of sound in m/s
         print("Distance:", distance)
         return distance
