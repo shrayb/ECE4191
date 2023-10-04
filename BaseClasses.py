@@ -375,6 +375,7 @@ class Ultrasonic:
             if time() > initial_time + 0.2:
                 return None
             pulse_start = time()
+            sleep(0.0001)
 
         initial_time = time()
 
@@ -382,6 +383,7 @@ class Ultrasonic:
             if time() > initial_time + 0.2:
                 return None
             pulse_end = time()
+            sleep(0.0001)
 
         pulse_duration = pulse_end - pulse_start
         distance = pulse_duration * 171.50  # Speed of sound in m/s
