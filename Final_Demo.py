@@ -21,7 +21,7 @@ limit_switch = LimitSwitch(distance=0.15, switch_pin=limit_switch_pin)
 colour_sensor = ColourSensor(s3=s3, s2=s2, signal=colour_sensor_signal)
 
 # Create robot class and instantiate component classes
-pose = Pose(0.3, 0.2, 0)
+pose = Pose(0.3, 0.4, 0)
 robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
