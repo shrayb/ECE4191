@@ -19,7 +19,7 @@ class Robot:
         self.PID_turning = 1  # Gain for turning PID
         self.distance_error = 0.005  # Metres accurate
         self.angle_error = 0.5  # Degrees accurate
-        self.map_size = (20, 20)  # Map size in xy metres, used to determine if an ultrasonic reading is a wall
+        self.map_size = (1.2, 1.2)  # Map size in xy metres, used to determine if an ultrasonic reading is a wall
 
         # Robot component classes
         self.left_motor = None  # Motor class for the left motor
