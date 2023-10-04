@@ -159,6 +159,8 @@ class Robot:
                 print("Scan complete. Result:", scan_result)
                 self.package = Package(scan_result)
                 break
+
+            sleep(0.001)
         # Turn motor off
         # self.conveyor_motor.stop()
 
