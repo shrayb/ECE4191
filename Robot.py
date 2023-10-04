@@ -490,40 +490,6 @@ class Robot:
         if waypoint_error_distance < self.distance_error and waypoint_error_angle < (self.angle_error * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 5 degree accuracy
             self.current_goal = None
 
-    def detect_obstacle(self, front_left_ultrasonic=None, front_right_ultrasonic=None):
-        left_dist = front_left_ultrasonic.measure_dist()
-        right_dist = front_right_ultrasonic.measure_dist()
-        if left_dist is None or right_dist is None:
-            return None
-        x, y, th = self.pose.x, self.pose.y, self.pose.theta
-
-        if left_dist is None or right_dist is None:
-            return False, 0, 0, 0
-
-        # Convert to metres
-        left_dist /= 100
-        right_dist /= 100
-
-        # Make sure reading isnt too close
-        acceptable_dist = 0.15
-        if left_dist < acceptable_dist and right_dist < acceptable_dist:
-            flag = True
-            coords_x = x + (front_left_ultrasonic.x_offset + 0.5 * (left_dist + right_dist)) * math.cos(self.pose.theta)
-            coords_y = y + (front_left_ultrasonic.x_offset + 0.5 * (left_dist + right_dist)) * math.sin(self.pose.theta)
-        elif left_dist < acceptable_dist:
-            flag = True
-            coords_x = front_left_ultrasonic.y_offset * math.sin(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.cos(self.pose.theta)
-            coords_y = front_left_ultrasonic.y_offset * math.cos(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.sin(self.pose.theta)
-        elif right_dist < acceptable_dist:
-            flag = True
-            coords_x = front_right_ultrasonic.y_offset * math.sin(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.cos(self.pose.theta)
-            coords_y = front_right_ultrasonic.y_offset * math.cos(self.pose.theta) + (front_left_ultrasonic.x_offset + left_dist) * math.sin(self.pose.theta)
-        else:
-            flag = False
-            coords_x, coords_y = None, None
-
-        return flag, coords_x, coords_y, th
-
     def detect_impending_collision(self, ultrasonic_unit):
         # Get a reading
         sonic_distance = ultrasonic_unit.measure_dist()
