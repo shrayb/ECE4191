@@ -377,8 +377,6 @@ class Ultrasonic:
             pulse_start = time()
             sleep(0.001)
 
-        print("Exiting first while")
-
         initial_time = time()
 
         while GPIO.input(self.echo_pin) == 1:
@@ -387,11 +385,9 @@ class Ultrasonic:
             pulse_end = time()
             sleep(0.001)
 
-        print("Exiting second while")
-
         pulse_duration = pulse_end - pulse_start
         distance = pulse_duration * 171.50  # Speed of sound in m/s
-
+        print("Distance:" distance)
         return distance
 
 class LimitSwitch:
