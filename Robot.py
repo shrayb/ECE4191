@@ -336,8 +336,6 @@ class Robot:
         # Calculate how many ticks to do for the given angle
         turn_distance = abs(angle) * self.turn_radius
         turn_ticks = (turn_distance / self.distance_per_tick) * 2
-        print("Turn dist:", turn_distance)
-        print("Turn ticks:", turn_ticks)
         # Initial pose
         initial_pose = deepcopy(self.pose)
 
@@ -480,7 +478,6 @@ class Robot:
                 # Check if angle difference is low enough for desired
                 if calculate_angle_difference(angle1=self.pose.theta, angle2=coordinate.theta) < (self.angle_error * math.pi / 180):
                     break
-                print(angle_difference)
                 self.do_turn(angle_difference)
                 self.max_tick_factor *= 0.7
 
