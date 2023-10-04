@@ -387,7 +387,7 @@ class Ultrasonic:
 
         pulse_duration = pulse_end - pulse_start
         distance = pulse_duration * 171.50  # Speed of sound in m/s
-        print("Distance:" distance)
+        print("Distance:", distance)
         return distance
 
 class LimitSwitch:
