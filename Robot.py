@@ -114,6 +114,8 @@ class Robot:
                 break
             sleep(0.02)
 
+            # Send communication data
+
             # Update limit switch reading
             self.limit_switch.detect()
 
