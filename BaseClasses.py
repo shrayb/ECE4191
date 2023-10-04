@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+from RPiGPIOIRQ import GPIO.IRQ
 from time import sleep, time
 import math
 
@@ -361,6 +362,7 @@ class Ultrasonic:
         self.reading_index = reading_index
         self.hypot = math.hypot(x_offset, y_offset)
         self.centre_angle = math.atan2(y_offset, x_offset)
+        self.interrupt = GPIO_IRQ(self.echo_pin, GPIO.RISING)
 
     def measure_dist(self):
         GPIO.output(self.trig_pin, True)
@@ -370,22 +372,33 @@ class Ultrasonic:
         pulse_start = time()
         pulse_end = time()
 
-        initial_time = time()
-        while GPIO.input(self.echo_pin) == 0:
-            if time() > initial_time + 0.2:
-                return None
-            pulse_start = time()
-            sleep(0.00000000001)
+        # Wait for the echo pin to trigger the interrupt
+        self.interrupt.wait(timeout=1)  # Adjust the timeout as needed
 
-        initial_time = time()
+        pulse_start_time = time()
 
-        while GPIO.input(self.echo_pin) == 1:
-            if time() > initial_time + 0.2:
-                return None
-            pulse_end = time()
-            sleep(0.00000000001)
+        # Wait for the echo pin to trigger the interrupt again
+        self.interrupt.wait(timeout=1)  # Adjust the timeout as needed
 
-        pulse_duration = pulse_end - pulse_start - 0.00000000001
+        pulse_end_time = time()
+
+
+        # initial_time = time()
+        # while GPIO.input(self.echo_pin) == 0:
+        #     if time() > initial_time + 0.2:
+        #         return None
+        #     pulse_start = time()
+        #     sleep(0.00000000001)
+        #
+        # initial_time = time()
+        #
+        # while GPIO.input(self.echo_pin) == 1:
+        #     if time() > initial_time + 0.2:
+        #         return None
+        #     pulse_end = time()
+        #     sleep(0.00000000001)
+
+        pulse_duration = pulse_end_time - pulse_start_time
         distance = pulse_duration * 171.50  # Speed of sound in m/s
         print("Distance:", distance)
         return distance
