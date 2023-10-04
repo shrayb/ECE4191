@@ -109,6 +109,7 @@ class Robot:
     def ultrasonic_thread(self):
         # ULTRASONIC THREAD and limit switch
         # Saves readings from ultrasonic sensors and limit switch
+        print("THREAD START ULTRASONIC")
         while True:
             if self.end_all_threads or self.end_ultrasonic_thread:
                 break
