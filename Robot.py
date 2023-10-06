@@ -130,11 +130,11 @@ class Robot:
                     if self.sensor_readings[index][0]:
                         self.is_impending_collision = True
 
-    def encoder_thread(self):
+    def encoder_process(self, left_mot, right_mot):
         # Efficiently updates the encoder ticks based on the encoder states
-        while not self.end_all_threads:
-            self.left_motor.update_encoder()
-            self.right_motor.update_encoder()
+        while True:
+            left_mot.update_encoder()
+            right_mot.update_encoder()
 
     """FUNCTIONS"""
 

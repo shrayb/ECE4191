@@ -30,7 +30,7 @@ robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
 
-encoder_thread = Thread(target=robot.encoder_thread)
+encoder_thread = Thread(target=robot.encoder_process)
 encoder_thread.start()
 
 

@@ -31,10 +31,15 @@ robot.front_right_ultrasonic = front_right_sonic
 robot.limit_switch = limit_switch
 robot.colour_sensor = colour_sensor
 
-# Initial thread start for localisation
-encoder_thread = Process(target=robot.encoder_thread)
-encoder_thread.start()
+# Start encoder process
+with Manager() as manager:
+    left_motor = Motor()
+    right_motor = Motor()
 
+    encoder_process = Process(target=robot.encoder_process, args=(robot.left_motor, robot.right_motor))
+    encoder_process.start()
+
+# Initial thread start for localisation
 ultrasonic_thread = Thread(target=robot.ultrasonic_thread)
 ultrasonic_thread.start()
 
@@ -68,9 +73,6 @@ def mainloop():
                 robot.end_all_threads = False
 
                 # Start threads
-                encoder_thread = Process(target=robot.encoder_thread)
-                encoder_thread.start()
-
                 ultrasonic_thread = Thread(target=robot.ultrasonic_thread)
                 ultrasonic_thread.start()
 

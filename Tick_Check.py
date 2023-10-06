@@ -31,7 +31,7 @@ robot.limit_switch = limit_switch
 robot.colour_sensor = colour_sensor
 
 # Initial thread start for localisation
-encoder_thread = Thread(target=robot.encoder_thread)
+encoder_thread = Thread(target=robot.encoder_process)
 encoder_thread.start()
 
 ultrasonic_thread = Thread(target=robot.ultrasonic_thread)

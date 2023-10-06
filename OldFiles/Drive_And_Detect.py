@@ -41,7 +41,7 @@ robot.right_motor = right_motor
 robot.front_left_ultrasonic = front_left_sonic
 robot.front_right_ultrasonic = front_right_sonic
 
-encoder_thread = Thread(target=robot.encoder_thread)
+encoder_thread = Thread(target=robot.encoder_process)
 encoder_thread.start()
 
 ultrasonic_thread = Thread(target=robot.ultrasonic_thread)
