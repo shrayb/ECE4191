@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 from time import sleep, time
+from multiprocessing import Process, Value, Manager
 import math
 
 def calculate_distance_between_points(point_1=None, point_2=None):
