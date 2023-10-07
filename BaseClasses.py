@@ -399,6 +399,6 @@ class LimitSwitch:
     def detect(self):
         if GPIO.input(self.pin) == GPIO.HIGH:
             self.triggered = False
-            print("Switch pressed")
+            #print("Switch pressed")
         else:
             self.triggered = False
