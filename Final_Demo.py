@@ -67,7 +67,7 @@ def mainloop():
                 # print("Robot localised at: (", robot.pose.x, robot.pose.y, ")")
 
                 # End all the threads to prepare for scanning
-                # robot.end_all_threads = True
+                robot.end_all_threads = True
 
                 # Scan for a new package
                 print("Scanning for new package...")
