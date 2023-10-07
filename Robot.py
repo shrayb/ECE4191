@@ -505,7 +505,6 @@ class Robot:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
             self.sensor_readings[ultrasonic_unit.reading_index].append(100)
-            print("No distance")
             return None
 
         # Check that the distance is within acceptable sensor distance
