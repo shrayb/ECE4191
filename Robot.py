@@ -81,13 +81,13 @@ class Robot:
                     self.stopping_time = time()
 
                 # Update all sensors if there is an object in its vision now that its stopped
-                for index in range(2):
+                for index in range(5):
                     is_vision_blocked = self.is_vision_blocked(index)
                     self.sensor_readings[index][0] = is_vision_blocked
 
                 # Check all sensor reading flags and if any are true, then the robot will stay still
                 should_it_stay = False
-                for index in range(2):
+                for index in range(5):
                     if self.sensor_readings[index][0]:
                         should_it_stay = True
 
@@ -114,7 +114,7 @@ class Robot:
         while True:
             if self.end_all_threads or self.end_ultrasonic_thread:
                 break
-            sleep(0.02)
+            sleep(0.5)
 
             # Send communication data
 
@@ -131,7 +131,7 @@ class Robot:
 
             # Check if any sensors detect an impending collision
             if not self.safe_reversing:
-                for index in range(2):
+                for index in range(5):
                     if self.sensor_readings[index][0]:
                         self.is_impending_collision = True
 
