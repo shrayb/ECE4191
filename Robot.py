@@ -282,7 +282,7 @@ class Robot:
         max_ticks *= self.max_tick_factor
         distance_total = 0.5 * max_ticks * self.distance_per_tick
 
-        tick_sum = self.left_motor.ticks + self.right_motor.ticks
+        tick_sum = self.left_motor.ticks.value + self.right_motor.ticks.value
         while tick_sum < max_ticks:
             sleep(0.01)
             # Check if there will be a collision
@@ -290,8 +290,8 @@ class Robot:
                 break
 
             # Calculate the left tick advantage and tick sum
-            left_tick_advantage = self.left_motor.ticks - self.right_motor.ticks
-            tick_sum = self.left_motor.ticks + self.right_motor.ticks
+            left_tick_advantage = self.left_motor.ticks.value - self.right_motor.ticks.value
+            tick_sum = self.left_motor.ticks.value + self.right_motor.ticks.value
             tick_percentage = tick_sum / max_ticks
 
             # Every two ticks slow down the leading motor by 1 speed
@@ -359,7 +359,7 @@ class Robot:
 
         sleep(0.25)
 
-        tick_sum = self.left_motor.ticks + self.right_motor.ticks
+        tick_sum = self.left_motor.ticks.value + self.right_motor.ticks.value
         distance_turned = 0.5 * tick_sum * self.distance_per_tick
         measured_angle = distance_turned / self.turn_radius
 
@@ -410,7 +410,7 @@ class Robot:
         sleep(0.25)
 
         # Use the tick count to estimate where the robot is
-        tick_sum = self.left_motor.ticks + self.right_motor.ticks
+        tick_sum = self.left_motor.ticks.value + self.right_motor.ticks.value
         measure_distance = 0.5 * tick_sum * self.distance_per_tick
 
         if distance < 0:
