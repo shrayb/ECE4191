@@ -258,7 +258,7 @@ class Motor:
         if new_encoder_a_state != self.encoder_a_state:
             self.encoder_a_state = new_encoder_a_state
             with self.ticks.get_lock():
-                self.ticks += 1
+                self.ticks.value += 1
 
 class ColourSensor:
     def __init__(self, s2=None, s3=None, signal=None):
