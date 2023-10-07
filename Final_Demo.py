@@ -39,10 +39,10 @@ robot.colour_sensor = colour_sensor
 
 # Start encoder process
 with Manager() as manager:
-    left_motor = Motor()
-    right_motor = Motor()
+    left_motor = robot.left_motor
+    right_motor = robot.right_motor
 
-    encoder_process = Process(target=robot.encoder_process, args=(robot.left_motor, robot.right_motor))
+    encoder_process = Process(target=robot.encoder_process, args=(left_motor, right_motor))
     encoder_process.start()
 
 # Initial thread start for localisation
