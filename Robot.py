@@ -27,8 +27,9 @@ class Robot:
         self.conveyor_motor = None  # Motor class for the conveyor belt motor
         self.front_left_ultrasonic = None  # Front left ultrasonic sensor class
         self.front_right_ultrasonic = None  # Front right ultrasonic sensor class
-        self.rear_left_ultrasonic = None  # Rear left ultrasonic sensor class
-        self.rear_right_ultrasonic = None  # Rear right ultrasonic sensor class
+        self.middle_ultrasonic = None  # Rear left ultrasonic sensor class
+        self.left_ultrasonic = None  # Rear left ultrasonic sensor class
+        self.right_ultrasonic = None  # Rear left ultrasonic sensor class
         self.colour_sensor = None  # Class for the colour sensor
         self.limit_switch = None  # Class for the limit switch
 
@@ -123,6 +124,10 @@ class Robot:
             # Update sensor readings which includes a detection flag for collisions
             self.detect_impending_collision(self.front_left_ultrasonic)
             self.detect_impending_collision(self.front_right_ultrasonic)
+            self.detect_impending_collision(self.middle_ultrasonic)
+            self.detect_impending_collision(self.left_ultrasonic)
+            self.detect_impending_collision(self.right_ultrasonic)
+
 
             # Check if any sensors detect an impending collision
             if not self.safe_reversing:

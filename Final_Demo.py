@@ -12,11 +12,14 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
 # Create component classes
-left_motor = Motor(motor_left_enable, motor_left_positive, motor_left_negative, motor_left_encoder_a, motor_left_encoder_b)
-right_motor = Motor(motor_right_enable, motor_right_positive, motor_right_negative, motor_right_encoder_a, motor_right_encoder_b)
+left_motor = Motor(motor_left_enable, motor_left_positive, motor_left_negative, motor_left_encoder_a)
+right_motor = Motor(motor_right_enable, motor_right_positive, motor_right_negative, motor_right_encoder_a)
 
 front_left_sonic = Ultrasonic(echo_pin=front_left_sonic_echo, trig_pin=front_left_sonic_trig, x_offset=0.155, y_offset=0.0585, theta=0, reading_index=0, maximum_read_distance=0.15)
 front_right_sonic = Ultrasonic(echo_pin=front_right_sonic_echo, trig_pin=front_right_sonic_trig, x_offset=0.155, y_offset=-0.0585, theta=0, reading_index=1, maximum_read_distance=0.15)
+middle_sonic = Ultrasonic(echo_pin=middle_sonic_echo, trig_pin=middle_sonic_trig, x_offset=0.155, y_offset=-0.0585, theta=0, reading_index=2, maximum_read_distance=0.15)
+left_sonic = Ultrasonic(echo_pin=left_sonic_echo, trig_pin=left_sonic_trig, x_offset=0.155, y_offset=-0.0585, theta=0, reading_index=3, maximum_read_distance=0.15)
+right_sonic = Ultrasonic(echo_pin=right_sonic_echo, trig_pin=right_sonic_trig, x_offset=0.155, y_offset=-0.0585, theta=0, reading_index=4, maximum_read_distance=0.15)
 
 limit_switch = LimitSwitch(distance=0.15, switch_pin=limit_switch_pin)
 colour_sensor = ColourSensor(s3=s3, s2=s2, signal=colour_sensor_signal)
@@ -28,6 +31,9 @@ robot.left_motor = left_motor
 robot.right_motor = right_motor
 robot.front_left_ultrasonic = front_left_sonic
 robot.front_right_ultrasonic = front_right_sonic
+robot.middle_ultrasonic = middle_sonic
+robot.right_ultrasonic = right_sonic
+robot.left_ultrasonic = left_sonic
 robot.limit_switch = limit_switch
 robot.colour_sensor = colour_sensor
 

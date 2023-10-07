@@ -217,17 +217,15 @@ class Package:
             self.return_destination = Pose(x=0.3, y=0.4)
 
 class Motor:
-    def __init__(self, enable_pin=None, input_a=None, input_b=None, encoder_a=None, encoder_b=None, speed=100):
+    def __init__(self, enable_pin=None, input_a=None, input_b=None, encoder_a=None, speed=100):
         self.enable_pin = enable_pin
         self.input_a = input_a
         self.input_b = input_b
         self.encoder_a = encoder_a
-        self.encoder_b = encoder_b
         GPIO.setup(self.enable_pin, GPIO.OUT)
         GPIO.setup(self.input_a, GPIO.OUT)
         GPIO.setup(self.input_b, GPIO.OUT)
         GPIO.setup(self.encoder_a, GPIO.IN)
-        GPIO.setup(self.encoder_b, GPIO.IN)
         self.speed = speed  # Speed from 0 to 100
         self.pwm = GPIO.PWM(self.enable_pin, 100)
         self.pwm.start(self.speed)
