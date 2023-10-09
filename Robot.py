@@ -335,7 +335,7 @@ class Robot:
         while tick_sum < max_ticks:
             sleep(0.01)
             # Check if there will be a collision
-            if self.do_localise and (self.is_impending_collision or self.limit_switch.triggered):
+            if not self.do_localise and (self.is_impending_collision or self.limit_switch.triggered):
                 break
 
             # Calculate the left tick advantage and tick sum
