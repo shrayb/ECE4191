@@ -21,7 +21,7 @@ middle_sonic = Ultrasonic(echo_pin=middle_sonic_echo, trig_pin=middle_sonic_trig
 left_sonic = Ultrasonic(echo_pin=left_sonic_echo, trig_pin=left_sonic_trig, x_offset=-0.047, y_offset=0.123, theta=math.pi/2, reading_index=3, maximum_read_distance=0.25)
 right_sonic = Ultrasonic(echo_pin=right_sonic_echo, trig_pin=right_sonic_trig, x_offset=-0.047, y_offset=-0.123, theta=-math.pi/2, reading_index=4, maximum_read_distance=0.25)
 
-limit_switch = LimitSwitch(distance=0.15, switch_pin=limit_switch_pin)
+limit_switch = LimitSwitch(distance=0.1, switch_pin=limit_switch_pin)
 colour_sensor = ColourSensor(s3=s3, s2=s2, signal=colour_sensor_signal)
 
 # Create robot class and instantiate component classes
