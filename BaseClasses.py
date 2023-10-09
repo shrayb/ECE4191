@@ -304,6 +304,8 @@ class ColourSensor:
                 colour_counts[detected_colour] += 1
                 break
 
+            sleep(0.5 / self.sample_size)
+
         max_colour = max(colour_counts, key=colour_counts.get)
         if colour_counts[max_colour] >= self.minimum_correct:
             return max_colour
