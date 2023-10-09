@@ -20,7 +20,7 @@ class Robot:
         self.distance_error = 0.005  # Metres accurate
         self.angle_error = 0.5  # Degrees accurate
         self.map_size = (1.2, 1.2)  # Map size in xy metres, used to determine if an ultrasonic reading is a wall
-        self.return_destination = Pose(0.3, 0.4)  # Place to return to before calibrating
+        self.return_destination = Pose(0.3, 0.4, 0)  # Place to return to before calibrating
 
         # Robot component classes
         self.left_motor = None  # Motor class for the left motor
