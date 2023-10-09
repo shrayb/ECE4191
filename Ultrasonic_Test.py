@@ -54,7 +54,7 @@ def Ultrasonic_Test():
         print("Distance:", distance)
 
         # Sleep in while loop
-        sleep(1)
+        sleep(0.2)
 
 def Ultrasonic_Test2():
     while True:
