@@ -392,11 +392,10 @@ class LimitSwitch:
         self.pin = switch_pin
 
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.pin, GPIO.IN)
+        GPIO.setup(self.pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     def detect(self):
-        print("GPIO:", GPIO.input(self.pin))
-        if GPIO.input(self.pin) == GPIO.LOW:
+        if GPIO.input(self.pin) == GPIO.HIGH:
             self.triggered = True
             print("Switch pressed")
         else:
