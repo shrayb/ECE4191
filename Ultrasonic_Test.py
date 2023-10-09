@@ -37,13 +37,13 @@ robot.left_ultrasonic = left_sonic
 robot.limit_switch = limit_switch
 robot.colour_sensor = colour_sensor
 
-# # Start encoder process
-# with Manager() as manager:
-#     left_motor = robot.left_motor
-#     right_motor = robot.right_motor
-#
-#     encoder_process = Process(target=robot.encoder_process, args=(left_motor, right_motor))
-#     encoder_process.start()
+# Start encoder process
+with Manager() as manager:
+    left_motor = robot.left_motor
+    right_motor = robot.right_motor
+
+    encoder_process = Process(target=robot.encoder_process, args=(left_motor, right_motor))
+    encoder_process.start()
 
 def Ultrasonic_Test():
     while True:
@@ -82,5 +82,5 @@ Ultrasonic_Test2()
 # ultrasonic_thread = Thread(target=Ultrasonic_Test)
 # ultrasonic_thread.start()
 
-# drive_thread = Thread(target=robot.drive_thread)
-# drive_thread.start()
+drive_thread = Thread(target=robot.drive_thread)
+drive_thread.start()
