@@ -66,6 +66,7 @@ def Ultrasonic_Test2():
         distance_right = robot.right_ultrasonic.measure_dist()
 
         # Print all distances
+        print("====================")
         print("Middle:", distance_middle)
         print("Front left:", distance_front_left)
         print("Front right:", distance_front_right)
