@@ -205,7 +205,7 @@ class Robot:
         # Drive backwards 10 cm
         self.max_tick_factor = 1.0
         print("Drive backward")
-        self.do_drive(-0.5)
+        self.do_drive(-0.1)
         print("Done driving")
         # Turn towards the close wall
         if self.pose.x < 0.6:
