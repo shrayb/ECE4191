@@ -270,7 +270,7 @@ class ColourSensor:
         GPIO.setup(self.s2, GPIO.OUT)
         GPIO.setup(self.s3, GPIO.OUT)
         GPIO.setup(self.signal, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        self.ranges = [[25427.61528563613, 23954.95717225941, 26798.473079589625], [21957.756609767297, 23915.392626169734, 19422.419703491934], [22749.67209757698, 26687.89253695654, 27577.20443053068]]  # R G B
+        self.ranges = [[26427.04842193677, 22832.31545138652, 28641.8571679673], [21359.270072403695, 22012.46859192458, 18097.61814086049], [19102.01174712717, 23115.1931583369, 24822.668095987254]]  # R G B
         self.colours = ["red", "green", "blue"]
         self.tolerance = 2500
         self.sample_size = 20
