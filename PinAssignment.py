@@ -23,7 +23,7 @@ left_sonic_trig = 3
 right_sonic_echo = 7
 right_sonic_trig = 1
 
-limit_switch_pin = 21
+limit_switch_pin = 10
 
 s3 = 20
 s2 = 16
