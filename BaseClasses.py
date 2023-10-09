@@ -213,7 +213,7 @@ class Package:
             self.destination_pose = Pose(x=0.9, y=0.4)
             self.return_destination = Pose(x=0.9, y=0.4)
         if self.colour == "blue":
-            self.destination_pose = Pose(x=9, y=0.4)
+            self.destination_pose = Pose(x=0.9, y=0.4)
             self.return_destination = Pose(x=0.9, y=0.4)
 
 class Motor:
