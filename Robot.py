@@ -335,15 +335,10 @@ class Robot:
         while tick_sum < max_ticks:
             sleep(0.01)
             # Check if there will be a collision
-            print("do local:", self.do_localise)
-            print("impending coll:", self.is_impending_collision)
-            print("limit:", self.limit_switch.triggered)
             if not self.do_localise and self.is_impending_collision:
-                print("Ultrasonic break")
                 break
 
             if self.do_localise and self.limit_switch.triggered:
-                print("BREAKS")
                 break
 
             # Calculate the left tick advantage and tick sum
