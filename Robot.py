@@ -288,7 +288,7 @@ class Robot:
 
         # Drive backwards to clear wall
         self.max_tick_factor = 1.0
-        self.do_drive(-0.1)
+        self.do_drive(-0.2)
 
         # Start drive thread
 
