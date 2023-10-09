@@ -75,7 +75,7 @@ def Ultrasonic_Test2():
         # Sleep in while loop
         sleep(0.2)
 
-Ultrasonic_Test()
+Ultrasonic_Test2()
 
 # # Initial thread start for localisation
 # ultrasonic_thread = Thread(target=Ultrasonic_Test)
