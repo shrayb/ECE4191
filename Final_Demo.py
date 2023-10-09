@@ -70,7 +70,7 @@ def mainloop():
                 robot.end_all_threads = True
 
                 # Turn conveyor belt on
-                robot.conveyor_motor.forward()
+                # robot.conveyor_motor.forward()
 
                 # Scan for a new package
                 while robot.package is None:
@@ -78,7 +78,7 @@ def mainloop():
                     robot.continuous_scan()
 
                 # Stop conveyor belt
-                robot.conveyor_motor.stop()
+                # robot.conveyor_motor.stop()
 
                 # Make the current goal the package delivery position and tell the robot its now delivering
                 robot.current_goal = robot.package.destination_pose

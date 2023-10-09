@@ -251,7 +251,7 @@ class Robot:
     def deposit_package(self):
         # Turn conveyor belt on
         print("\tDepositing package...")
-        self.conveyor_motor.forward()
+        # self.conveyor_motor.forward()
 
         # TODO Fix scanning multiple boxes. Don't want to scan old box twice
         sleep(2)
@@ -263,7 +263,7 @@ class Robot:
         self.continuous_scan()
 
         # Turn conveyor off
-        self.conveyor_motor.stop()
+        # self.conveyor_motor.stop()
         print("\tPackage delivered.")
 
         # Check if package exists
