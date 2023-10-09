@@ -248,6 +248,24 @@ class Robot:
         return False
 
     def deposit_package(self):
+        # Drive forward slowly until limit switch is triggered
+        self.max_tick_factor = 1.0
+        self.do_drive(1, max_speed=self.slow_speed)
+
+        # Set y pose
+        self.pose.y = 0.1 - self.limit_switch.distance
+        self.pose.theta = math.pi / 2
+
+        self.limit_switch.triggered = False
+
+        # Kill ultrasonic and limit switch thread
+        self.end_ultrasonic_thread = True
+        sleep(0.1)
+
+        # Drive backwards 10 cm
+        self.max_tick_factor = 1.0
+        self.do_drive(-0.03)
+
         # Turn conveyor belt on
         print("\tDepositing package...")
         # self.conveyor_motor.forward()

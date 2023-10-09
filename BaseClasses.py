@@ -206,11 +206,11 @@ class Package:
 
     def identify_destinations(self):
         if self.colour == "red":
-            self.destination_pose = Pose(x=0.2, y=1, theta=math.pi/2)
+            self.destination_pose = Pose(x=0.25, y=1, theta=math.pi/2)
         if self.colour == "green":
             self.destination_pose = Pose(x=0.6, y=1, theta=math.pi/2)
         if self.colour == "blue":
-            self.destination_pose = Pose(x=1, y=1, theta=math.pi/2)
+            self.destination_pose = Pose(x=0.95, y=1, theta=math.pi/2)
 
 class Motor:
     def __init__(self, enable_pin=None, input_a=None, input_b=None, encoder_a=None, speed=100):
