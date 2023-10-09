@@ -20,6 +20,7 @@ class Robot:
         self.distance_error = 0.005  # Metres accurate
         self.angle_error = 0.5  # Degrees accurate
         self.map_size = (1.2, 1.2)  # Map size in xy metres, used to determine if an ultrasonic reading is a wall
+        self.return_destination = Pose(0.3, 0.4)  # Place to return to before calibrating
 
         # Robot component classes
         self.left_motor = None  # Motor class for the left motor
@@ -41,6 +42,7 @@ class Robot:
         self.do_localise = False  # Goes true when we want the robot to re-localise
 
         # Package delivering flags
+        self.scanning_timeout = 5  # Seconds to scan for before the program assumes there is no package
         self.package = None  # Package class that was currently scanned
         self.delivering = False  # Flag for if the robot is currently driving to deliver a package
         self.depositing = False  # Flag for when the conveyor motor is depositing a package
@@ -129,7 +131,6 @@ class Robot:
             self.detect_impending_collision(self.left_ultrasonic)
             self.detect_impending_collision(self.right_ultrasonic)
 
-
             # Check if any sensors detect an impending collision
             if not self.safe_reversing:
                 for index in range(5):
@@ -152,11 +153,8 @@ class Robot:
         """
         Rotates the conveyor belt and scans constantly until a colour is returned then stops the thread.
         """
-        # Turn motor on
-        # self.conveyor_motor.set_speed(75)
-        # self.conveyor_motor.forward()
-
-        while True:
+        initial_time = time()
+        while time() < initial_time + self.scanning_timeout:
             # Do a scan attempt
             scan_result = self.scan_attempt()
 
@@ -164,11 +162,12 @@ class Robot:
                 # Add this package to the packages variable
                 print("Scan complete. Result:", scan_result)
                 self.package = Package(scan_result)
-                break
+                return None
 
             sleep(0.001)
-        # Turn motor off
-        # self.conveyor_motor.stop()
+
+        # Set package to none
+        self.package = None
 
     def scan_attempt(self):
         """
@@ -251,23 +250,46 @@ class Robot:
         return False
 
     def deposit_package(self):
-        # Deposit the next package
-        # TODO
-        pass
+        # Turn conveyor belt on
+        print("\tDepositing package...")
+        self.conveyor_motor.forward()
 
-    def set_state(self, state=None, sub_state=None):
-        if state is not None:
-            self.state = state
-            self.sub_state = sub_state
+        # TODO Fix scanning multiple boxes. Don't want to scan old box twice
+        sleep(2)
 
-        if state is None and sub_state is not None:
-            self.sub_state = sub_state
+        # Stop all threads
+        self.end_all_threads = True
 
-    def get_state(self):
-        return self.state
+        # Start continuously scanning colours
+        self.continuous_scan()
 
-    def get_sub_state(self):
-        return self.sub_state
+        # Turn conveyor off
+        self.conveyor_motor.stop()
+        print("\tPackage delivered.")
+
+        # Check if package exists
+        if self.package is not None:
+            # Package detected
+            self.delivering = True
+
+            # Set current goal
+            self.current_goal = self.package.destination_pose
+        else:
+            # No package detected
+            self.delivering = False
+
+            # Return to pre calibration coordinate
+            self.current_goal = self.return_destination
+            print("Returning to pre localisation pose...")
+
+        self.end_all_threads = False
+
+        # Start threads
+        ultrasonic_thread = Thread(target=self.ultrasonic_thread)
+        ultrasonic_thread.start()
+
+        drive_thread = Thread(target=self.drive_thread)
+        drive_thread.start()
 
     def tick_check_and_speed_control(self, max_ticks, max_speed, is_turning):
         """

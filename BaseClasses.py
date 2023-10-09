@@ -273,7 +273,7 @@ class ColourSensor:
         self.ranges = [[25247.64029711779, 21797.49209496178, 27791.152395017598], [18614.51283276945, 21658.664828982168, 28250.540207035287], [18928.711124063804, 23867.13084297301, 25737.03521293388]]  # R G B
         self.colours = ["red", "green", "blue"]
         self.tolerance = 2500
-        self.sample_size = 5
+        self.sample_size = 20
         self.minimum_percent = 0.8
         self.minimum_correct = math.ceil(self.sample_size * self.minimum_percent)
 
@@ -378,13 +378,12 @@ class Ultrasonic:
         initial_time = time()
 
         while GPIO.input(self.echo_pin) == 1:
-            if time() > initial_time + 0.2:
+            if time() > initial_time + 0.02:
                 return None
             pulse_end = time()
 
         pulse_duration = pulse_end - pulse_start
         distance = pulse_duration * 171.50  # Speed of sound in m/s
-        #print("Distance:", distance)
         return distance
 
 class LimitSwitch:
