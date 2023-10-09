@@ -404,7 +404,7 @@ class LimitSwitch:
 
 
 if __name__ == "__main__":
-    siwtch = LimitSwitch(0.1, 21)
+    siwtch = LimitSwitch(0.1, switch_pin=21)
     while True:
         siwtch.detect()
         sleep(0.1)
