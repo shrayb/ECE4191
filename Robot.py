@@ -116,8 +116,7 @@ class Robot:
         while True:
             if self.end_all_threads or self.end_ultrasonic_thread:
                 break
-            sleep(1)
-            continue
+            sleep(0.1)
 
             # Send communication data
 
