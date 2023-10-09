@@ -338,7 +338,11 @@ class Robot:
             print("do local:", self.do_localise)
             print("impending coll:", self.is_impending_collision)
             print("limit:", self.limit_switch.triggered)
-            if self.do_localise and (self.is_impending_collision or self.limit_switch.triggered):
+            if not self.do_localise and self.is_impending_collision:
+                print("Ultrasonic break")
+                break
+
+            if self.do_localise and self.limit_switch.triggered:
                 print("BREAKS")
                 break
 
