@@ -204,9 +204,7 @@ class Robot:
 
         # Drive backwards 10 cm
         self.max_tick_factor = 1.0
-        print("Drive backward")
-        self.do_drive(-0.1)
-        print("Done driving")
+        self.do_drive(-0.15)
         # Turn towards the close wall
         if self.pose.x < 0.6:
             new_pose = Pose(self.pose.x, self.pose.y, math.pi)
@@ -238,7 +236,7 @@ class Robot:
 
         # Drive back 10 cm to safety
         self.max_tick_factor = 1.0
-        self.do_drive(-0.1)
+        self.do_drive(-0.15)
 
     def is_vision_blocked(self, sensor_index):
         # Check if any are 100
@@ -257,11 +255,11 @@ class Robot:
         self.pose.y = 0.1 - self.limit_switch.distance
         self.pose.theta = math.pi / 2
 
-        self.limit_switch.triggered = False
-
         # Kill ultrasonic and limit switch thread
         self.end_ultrasonic_thread = True
         sleep(0.1)
+
+        self.limit_switch.triggered = False
 
         # Drive backwards 10 cm
         self.max_tick_factor = 1.0
@@ -443,14 +441,12 @@ class Robot:
 
         # Initial pose
         initial_pose = deepcopy(self.pose)
-        print("Start tick check")
         # Continuously check if the robot has driven most of the way
         if distance < 0.05:  # 5 cm
             self.tick_check_and_speed_control(drive_ticks, self.slow_speed, 0)
         else:
             self.tick_check_and_speed_control(drive_ticks, max_speed, 0)
 
-        print("End tick check")
         # Stop the motors
         self.left_motor.stop()
         self.right_motor.stop()
