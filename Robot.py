@@ -257,7 +257,7 @@ class Robot:
         self.do_drive(1, max_speed=self.slow_speed)
 
         # Set y pose
-        self.pose.y = 0.1 - self.limit_switch.distance
+        self.pose.y = 1.2 - self.limit_switch.distance
         self.pose.theta = math.pi / 2
 
         # Kill ultrasonic and limit switch thread
