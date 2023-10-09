@@ -96,10 +96,6 @@ def mainloop():
             if robot.current_goal is None and robot.delivering:
                 robot.deposit_package()
 
-                # Drive backwards to clear wall
-                robot.max_tick_factor = 1.0
-                robot.do_drive(-0.1)
-
             sleep(0.001)
 
     # Handle Control-C to stop motors

@@ -282,9 +282,15 @@ class Robot:
 
         self.end_all_threads = False
 
-        # Start threads
+        # Start ultrasonic
         ultrasonic_thread = Thread(target=self.ultrasonic_thread)
         ultrasonic_thread.start()
+
+        # Drive backwards to clear wall
+        self.max_tick_factor = 1.0
+        self.do_drive(-0.1)
+
+        # Start drive thread
 
         drive_thread = Thread(target=self.drive_thread)
         drive_thread.start()
