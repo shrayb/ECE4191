@@ -62,7 +62,7 @@ def mainloop():
 
             while True:
                 sleep(1)
-                print("Ticks:", (robot.left_motor.ticks + robot.right_motor.ticks) / 2)
+                print("Ticks:", (robot.left_motor.ticks.value + robot.right_motor.ticks.value) / 2)
                 x = input("Press x to go again")
                 break
 
