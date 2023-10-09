@@ -247,6 +247,11 @@ class Robot:
         return False
 
     def deposit_package(self):
+        # Start ultrasonic and limit switch thread
+        self.end_ultrasonic_thread = False
+        ultrasonic_thread = Thread(target=self.ultrasonic_thread)
+        ultrasonic_thread.start()
+
         # Drive forward slowly until limit switch is triggered
         self.max_tick_factor = 1.0
         self.do_drive(1, max_speed=self.slow_speed)
