@@ -230,11 +230,11 @@ class Robot:
             self.pose.x = self.map_size[0] - self.limit_switch.distance
         self.pose.theta = new_pose.theta
 
-        self.limit_switch.triggered = False
-
         # Kill ultrasonic and limit switch thread
         self.end_ultrasonic_thread = True
         sleep(0.1)
+
+        self.limit_switch.triggered = False
 
         # Drive back 10 cm to safety
         self.max_tick_factor = 1.0
