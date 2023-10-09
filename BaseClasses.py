@@ -206,11 +206,11 @@ class Package:
 
     def identify_destinations(self):
         if self.colour == "red":
-            self.destination_pose = Pose(x=0.22, y=1, theta=math.pi/2)
+            self.destination_pose = Pose(x=0.2, y=1, theta=math.pi/2)
         if self.colour == "green":
             self.destination_pose = Pose(x=0.6, y=1, theta=math.pi/2)
         if self.colour == "blue":
-            self.destination_pose = Pose(x=0.98, y=1, theta=math.pi/2)
+            self.destination_pose = Pose(x=1, y=1, theta=math.pi/2)
 
 class Motor:
     def __init__(self, enable_pin=None, input_a=None, input_b=None, encoder_a=None, speed=100):
@@ -266,7 +266,7 @@ class ColourSensor:
         GPIO.setup(self.s2, GPIO.OUT)
         GPIO.setup(self.s3, GPIO.OUT)
         GPIO.setup(self.signal, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        self.ranges = [[26427.04842193677, 22832.31545138652, 28641.8571679673], [21359.270072403695, 22012.46859192458, 18097.61814086049], [19102.01174712717, 23115.1931583369, 24822.668095987254]]  # R G B
+        self.ranges = [[28772.322024111498, 21288.820645176806, 27013.147306616556], [30052.233546863732, 21340.510806600665, 29920.00216818263], [18086.99720998442, 21780.649937186572, 23450.855140049403]]  # R G B
         self.colours = ["red", "green", "blue"]
         self.tolerance = 3000
         self.sample_size = 80
