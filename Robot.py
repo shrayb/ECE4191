@@ -336,7 +336,7 @@ class Robot:
             sleep(0.01)
             # Check if there will be a collision
             print(self.do_localise)
-            if not self.do_localise and (self.is_impending_collision or self.limit_switch.triggered):
+            if (not self.do_localise) and (self.is_impending_collision or self.limit_switch.triggered):
                 print("BREAKS")
                 break
 
