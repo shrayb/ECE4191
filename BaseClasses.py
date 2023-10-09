@@ -392,7 +392,7 @@ class LimitSwitch:
         self.pin = switch_pin
 
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        GPIO.setup(self.pin, GPIO.IN)
 
     def detect(self):
         print(GPIO.input(self.pin))
