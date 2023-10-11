@@ -58,46 +58,27 @@ drive_thread.start()
 def mainloop():
     try:
         while True:
-            # Check colour sensor for package
-            if robot.current_goal is None and not robot.delivering:
-                # # Re-localise the robot with a corner
-                # robot.do_localise = True
-                #
-                # # Wait until the robot has finished localising
-                # print("Robot re-localising...")
-                # while robot.do_localise:
-                #     sleep(0.1)
-                # print("Robot localised at: (", robot.pose.x, robot.pose.y, ")")
+            print("Pose:", round(robot.pose.x, 3), round(robot.pose.y, 3), round(robot.pose.theta, 3))
+            x_val = input("Give x value input")
+            y_val = input("Give y value input")
+            theta_val = input("Give theta value in degrees")
+            if x_val != "":
+                x_val = float(x_val)
+            else:
+                x_val = robot.pose.x
 
-                # End all the threads to prepare for scanning
-                robot.end_all_threads = True
+            if y_val != "":
+                y_val = float(y_val)
+            else:
+                y_val = robot.pose.y
 
-                # Scan for a new package
-                print("Scanning for new package...")
-                while robot.package is None:
-                    package_id = robot.scan_package_ultrasonic()
+            if theta_val != "":
+                theta_val = float(theta_val)
+            else:
+                theta_val = None
 
-                    if package_id != 3:
-                        robot.package = Package(package_id)
-                        break
-
-                print("Scanned package:", package_id)
-
-                # Make the current goal the package delivery position and tell the robot its now delivering
-                robot.current_goal = robot.package.destination_pose
-                robot.delivering = True
-                robot.end_all_threads = False
-
-                # Start threads
-                ultrasonic_thread = Thread(target=robot.ultrasonic_thread)
-                ultrasonic_thread.start()
-
-                drive_thread = Thread(target=robot.drive_thread)
-                drive_thread.start()
-
-            # If the robot is at the deposit zone and ready to deposit
-            if robot.current_goal is None and robot.delivering:
-                robot.deposit_package()
+            new_coord = Pose(x_val, y_val, theta_val)
+            robot.current_goal = new_coord
 
             sleep(0.001)
 
