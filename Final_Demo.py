@@ -69,16 +69,14 @@ def mainloop():
                 # End all the threads to prepare for scanning
                 robot.end_all_threads = True
 
-                # Turn conveyor belt on
-                # robot.conveyor_motor.forward()
-
                 # Scan for a new package
                 while robot.package is None:
                     print("Scanning for new package...")
-                    robot.continuous_scan()
+                    package_id = robot.scan_package_ultrasonic()
 
-                # Stop conveyor belt
-                # robot.conveyor_motor.stop()
+                    if package_id != 3:
+                        robot.package = Package(package_id)
+                        break
 
                 # Make the current goal the package delivery position and tell the robot its now delivering
                 robot.current_goal = robot.package.destination_pose

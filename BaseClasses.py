@@ -199,17 +199,17 @@ class Obstacle:
         self.tolerance = tolerance  # The distance in metres the robot is allowed to the bounding box of the obstacle
 
 class Package:
-    def __init__(self, colour=None):
-        self.colour = colour  # A unique id number for a destination e.g: "red", "green", "blue"
+    def __init__(self, ID=None):
+        self.ID = ID  # A unique id number for a destination e.g: "red", "green", "blue"
         self.destination_pose = None
         self.identify_destinations()
 
     def identify_destinations(self):
-        if self.colour == "red":
+        if self.ID == 0:
             self.destination_pose = Pose(x=0.2, y=1, theta=math.pi/2)
-        if self.colour == "green":
+        if self.ID == 1:
             self.destination_pose = Pose(x=0.6, y=1, theta=math.pi/2)
-        if self.colour == "blue":
+        if self.ID == 2:
             self.destination_pose = Pose(x=1, y=1, theta=math.pi/2)
 
 class Motor:

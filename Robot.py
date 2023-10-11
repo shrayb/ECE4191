@@ -21,6 +21,8 @@ class Robot:
         self.angle_error = 0.5  # Degrees accurate
         self.map_size = (1.2, 1.2)  # Map size in xy metres, used to determine if an ultrasonic reading is a wall
         self.return_destination = Pose(0.3, 0.4)  # Place to return to before calibrating
+        self.package_scanning_count = 10  # Number of similar package reading distances required to decide the package is correct
+        self.distance_brackets = [[0.3, 0.1], [0.1, 0.05], [0.05, 0.005]]  # ABC
 
         # Robot component classes
         self.left_motor = None  # Motor class for the left motor
@@ -32,6 +34,7 @@ class Robot:
         self.left_ultrasonic = None  # Rear left ultrasonic sensor class
         self.right_ultrasonic = None  # Rear left ultrasonic sensor class
         self.colour_sensor = None  # Class for the colour sensor
+        self.package_ultrasonic = None  # Class for ultrasonic sensor to detect package
         self.limit_switch = None  # Class for the limit switch
 
         # Movement variables and flags
@@ -147,25 +150,25 @@ class Robot:
         if self.package is not None:
             return self.package.destination_pose
 
-    def continuous_scan(self):
-        """
-        Rotates the conveyor belt and scans constantly until a colour is returned then stops the thread.
-        """
-        initial_time = time()
-        while time() < initial_time + self.scanning_timeout:
-            # Do a scan attempt
-            scan_result = self.scan_attempt()
-
-            if scan_result is not None:
-                # Add this package to the packages variable
-                print("Scan complete. Result:", scan_result)
-                self.package = Package(scan_result)
-                return None
-
-            sleep(0.001)
-
-        # Set package to none
-        self.package = None
+    # def continuous_scan(self):
+    #     """
+    #     Rotates the conveyor belt and scans constantly until a colour is returned then stops the thread.
+    #     """
+    #     initial_time = time()
+    #     while time() < initial_time + self.scanning_timeout:
+    #         # Do a scan attempt
+    #         scan_result = self.scan_attempt()
+    #
+    #         if scan_result is not None:
+    #             # Add this package to the packages variable
+    #             print("Scan complete. Result:", scan_result)
+    #             self.package = Package(scan_result)
+    #             return None
+    #
+    #         sleep(0.001)
+    #
+    #     # Set package to none
+    #     self.package = None
 
     def scan_attempt(self):
         """
@@ -274,14 +277,19 @@ class Robot:
         print("\tDepositing package...")
         # self.conveyor_motor.forward()
 
-        # TODO Fix scanning multiple boxes. Don't want to scan old box twice
-        sleep(2)
-
         # Stop all threads
         self.end_all_threads = True
 
-        # Start continuously scanning colours
-        self.continuous_scan()
+        # Continously scan until ID change
+        while True:
+            sleep(0.001)
+            new_package_id = self.scan_package_ultrasonic()
+            if self.package.ID != new_package_id:
+                if new_package_id == 3:
+                    self.package = None
+                else:
+                    self.package = Package(new_package_id)
+                break
 
         # Turn conveyor off
         # self.conveyor_motor.stop()
@@ -313,7 +321,6 @@ class Robot:
         self.do_drive(-0.2)
 
         # Start drive thread
-
         drive_thread = Thread(target=self.drive_thread)
         drive_thread.start()
 
@@ -589,6 +596,55 @@ class Robot:
 
         # Object not getting closer
         self.sensor_readings[ultrasonic_unit.reading_index][0] = False
+
+    def scan_package_ultrasonic(self):
+        # Array for previous 10 readings
+        previous_readings = [0] * self.package_scanning_count
+
+        count = 0
+        while True:
+            # Sleep for while loop
+            sleep(0.001)
+
+            # Do ultrasonic distance scan
+            distance = self.package_ultrasonic.measure_dist()
+
+            # Add distance to correct array position
+            previous_readings[count % self.package_scanning_count - 1] = distance
+
+            # Check if all readings are in the same distance bracket
+            package_id = self.similar_distance_bracket(previous_readings)
+            if package_id is False:
+                count += 1
+                continue
+            else:
+                # If so, create the new package
+                return package_id
+
+    def similar_distance_bracket(self, previous_readings):
+        similarity_check_list = []
+        for reading_index, reading in enumerate(previous_readings):
+            # Loop through each bracket
+            for index, bracket in enumerate(self.distance_brackets):
+                upper_bound = bracket[0]
+                lower_bound = bracket[1]
+                # If a reading matches a bracket add the id to the list
+                if upper_bound > reading >= lower_bound:
+                    similarity_check_list.append(index)
+
+            # Check if no number was added
+            if len(similarity_check_list) - 1 != reading_index:
+                similarity_check_list.append(3)  # Add 3 if no object was detected
+
+        # Check to see if they are all the same
+        first_value = similarity_check_list[0]
+
+        for value in similarity_check_list:
+            if value != first_value:
+                return False
+
+        # If they are all the same, assume correct reading
+        return first_value
 
     def mum_im_scared_pick_me_up(self):
         """
