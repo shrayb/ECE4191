@@ -223,11 +223,11 @@ class Motor:
         GPIO.setup(self.input_b, GPIO.OUT)
         if self.encoder_a is not None:
             GPIO.setup(self.encoder_a, GPIO.IN)
+            self.encoder_a_state = GPIO.input(self.encoder_a)
         self.speed = speed  # Speed from 0 to 100
         self.pwm = GPIO.PWM(self.enable_pin, 100)
         self.pwm.start(self.speed)
         self.ticks = Value('i', 0)
-        self.encoder_a_state = GPIO.input(self.encoder_a)
 
     def set_speed(self, speed=None):
         self.speed = speed
