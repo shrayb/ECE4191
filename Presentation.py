@@ -48,9 +48,9 @@ with Manager() as manager:
     encoder_process = Process(target=robot.encoder_process, args=(left_motor, right_motor))
     encoder_process.start()
 
-# # Initial thread start for localisation
-# ultrasonic_thread = Thread(target=robot.ultrasonic_thread)
-# ultrasonic_thread.start()
+# Initial thread start for localisation
+ultrasonic_thread = Thread(target=robot.ultrasonic_thread)
+ultrasonic_thread.start()
 
 drive_thread = Thread(target=robot.drive_thread)
 drive_thread.start()
