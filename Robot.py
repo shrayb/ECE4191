@@ -601,11 +601,6 @@ class Robot:
         # Array for previous 10 readings
         previous_readings = [0] * self.package_scanning_count
 
-        while True:
-            # Do ultrasonic distance scan
-            distance = self.package_ultrasonic.measure_dist()
-            print("Distance:", distance)
-
         count = 0
         while True:
             # Sleep for while loop
