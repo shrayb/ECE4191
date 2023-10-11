@@ -22,7 +22,6 @@ left_sonic = Ultrasonic(echo_pin=left_sonic_echo, trig_pin=left_sonic_trig, x_of
 right_sonic = Ultrasonic(echo_pin=right_sonic_echo, trig_pin=right_sonic_trig, x_offset=0.155, y_offset=-0.0585, theta=0, reading_index=4, maximum_read_distance=0.15)
 
 limit_switch = LimitSwitch(distance=0.15, switch_pin=limit_switch_pin)
-colour_sensor = ColourSensor(s3=s3, s2=s2, signal=colour_sensor_signal)
 
 # Create robot class and instantiate component classes
 pose = Pose(0.3, 0.4, 0)
@@ -35,7 +34,6 @@ robot.middle_ultrasonic = middle_sonic
 robot.right_ultrasonic = right_sonic
 robot.left_ultrasonic = left_sonic
 robot.limit_switch = limit_switch
-robot.colour_sensor = colour_sensor
 
 # Start encoder process
 with Manager() as manager:
