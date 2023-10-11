@@ -22,7 +22,8 @@ left_sonic = Ultrasonic(echo_pin=left_sonic_echo, trig_pin=left_sonic_trig, x_of
 right_sonic = Ultrasonic(echo_pin=right_sonic_echo, trig_pin=right_sonic_trig, x_offset=-0.047, y_offset=-0.123, theta=-math.pi/2, reading_index=4, maximum_read_distance=0.15)
 
 limit_switch = LimitSwitch(distance=0.1, switch_pin=limit_switch_pin)
-colour_sensor = ColourSensor(s3=s3, s2=s2, signal=colour_sensor_signal)
+package_sonic = Ultrasonic(echo_pin=package_sonic_echo, trig_pin=package_sonic_trig, x_offset=0, y_offset=0, theta=0, reading_index=-1, maximum_read_distance=0.3)
+# colour_sensor = ColourSensor(s3=s3, s2=s2, signal=colour_sensor_signal)
 
 # Create robot class and instantiate component classes
 pose = Pose(0.3, 0.4, 0)
@@ -35,7 +36,8 @@ robot.middle_ultrasonic = middle_sonic
 robot.right_ultrasonic = right_sonic
 robot.left_ultrasonic = left_sonic
 robot.limit_switch = limit_switch
-robot.colour_sensor = colour_sensor
+robot.package_ultrasonic = package_sonic
+# robot.colour_sensor = colour_sensor
 
 # Start encoder process
 with Manager() as manager:
@@ -77,6 +79,8 @@ def mainloop():
                     if package_id != 3:
                         robot.package = Package(package_id)
                         break
+
+                print("Scanned package:", package_id)
 
                 # Make the current goal the package delivery position and tell the robot its now delivering
                 robot.current_goal = robot.package.destination_pose

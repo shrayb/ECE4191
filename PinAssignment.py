@@ -23,8 +23,11 @@ left_sonic_trig = 3
 right_sonic_echo = 7
 right_sonic_trig = 1
 
+package_sonic_echo = 20
+package_sonic_trig = 16
+
 limit_switch_pin = 10
 
-s3 = 20
-s2 = 16
-colour_sensor_signal = 12
+# s3 = 20
+# s2 = 16
+# colour_sensor_signal = 12
