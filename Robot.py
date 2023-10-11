@@ -608,7 +608,7 @@ class Robot:
 
             # Do ultrasonic distance scan
             distance = self.package_ultrasonic.measure_dist()
-
+            print("Distance:", distance)
             # Add distance to correct array position
             previous_readings[count % self.package_scanning_count - 1] = distance
 

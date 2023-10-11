@@ -72,8 +72,8 @@ def mainloop():
                 robot.end_all_threads = True
 
                 # Scan for a new package
+                print("Scanning for new package...")
                 while robot.package is None:
-                    print("Scanning for new package...")
                     package_id = robot.scan_package_ultrasonic()
 
                     if package_id != 3:
