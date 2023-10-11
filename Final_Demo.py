@@ -25,6 +25,8 @@ limit_switch = LimitSwitch(distance=0.1, switch_pin=limit_switch_pin)
 package_sonic = Ultrasonic(echo_pin=package_sonic_echo, trig_pin=package_sonic_trig, x_offset=0, y_offset=0, theta=0, reading_index=-1, maximum_read_distance=0.3)
 # colour_sensor = ColourSensor(s3=s3, s2=s2, signal=colour_sensor_signal)
 
+conveyor_motor = Motor(motor_conveyor_enable, motor_conveyor_positive, motor_conveyor_negative)
+
 # Create robot class and instantiate component classes
 pose = Pose(0.3, 0.4, 0)
 robot = Robot(pose)
@@ -37,6 +39,7 @@ robot.right_ultrasonic = right_sonic
 robot.left_ultrasonic = left_sonic
 robot.limit_switch = limit_switch
 robot.package_ultrasonic = package_sonic
+robot.conveyor_motor = conveyor_motor
 # robot.colour_sensor = colour_sensor
 
 # Start encoder process

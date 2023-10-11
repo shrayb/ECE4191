@@ -150,33 +150,6 @@ class Robot:
         if self.package is not None:
             return self.package.destination_pose
 
-    # def continuous_scan(self):
-    #     """
-    #     Rotates the conveyor belt and scans constantly until a colour is returned then stops the thread.
-    #     """
-    #     initial_time = time()
-    #     while time() < initial_time + self.scanning_timeout:
-    #         # Do a scan attempt
-    #         scan_result = self.scan_attempt()
-    #
-    #         if scan_result is not None:
-    #             # Add this package to the packages variable
-    #             print("Scan complete. Result:", scan_result)
-    #             self.package = Package(scan_result)
-    #             return None
-    #
-    #         sleep(0.001)
-    #
-    #     # Set package to none
-    #     self.package = None
-
-    def scan_attempt(self):
-        """
-        Makes a scan attempt using the colour sensor. If a colour is detected return the colour, otherwise return None
-        """
-        colour_reading = self.colour_sensor.read_colour()
-        return colour_reading
-
     def re_localise(self):
         # Kill ultrasonic and limit switch thread
         self.end_ultrasonic_thread = True

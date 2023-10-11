@@ -28,6 +28,10 @@ package_sonic_trig = 16
 
 limit_switch_pin = 10
 
+motor_conveyor_enable = 11
+motor_conveyor_positive = 9
+motor_conveyor_negative = 25
+
 # s3 = 20
 # s2 = 16
 # colour_sensor_signal = 12
