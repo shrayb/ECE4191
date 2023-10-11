@@ -73,7 +73,7 @@ def mainloop():
                 y_val = robot.pose.y
 
             if theta_val != "":
-                theta_val = float(theta_val * math.pi / 180)
+                theta_val = float(theta_val) * math.pi / 180
             else:
                 theta_val = None
 
