@@ -59,9 +59,9 @@ def mainloop():
     try:
         while True:
             print("Pose:", round(robot.pose.x, 3), round(robot.pose.y, 3), round(robot.pose.theta, 3))
-            x_val = input("Give x value input")
-            y_val = input("Give y value input")
-            theta_val = input("Give theta value in degrees")
+            x_val = input("Give x value input: ")
+            y_val = input("Give y value input: ")
+            theta_val = input("Give theta value in degrees: ")
             if x_val != "":
                 x_val = float(x_val)
             else:
