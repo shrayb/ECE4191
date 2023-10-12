@@ -97,6 +97,7 @@ def mainloop():
 
             # If the robot is at the deposit zone and ready to deposit
             if robot.current_goal is None and robot.delivering:
+                print("Aligning with the wall...")
                 robot.deposit_package()
 
             sleep(0.001)
