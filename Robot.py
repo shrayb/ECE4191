@@ -252,7 +252,7 @@ class Robot:
         # Stop all threads
         self.end_all_threads = True
 
-        # Continously scan until ID change
+        # Continuously scan until ID change
         while True:
             sleep(0.001)
             new_package_id = self.scan_package_ultrasonic()
