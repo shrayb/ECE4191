@@ -206,11 +206,11 @@ class Package:
 
     def identify_destinations(self):
         if self.ID == 0:
-            self.destination_pose = Pose(x=0.21, y=1, theta=math.pi/2)
+            self.destination_pose = Pose(x=0.23, y=1, theta=math.pi/2)
         if self.ID == 1:
             self.destination_pose = Pose(x=0.6, y=1, theta=math.pi/2)
         if self.ID == 2:
-            self.destination_pose = Pose(x=0.99, y=1, theta=math.pi/2)
+            self.destination_pose = Pose(x=0.97, y=1, theta=math.pi/2)
 
 class Motor:
     def __init__(self, enable_pin=None, input_a=None, input_b=None, encoder_a=None, speed=100):
