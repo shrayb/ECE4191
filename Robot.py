@@ -316,6 +316,9 @@ class Robot:
             if self.do_localise and self.limit_switch.triggered:
                 break
 
+            if not self.do_localise and self.limit_switch.triggered:
+                break
+
             # Calculate the left tick advantage and tick sum
             left_tick_advantage = self.left_motor.ticks.value - self.right_motor.ticks.value
             tick_sum = self.left_motor.ticks.value + self.right_motor.ticks.value
