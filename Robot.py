@@ -248,7 +248,7 @@ class Robot:
 
         # Turn conveyor belt on
         print("\tDepositing package...")
-        # self.conveyor_motor.forward()
+        self.conveyor_motor.forward()
 
         # Stop all threads
         self.end_all_threads = True
@@ -265,7 +265,7 @@ class Robot:
                 break
 
         # Turn conveyor off
-        # self.conveyor_motor.stop()
+        self.conveyor_motor.stop()
         print("\tPackage delivered.")
 
         # Check if package exists
