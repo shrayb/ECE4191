@@ -241,10 +241,6 @@ class Robot:
 
         self.limit_switch.triggered = False
 
-        # Drive backwards 10 cm
-        self.max_tick_factor = 1.0
-        self.do_drive(-0.03)
-
         # Turn conveyor belt on
         print("\tDepositing package...")
         self.conveyor_motor.forward()
