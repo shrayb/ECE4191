@@ -296,18 +296,6 @@ class Robot:
 
         self.end_all_threads = False
 
-        # Start ultrasonic
-        ultrasonic_thread = Thread(target=self.ultrasonic_thread)
-        ultrasonic_thread.start()
-
-        # Drive backwards to clear wall
-        self.max_tick_factor = 1.0
-        self.do_drive(-0.2)
-
-        # Start drive thread
-        drive_thread = Thread(target=self.drive_thread)
-        drive_thread.start()
-
     def tick_check_and_speed_control(self, max_ticks, max_speed, is_turning):
         """
         Runs the motors until max ticks are reached, also applies PID control to match speed
