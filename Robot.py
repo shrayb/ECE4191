@@ -249,14 +249,17 @@ class Robot:
         self.end_all_threads = True
 
         # Continuously scan until ID change
+        sleep(0.2)
         while True:
-            sleep(0.2)
+            sleep(0.001)
             new_package_id = self.scan_package_ultrasonic()
             if self.package.ID != new_package_id:
                 if new_package_id == 3:
                     self.package = None
+                    print("No more packages. Going home...")
                 else:
                     self.package = Package(new_package_id)
+                    print("Package scanned:", new_package_id)
                 break
 
         # Turn conveyor off
