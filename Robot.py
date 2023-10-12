@@ -213,19 +213,6 @@ class Robot:
         self.max_tick_factor = 1.0
         self.do_drive(-0.15)
 
-        # Kill ultrasonic and limit switch thread
-        self.end_ultrasonic_thread = True
-        sleep(0.1)
-
-        # Face the robot towards the wall in the positive x direction
-        new_pose = Pose(self.pose.x, self.pose.y, 0)
-        self.drive_to_coordinate(new_pose)
-
-        # Start ultrasonic and limit switch thread
-        self.end_ultrasonic_thread = False
-        ultrasonic_thread = Thread(target=self.ultrasonic_thread)
-        ultrasonic_thread.start()
-
     def is_vision_blocked(self, sensor_index):
         # Check if any are 100
         for index in range(1, len(self.sensor_readings[sensor_index])):
@@ -295,6 +282,18 @@ class Robot:
             print("Returning to pre localisation pose...")
 
         self.end_all_threads = False
+
+        # Start ultrasonic
+        ultrasonic_thread = Thread(target=self.ultrasonic_thread)
+        ultrasonic_thread.start()
+
+        # Drive backwards to clear wall
+        self.max_tick_factor = 1.0
+        self.do_drive(-0.2)
+
+        # Start drive thread
+        drive_thread = Thread(target=self.drive_thread)
+        drive_thread.start()
 
     def tick_check_and_speed_control(self, max_ticks, max_speed, is_turning):
         """
