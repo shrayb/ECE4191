@@ -582,7 +582,12 @@ class Robot:
 
             # Do ultrasonic distance scan
             distance = self.package_ultrasonic.measure_dist()
-            # print("Distance:", distance)
+
+            # Check if distance is None
+            if distance is None:
+                print("Ultrasonic timed out...")
+                continue
+
             # Add distance to correct array position
             previous_readings[count % self.package_scanning_count - 1] = distance
 
@@ -602,6 +607,7 @@ class Robot:
             for index, bracket in enumerate(self.distance_brackets):
                 upper_bound = bracket[0]
                 lower_bound = bracket[1]
+
                 # If a reading matches a bracket add the id to the list
                 if upper_bound > reading >= lower_bound:
                     similarity_check_list.append(index)
