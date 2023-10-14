@@ -27,7 +27,7 @@ package_sonic = Ultrasonic(echo_pin=package_sonic_echo, trig_pin=package_sonic_t
 conveyor_motor = Motor(motor_conveyor_enable, motor_conveyor_positive, motor_conveyor_negative)
 
 # Create robot class and instantiate component classes
-pose = Pose(0.25, 0.35, 0)
+pose = Pose(0.15, 0.15, math.pi/2)
 robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
@@ -60,14 +60,14 @@ def mainloop():
         while True:
             # Check colour sensor for package
             if robot.current_goal is None and not robot.delivering:
-                # Re-localise the robot with a corner
-                robot.do_localise = True
-
-                # Wait until the robot has finished localising
-                print("Robot re-localising...")
-                while robot.do_localise:
-                    sleep(0.1)
-                print("Robot localised at: (", robot.pose.x, robot.pose.y, ")")
+                # # Re-localise the robot with a corner
+                # robot.do_localise = True
+                #
+                # # Wait until the robot has finished localising
+                # print("Robot re-localising...")
+                # while robot.do_localise:
+                #     sleep(0.1)
+                # print("Robot localised at: (", robot.pose.x, robot.pose.y, ")")
 
                 # End all the threads to prepare for scanning
                 robot.end_all_threads = True
