@@ -497,6 +497,7 @@ class Robot:
                 angle_difference = self.calculate_angle_difference(coordinate)
                 if abs(angle_difference) >= math.pi / 2:
                     distance *= -1
+                print("Drive")
                 self.do_drive(distance)
                 self.max_tick_factor *= 0.7
             print("\t\tDrive complete")
