@@ -99,11 +99,18 @@ class Robot:
                 # Once 5 seconds of being stopped waiting for the obstacle to move
                 if time() > self.stopping_time + 5:
                     self.time_flag = False
-                    self.safe_reversing = True
-                    self.is_impending_collision = False
-                    self.max_tick_factor = 1.0
-                    self.do_drive(-0.25)  # Drive backwards 10 cm
-                    self.safe_reversing = False
+                    # Check if reversing will make the robot crash
+                    distance_to_reverse = 0.25  # Metres
+                    end_pose = create_point(self.pose, -distance_to_reverse, self.pose.theta)
+                    if 0.25 <= end_pose.x <= self.map_size[0] - 0.25 and 0.25 <= end_pose.y <= self.map_size[1] - 0.25:
+                        self.safe_reversing = True
+                        self.max_tick_factor = 1.0
+                        self.do_drive(-distance_to_reverse)  # Drive backwards 25 cm
+                        self.safe_reversing = False
+                        continue
+                    else:
+                        # Activate emergency function
+                        self.mum_im_scared_pick_me_up()
 
                 if should_it_stay:
                     continue
