@@ -110,7 +110,6 @@ class Robot:
                         self.safe_reversing = False
                         continue
                     else:
-                        print("MUM IM SCARED PICK ME UP")
                         # Activate emergency function
                         self.mum_im_scared_pick_me_up()
 
@@ -656,6 +655,7 @@ class Robot:
         """
         Find the way home so we can pick him up
         """
+        print("MUM IM SCARED PICK ME UP")
         # Stop driving
         self.left_motor.stop()
         self.right_motor.stop()
@@ -664,9 +664,9 @@ class Robot:
         # Turn right 60 degrees then drive until wall until limit switch is pressed
         while True:
             self.max_tick_factor = 1.0
+            self.ignore_except_switch = True
             self.do_turn(-90 * math.pi / 180)
             self.max_tick_factor = 1.0
-            self.ignore_except_switch = True
             self.do_drive(1.0)
             self.ignore_except_switch = False
             self.safe_reversing = True
