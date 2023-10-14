@@ -590,7 +590,7 @@ class Robot:
         # If object is getting closer
         if object_getting_closer(self.sensor_readings[ultrasonic_unit.reading_index]):
             self.sensor_readings[ultrasonic_unit.reading_index][0] = True
-            print("Obstacle detected from:", ultrasonic_unit.reading_index, " at coords:", coords.x, coords.y)
+            print("Obstacle from:", ultrasonic_unit.reading_index, " at distance:", sonic_distance, "at coords:", coords.x, coords.y)
             return None
 
         # Object not getting closer
