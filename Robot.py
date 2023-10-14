@@ -109,6 +109,7 @@ class Robot:
                         self.safe_reversing = False
                         continue
                     else:
+                        print("MUM IM SCARED PICK ME UP")
                         # Activate emergency function
                         self.mum_im_scared_pick_me_up()
 
