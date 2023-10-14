@@ -388,7 +388,7 @@ class Ultrasonic:
         return distance
 
 class LimitSwitch:
-    def __init__(self, distance, switch_pin = None):
+    def __init__(self, distance, switch_pin=None):
         self.distance = distance
         self.triggered = False
         self.pin = switch_pin
