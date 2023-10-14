@@ -97,7 +97,6 @@ class Robot:
                         should_it_stay = True
 
                 print("Should it stay:", should_it_stay)
-                print("")
 
                 # Once 5 seconds of being stopped waiting for the obstacle to move
                 if time() > self.stopping_time + 5:
@@ -111,6 +110,7 @@ class Robot:
                 if should_it_stay:
                     continue
 
+                self.time_flag = False
                 self.is_impending_collision = False
 
             # Drive to current goal
