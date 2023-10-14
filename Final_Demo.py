@@ -18,8 +18,8 @@ right_motor = Motor(motor_right_enable, motor_right_positive, motor_right_negati
 front_left_sonic = Ultrasonic(echo_pin=front_left_sonic_echo, trig_pin=front_left_sonic_trig, x_offset=0.0875, y_offset=0.060, theta=22.5*math.pi/180, reading_index=0, maximum_read_distance=0.25)
 front_right_sonic = Ultrasonic(echo_pin=front_right_sonic_echo, trig_pin=front_right_sonic_trig, x_offset=0.0875, y_offset=-0.060, theta=-22.5*math.pi/180, reading_index=1, maximum_read_distance=0.25)
 middle_sonic = Ultrasonic(echo_pin=middle_sonic_echo, trig_pin=middle_sonic_trig, x_offset=0.100, y_offset=0, theta=0, reading_index=2, maximum_read_distance=0.25)
-left_sonic = Ultrasonic(echo_pin=left_sonic_echo, trig_pin=left_sonic_trig, x_offset=-0.047, y_offset=0.123, theta=math.pi/2, reading_index=3, maximum_read_distance=0.20)
-right_sonic = Ultrasonic(echo_pin=right_sonic_echo, trig_pin=right_sonic_trig, x_offset=-0.047, y_offset=-0.123, theta=-math.pi/2, reading_index=4, maximum_read_distance=0.20)
+left_sonic = Ultrasonic(echo_pin=left_sonic_echo, trig_pin=left_sonic_trig, x_offset=-0.047, y_offset=0.123, theta=math.pi/2, reading_index=3, maximum_read_distance=0.15)
+right_sonic = Ultrasonic(echo_pin=right_sonic_echo, trig_pin=right_sonic_trig, x_offset=-0.047, y_offset=-0.123, theta=-math.pi/2, reading_index=4, maximum_read_distance=0.15)
 
 limit_switch = LimitSwitch(distance=0.1, switch_pin=limit_switch_pin)
 package_sonic = Ultrasonic(echo_pin=package_sonic_echo, trig_pin=package_sonic_trig, x_offset=0, y_offset=0, theta=0, reading_index=-1, maximum_read_distance=0.3)
