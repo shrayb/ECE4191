@@ -332,6 +332,10 @@ class Robot:
             if not self.safe_reversing and (not self.do_localise and self.limit_switch.triggered):
                 break
 
+            # Mum im scared pick me up
+            if self.safe_reversing and self.limit_switch.triggered:
+                break
+
             # Calculate the left tick advantage and tick sum
             left_tick_advantage = self.left_motor.ticks.value - self.right_motor.ticks.value
             tick_sum = self.left_motor.ticks.value + self.right_motor.ticks.value
@@ -657,6 +661,7 @@ class Robot:
             self.do_turn(-90 * math.pi / 180)
             self.max_tick_factor = 1.0
             self.do_drive(1)
+            self.do_drive(-0.25)
 
     def establish_connection_to_send(self):
         server_ip = '118.138.20.161'  # Replace with the actual IP address of the receiving computer
