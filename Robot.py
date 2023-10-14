@@ -656,6 +656,7 @@ class Robot:
         Find the way home so we can pick him up
         """
         print("MUM IM SCARED PICK ME UP")
+        self.is_impending_collision = False
         # Stop driving
         self.left_motor.stop()
         self.right_motor.stop()
