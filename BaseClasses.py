@@ -246,7 +246,8 @@ class Motor:
         GPIO.output(self.input_b, GPIO.LOW)
 
     def reset_encoder(self):
-        self.ticks.value = 0
+        with self.ticks.get_lock():
+            self.ticks.value = 0
         self.encoder_a_state = GPIO.input(self.encoder_a)
 
     def update_encoder(self):

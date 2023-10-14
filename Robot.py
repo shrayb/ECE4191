@@ -661,6 +661,7 @@ class Robot:
             self.do_turn(-90 * math.pi / 180)
             self.max_tick_factor = 1.0
             self.do_drive(1)
+
             self.do_drive(-0.25)
 
     def establish_connection_to_send(self):
