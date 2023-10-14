@@ -490,6 +490,10 @@ class Robot:
             # Set max tick factor back to 0.8 and do multiple decreasing length drives to dial in the desired position
             self.max_tick_factor = 0.8
             for index in range(4):
+                # If there is a collision skip the rest of drive to coord function
+                if self.is_impending_collision:
+                    return None
+
                 # Find distance to drive
                 distance = math.hypot(coordinate.x - self.pose.x, coordinate.y - self.pose.y)
 
@@ -497,7 +501,6 @@ class Robot:
                 angle_difference = self.calculate_angle_difference(coordinate)
                 if abs(angle_difference) >= math.pi / 2:
                     distance *= -1
-                print("Drive")
                 self.do_drive(distance)
                 self.max_tick_factor *= 0.7
             print("\t\tDrive complete")
