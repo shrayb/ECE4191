@@ -82,6 +82,7 @@ def mainloop():
                         break
 
                 print("Scanned package:", package_id)
+                sleep(1)
 
                 # Make the current goal the package delivery position and tell the robot its now delivering
                 robot.current_goal = robot.package.destination_pose
