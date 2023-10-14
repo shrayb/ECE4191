@@ -96,8 +96,6 @@ class Robot:
                     if self.sensor_readings[index][0]:
                         should_it_stay = True
 
-                print("Should it stay:", should_it_stay)
-
                 # Once 5 seconds of being stopped waiting for the obstacle to move
                 if time() > self.stopping_time + 5:
                     self.time_flag = False
