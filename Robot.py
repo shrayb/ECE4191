@@ -321,6 +321,7 @@ class Robot:
         distance_total = 0.5 * max_ticks * self.distance_per_tick
 
         tick_sum = self.left_motor.ticks.value + self.right_motor.ticks.value
+        start_time = time()
         while tick_sum < max_ticks:
             sleep(0.01)
             # Check if there will be a collision
@@ -341,6 +342,11 @@ class Robot:
             left_tick_advantage = self.left_motor.ticks.value - self.right_motor.ticks.value
             tick_sum = self.left_motor.ticks.value + self.right_motor.ticks.value
             tick_percentage = tick_sum / max_ticks
+
+            # In the case of mum im scared pick me up if the time elapsed is greater than the max desired
+            # then break
+            if time() > start_time + 10:
+                break
 
             # Every two ticks slow down the leading motor by 1 speed
             if left_tick_advantage > 0:
