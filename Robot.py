@@ -119,7 +119,7 @@ class Robot:
         while True:
             if self.end_all_threads or self.end_ultrasonic_thread:
                 break
-            sleep(0.02)
+            sleep(0.001)
             # Send communication data
 
             # Update limit switch reading
