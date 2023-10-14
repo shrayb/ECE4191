@@ -101,6 +101,7 @@ class Robot:
                     self.time_flag = False
                     self.safe_reversing = True
                     self.is_impending_collision = False
+                    self.max_tick_factor = 1.0
                     self.do_drive(-0.25)  # Drive backwards 10 cm
                     self.safe_reversing = False
 
