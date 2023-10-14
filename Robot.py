@@ -42,6 +42,7 @@ class Robot:
         self.is_moving = False  # Boolean for if the robot is moving
         self.is_impending_collision = False  # Goes True if the robot detects something in front of it whilst moving
         self.safe_reversing = False  # Goes true when the robot is reversing after being stuck with an object in front of it
+        self.ignore_except_switch = False  # Only stops driving when a limit switch is pressed
         self.do_localise = False  # Goes true when we want the robot to re-localise
 
         # Package delivering flags
@@ -333,7 +334,7 @@ class Robot:
                 break
 
             # Mum im scared pick me up
-            if self.safe_reversing and self.limit_switch.triggered:
+            if self.ignore_except_switch and self.limit_switch.triggered:
                 break
 
             # Calculate the left tick advantage and tick sum
@@ -655,14 +656,16 @@ class Robot:
         sleep(0.5)
 
         # Turn right 60 degrees then drive until wall until limit switch is pressed
-        self.safe_reversing = True
         while True:
             self.max_tick_factor = 1.0
             self.do_turn(-90 * math.pi / 180)
             self.max_tick_factor = 1.0
-            self.do_drive(1)
-
+            self.ignore_except_switch = True
+            self.do_drive(1.0)
+            self.ignore_except_switch = False
+            self.safe_reversing = True
             self.do_drive(-0.25)
+            self.safe_reversing = False
 
     def establish_connection_to_send(self):
         server_ip = '118.138.20.161'  # Replace with the actual IP address of the receiving computer
