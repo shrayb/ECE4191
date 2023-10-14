@@ -96,6 +96,9 @@ class Robot:
                     if self.sensor_readings[index][0]:
                         should_it_stay = True
 
+                print("Should it stay:", should_it_stay)
+                print("")
+
                 # Once 5 seconds of being stopped waiting for the obstacle to move
                 if time() > self.stopping_time + 5:
                     self.time_flag = False
@@ -314,7 +317,7 @@ class Robot:
         while tick_sum < max_ticks:
             sleep(0.01)
             # Check if there will be a collision
-            if not self.do_localise and self.is_impending_collision:
+            if not self.safe_reversing and (not self.do_localise and self.is_impending_collision):
                 break
 
             if self.do_localise and self.limit_switch.triggered:
