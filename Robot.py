@@ -326,10 +326,10 @@ class Robot:
             if not self.safe_reversing and (not self.do_localise and self.is_impending_collision):
                 break
 
-            if self.do_localise and self.limit_switch.triggered:
+            if not self.safe_reversing and (self.do_localise and self.limit_switch.triggered):
                 break
 
-            if not self.do_localise and self.limit_switch.triggered:
+            if not self.safe_reversing and (not self.do_localise and self.limit_switch.triggered):
                 break
 
             # Calculate the left tick advantage and tick sum
@@ -651,8 +651,11 @@ class Robot:
         sleep(0.5)
 
         # Turn right 60 degrees then drive until wall until limit switch is pressed
+        self.safe_reversing = True
         while not self.limit_switch.triggered:
-            self.do_turn(-60 * math.pi / 180)
+            self.max_tick_factor = 1.0
+            self.do_turn(-90 * math.pi / 180)
+            self.max_tick_factor = 1.0
             self.do_drive(1)
 
     def establish_connection_to_send(self):
