@@ -134,12 +134,12 @@ class Robot:
             if self.end_all_threads or self.end_ultrasonic_thread:
                 break
 
-            # Send communication data
-            try:
-                json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi]}
-                self.client.send_message(json_pose)
-            except Exception:
-                pass
+            # # Send communication data
+            # try:
+            #     json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi]}
+            #     self.client.send_message(json_pose)
+            # except Exception:
+            #     pass
 
             # Update limit switch reading
             self.limit_switch.detect()
