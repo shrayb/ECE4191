@@ -330,7 +330,7 @@ class Robot:
         drive_thread = Thread(target=self.drive_thread)
         drive_thread.start()
 
-    def tick_check_and_speed_control(self, max_ticks, max_speed, is_turning):
+    def tick_check_and_speed_control(self, max_ticks, max_speed, is_turning, direction=1):
         """
         Runs the motors until max ticks are reached, also applies PID control to match speed
         """
@@ -392,8 +392,8 @@ class Robot:
             # During this while loop, continuously update the pose of the robot
             if is_turning == 0:  # 0 = Driving
                 current_distance = distance_total * tick_percentage
-                self.pose.x = initial_pose.x + current_distance * math.cos(initial_pose.theta)
-                self.pose.y = initial_pose.y + current_distance * math.sin(initial_pose.theta)
+                self.pose.x = initial_pose.x + current_distance * math.cos(initial_pose.theta) * direction
+                self.pose.y = initial_pose.y + current_distance * math.sin(initial_pose.theta) * direction
             else:  # 1 = Turning counterclockwise, -1 = Turning clockwise
                 distance_turned = 0.5 * tick_sum * self.distance_per_tick
                 measured_angle = distance_turned / self.turn_radius
@@ -477,9 +477,9 @@ class Robot:
         initial_pose = deepcopy(self.pose)
         # Continuously check if the robot has driven most of the way
         if distance < 0.05:  # 5 cm
-            self.tick_check_and_speed_control(drive_ticks, self.slow_speed, 0)
+            self.tick_check_and_speed_control(drive_ticks, self.slow_speed, 0, np.sign(distance))
         else:
-            self.tick_check_and_speed_control(drive_ticks, max_speed, 0)
+            self.tick_check_and_speed_control(drive_ticks, max_speed, 0, np.sign(distance))
 
         # Stop the motors
         self.left_motor.stop()
