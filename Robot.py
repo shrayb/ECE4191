@@ -64,7 +64,7 @@ class Robot:
         self.stopping_time = None  # Saves the current time when the robot starts waiting 5 seconds
 
         # Network Client Class
-        self.client = Client()
+        # self.client = Client()
 
     """THREADS"""
 
