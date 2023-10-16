@@ -407,6 +407,7 @@ class LimitSwitch:
 
 if __name__ == "__main__":
     siwtch = LimitSwitch(0.1, switch_pin=10)
+    print("Not corrupt")
     while True:
         siwtch.detect()
         sleep(0.1)
