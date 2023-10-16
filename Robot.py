@@ -278,6 +278,7 @@ class Robot:
 
         # Continuously scan until ID change
         sleep(0.1)
+        start_time = time()
         while True:
             sleep(0.001)
             new_package_id = self.scan_package_ultrasonic()
@@ -289,7 +290,9 @@ class Robot:
                     self.package = Package(new_package_id)
                     print("Package scanned:", new_package_id)
                 break
-
+        end_time = time()
+        print("End time:", end_time)
+        print("Start time:", start_time)
         # Turn conveyor off
         self.conveyor_motor.stop()
         print("\tPackage delivered.")
