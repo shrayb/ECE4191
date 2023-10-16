@@ -135,8 +135,11 @@ class Robot:
                 break
 
             # Send communication data
-            json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi]}
-            self.client.send_message(json_pose)
+            try:
+                json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi]}
+                self.client.send_message(json_pose)
+            except Exception:
+                pass
 
             # Update limit switch reading
             self.limit_switch.detect()
