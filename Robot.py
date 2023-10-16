@@ -4,6 +4,7 @@ from BaseClasses import *
 from copy import deepcopy
 from client import *
 from time import time, sleep
+import numpy as np
 
 class Robot:
     def __init__(self, pose=None):
@@ -617,8 +618,9 @@ class Robot:
         self.sensor_readings[ultrasonic_unit.reading_index][0] = False
 
     def scan_package_ultrasonic(self):
-        # Array for previous 10 readings
-        previous_readings = [0] * self.package_scanning_count
+        # Array for previous readings
+        previous_readings = np.zeros([200, 1]).tolist()
+        print(previous_readings)
 
         count = 0
         while True:
