@@ -620,7 +620,7 @@ class Robot:
     def scan_package_ultrasonic(self):
         # Array for previous readings
         previous_readings = [0] * self.package_scanning_count
-        print(previous_readings)
+
         count = 0
         while True:
             # Sleep for while loop
@@ -635,7 +635,7 @@ class Robot:
                 continue
 
             # Add distance to correct array position
-            previous_readings[count % self.package_scanning_count - 1] = distance
+            previous_readings[count % self.package_scanning_count] = distance
 
             # Check if all readings are in the same distance bracket
             package_id = self.similar_distance_bracket(previous_readings)

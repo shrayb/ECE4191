@@ -407,5 +407,4 @@ class LimitSwitch:
 
 
 if __name__ == "__main__":
-    previous_readings = np.zeros(200).tolist()
-    print(previous_readings)
+    pass
