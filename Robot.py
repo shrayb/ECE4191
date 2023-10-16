@@ -620,7 +620,7 @@ class Robot:
     def scan_package_ultrasonic(self):
         # Array for previous readings
         previous_readings = [None] * self.package_scanning_count
-
+        print(previous_readings)
         count = 0
         while True:
             # Sleep for while loop
@@ -628,7 +628,7 @@ class Robot:
 
             # Do ultrasonic distance scan
             distance = self.package_ultrasonic.measure_dist()
-
+            print("Distance:", distance)
             # Check if distance is None
             if distance is None:
                 print("Ultrasonic timed out...")
@@ -663,10 +663,6 @@ class Robot:
                     similarity_check_list.append(index)
                 else:
                     similarity_check_list.append(3)
-
-            # Check if no number was added
-            if len(similarity_check_list) - 1 != reading_index:
-                similarity_check_list.append(3)  # Add 3 if no object was detected
 
         # Check to see if they are all the same
         first_value = similarity_check_list[0]
