@@ -571,7 +571,8 @@ class Robot:
     def detect_impending_collision(self, ultrasonic_unit):
         # Get a reading
         sonic_distance = ultrasonic_unit.measure_dist()
-
+        if ultrasonic_unit.reading_index == 2:
+            print("Distance:", sonic_distance)
         if sonic_distance is None:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
