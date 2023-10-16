@@ -24,7 +24,7 @@ class Robot:
         self.angle_error = 3  # Degrees accurate
         self.map_size = (1.2, 1.2)  # Map size in xy metres, used to determine if an ultrasonic reading is a wall
         self.return_destination = Pose(0.9, 0.30)  # Place to return to before calibrating
-        self.package_scanning_count = 40  # Number of similar package reading distances required to decide the package is correct
+        self.package_scanning_count = 200  # Number of similar package reading distances required to decide the package is correct
         self.distance_brackets = [[0.2, 0.12], [0.12, 0.07], [0.07, 0.005]]  # ABC
 
         # Robot component classes
@@ -628,7 +628,6 @@ class Robot:
 
             # Do ultrasonic distance scan
             distance = self.package_ultrasonic.measure_dist()
-            print("Distance:", distance)
             # Check if distance is None
             if distance is None:
                 print("Ultrasonic timed out...")
@@ -668,8 +667,6 @@ class Robot:
 
         # Check to see if they are all the same
         first_value = similarity_check_list[0]
-
-        print(similarity_check_list)
 
         for value in similarity_check_list:
             if value != first_value:
