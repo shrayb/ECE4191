@@ -10,7 +10,7 @@ class Client():
         # Host Address
         # Port
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        host_address = '192.168.188.239'  # Replace this with Server IP address
+        host_address = '172.20.10.9'  # Replace this with Server IP address
         port = 12346  # Replace with server suitable port
         self.client_socket.connect((host_address, port))
         print("CONNECTED TO SERVER")
