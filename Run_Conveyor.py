@@ -60,8 +60,6 @@ def mainloop():
         while True:
             robot.conveyor_motor.forward()
             sleep(1)
-            robot.conveyor_motor.stop()
-            sleep(1)
 
     # Handle Control-C to stop motors
     except KeyboardInterrupt:
