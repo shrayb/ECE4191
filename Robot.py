@@ -176,6 +176,7 @@ class Robot:
 
     def re_localise(self):
         # Kill ultrasonic and limit switch thread
+        self.ignore_except_switch = True
         self.end_ultrasonic_thread = True
         sleep(0.1)
 
@@ -237,6 +238,8 @@ class Robot:
         # Drive back 10 cm to safety
         self.max_tick_factor = 1.0
         self.do_drive(-0.12)
+
+        self.ignore_except_switch = False
 
     def is_vision_blocked(self, sensor_index):
         # Check if any are 100
@@ -543,7 +546,7 @@ class Robot:
         drive_pose_accuracy = calculate_distance_between_points(self.pose, coordinate)
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta and drive_pose_accuracy < self.distance_error:
-            print("\tTurning from:", round(self.pose.theta, 2), "degrees to:", round(coordinate.theta * 180 / math.pi, 2), "degrees...")
+            print("\tTurning from:", round(self.pose.theta * 180 / math.pi, 2), "degrees to:", round(coordinate.theta * 180 / math.pi, 2), "degrees...")
             self.max_tick_factor = 0.9
 
             # Do multiple decreasing length turns to dial in on the final angle
