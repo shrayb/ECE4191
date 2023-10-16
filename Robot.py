@@ -200,7 +200,7 @@ class Robot:
 
         # Drive backwards 10 cm
         self.max_tick_factor = 1.0
-        self.do_drive(-0.15)
+        self.do_drive(-0.12)
         # Turn towards the close wall
         if self.pose.x < 0.6:
             new_pose = Pose(self.pose.x, self.pose.y, math.pi)
@@ -232,7 +232,7 @@ class Robot:
 
         # Drive back 10 cm to safety
         self.max_tick_factor = 1.0
-        self.do_drive(-0.15)
+        self.do_drive(-0.12)
 
     def is_vision_blocked(self, sensor_index):
         # Check if any are 100
