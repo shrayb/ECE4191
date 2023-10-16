@@ -2,6 +2,7 @@ import socket
 from threading import Thread
 from BaseClasses import *
 from copy import deepcopy
+from client import *
 
 class Robot:
     def __init__(self, pose=None):
@@ -61,6 +62,9 @@ class Robot:
         # Time variables and flags
         self.time_flag = False  # Goes true when time is being considered (when waiting 5 seconds to see if the obstacle moves)
         self.stopping_time = None  # Saves the current time when the robot starts waiting 5 seconds
+
+        # Network Client Class
+        self.client = Client()
 
     """THREADS"""
 
@@ -126,10 +130,13 @@ class Robot:
         # ULTRASONIC THREAD and limit switch
         # Saves readings from ultrasonic sensors and limit switch
         while True:
+            sleep(0.01)
             if self.end_all_threads or self.end_ultrasonic_thread:
                 break
-            sleep(0.01)
+
             # Send communication data
+            json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi]}
+            self.client.send_message(json_pose)
 
             # Update limit switch reading
             self.limit_switch.detect()
