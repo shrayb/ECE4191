@@ -24,7 +24,7 @@ class Robot:
         self.angle_error = 3  # Degrees accurate
         self.map_size = (1.2, 1.2)  # Map size in xy metres, used to determine if an ultrasonic reading is a wall
         self.return_destination = Pose(0.9, 0.30)  # Place to return to before calibrating
-        self.package_scanning_count = 500  # Number of similar package reading distances required to decide the package is correct
+        self.package_scanning_count = 200  # Number of similar package reading distances required to decide the package is correct
         self.distance_brackets = [[0.2, 0.12], [0.12, 0.07], [0.07, 0.005]]  # ABC
 
         # Robot component classes
@@ -619,7 +619,7 @@ class Robot:
 
     def scan_package_ultrasonic(self):
         # Array for previous readings
-        previous_readings = [0] * self.package_scanning_count
+        previous_readings = [None] * self.package_scanning_count
 
         count = 0
         while True:
@@ -639,7 +639,6 @@ class Robot:
 
             # Check if all readings are in the same distance bracket
             package_id = self.similar_distance_bracket(previous_readings)
-            print(package_id)
             if package_id is False:
                 count += 1
                 continue
@@ -650,14 +649,20 @@ class Robot:
     def similar_distance_bracket(self, previous_readings):
         similarity_check_list = []
         for reading_index, reading in enumerate(previous_readings):
+            # Check for None reading
+            if reading is None:
+                return False
+
             # Loop through each bracket
             for index, bracket in enumerate(self.distance_brackets):
+                # If a reading matches a bracket add the id to the list
                 upper_bound = bracket[0]
                 lower_bound = bracket[1]
 
-                # If a reading matches a bracket add the id to the list
                 if upper_bound > reading >= lower_bound:
                     similarity_check_list.append(index)
+                else:
+                    similarity_check_list.append(3)
 
             # Check if no number was added
             if len(similarity_check_list) - 1 != reading_index:
