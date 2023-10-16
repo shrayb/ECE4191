@@ -67,6 +67,7 @@ class Robot:
 
         # Network Client Class
         self.client = Client()
+        self.client_timestart = None
 
     """THREADS"""
 
@@ -131,17 +132,20 @@ class Robot:
     def ultrasonic_thread(self):
         # ULTRASONIC THREAD and limit switch
         # Saves readings from ultrasonic sensors and limit switch
+        self.client_timestart = time()
         while True:
             sleep(0.01)
             if self.end_all_threads or self.end_ultrasonic_thread:
                 break
 
             # Send communication data
-            try:
-                json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi]}
-                self.client.send_message(json_pose)
-            except Exception:
-                pass
+            if time() > self.client_timestart + 0.5:
+                try:
+                    json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi]}
+                    self.client.send_message(json_pose)
+                except Exception:
+                    pass
+                self.client_timestart = time()
 
             # Update limit switch reading
             self.limit_switch.detect()
