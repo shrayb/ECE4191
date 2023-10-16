@@ -151,10 +151,10 @@ class Robot:
 
             # Update sensor readings which includes a detection flag for collisions
             self.detect_impending_collision(self.front_left_ultrasonic)
-            self.detect_impending_collision(self.front_right_ultrasonic)
-            self.detect_impending_collision(self.middle_ultrasonic)
-            self.detect_impending_collision(self.left_ultrasonic)
             self.detect_impending_collision(self.right_ultrasonic)
+            self.detect_impending_collision(self.front_right_ultrasonic)
+            self.detect_impending_collision(self.left_ultrasonic)
+            self.detect_impending_collision(self.middle_ultrasonic)
 
             # Check if any sensors detect an impending collision
             if not self.safe_reversing:
@@ -571,8 +571,7 @@ class Robot:
     def detect_impending_collision(self, ultrasonic_unit):
         # Get a reading
         sonic_distance = ultrasonic_unit.measure_dist()
-        if ultrasonic_unit.reading_index == 2:
-            print("Distance:", sonic_distance)
+
         if sonic_distance is None:
             self.sensor_readings[ultrasonic_unit.reading_index][0] = False
             self.sensor_readings[ultrasonic_unit.reading_index].pop(1)
