@@ -145,6 +145,10 @@ class Robot:
             # Update limit switch reading
             self.limit_switch.detect()
 
+            # If in mum im scared pick me up
+            if self.ignore_except_switch:
+                continue
+
             # Update sensor readings which includes a detection flag for collisions
             self.detect_impending_collision(self.front_left_ultrasonic)
             self.detect_impending_collision(self.front_right_ultrasonic)
