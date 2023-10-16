@@ -667,6 +667,8 @@ class Robot:
         # Check to see if they are all the same
         first_value = similarity_check_list[0]
 
+        print(similarity_check_list)
+
         for value in similarity_check_list:
             if value != first_value:
                 return False
