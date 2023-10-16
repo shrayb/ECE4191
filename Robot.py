@@ -132,7 +132,6 @@ class Robot:
     def ultrasonic_thread(self):
         # ULTRASONIC THREAD and limit switch
         # Saves readings from ultrasonic sensors and limit switch
-        self.client = Client()
         self.client_timestart = time()
         while True:
             sleep(0.01)
