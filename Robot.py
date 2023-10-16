@@ -672,7 +672,6 @@ class Robot:
         """
         print("MUM IM SCARED PICK ME UP")
         self.is_impending_collision = False
-        self.end_ultrasonic_thread = True
 
         # Stop driving
         self.left_motor.stop()
