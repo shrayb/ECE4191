@@ -639,6 +639,7 @@ class Robot:
 
             # Check if all readings are in the same distance bracket
             package_id = self.similar_distance_bracket(previous_readings)
+            print(package_id)
             if package_id is False:
                 count += 1
                 continue
