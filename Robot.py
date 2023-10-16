@@ -500,7 +500,7 @@ class Robot:
         # Check if the robot is already there
         distance_error = calculate_distance_between_points(self.pose, coordinate)
         if distance_error > self.distance_error:  # 3 cm away
-            print("\tDriving from: (", self.pose.x, self.pose.y, ") to (", coordinate.x, coordinate.y, ")")
+            print("\tDriving from: (", round(self.pose.x, 2), round(self.pose.y, 2), ") to (", round(coordinate.x, 2), round(coordinate.y, 2), ")")
             # Do multiple decreasing length turns to dial in to the desired angle
             self.max_tick_factor = 0.9
             for index in range(4):
@@ -539,7 +539,7 @@ class Robot:
         drive_pose_accuracy = calculate_distance_between_points(self.pose, coordinate)
         # If there is an end orientation face it
         if coordinate.theta is not None and self.pose.theta != coordinate.theta and drive_pose_accuracy < self.distance_error:
-            print("\tTurning from:", self.pose.theta, "degrees to:", coordinate.theta * 180 / math.pi, "degrees...")
+            print("\tTurning from:", round(self.pose.theta, 2), "degrees to:", round(coordinate.theta * 180 / math.pi, 2), "degrees...")
             self.max_tick_factor = 0.9
 
             # Do multiple decreasing length turns to dial in on the final angle
@@ -601,7 +601,7 @@ class Robot:
         # If object is getting closer
         if object_getting_closer(self.sensor_readings[ultrasonic_unit.reading_index]):
             self.sensor_readings[ultrasonic_unit.reading_index][0] = True
-            print("Obstacle from:", ultrasonic_unit.reading_index, " at distance:", sonic_distance)
+            print("Obstacle from:", ultrasonic_unit.reading_index, " at distance:", round(sonic_distance, 2), " at coords:", round(coords.x, 2), round(coords.y, 2))
             return None
 
         # Object not getting closer

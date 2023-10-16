@@ -67,7 +67,7 @@ def mainloop():
                 print("Robot re-localising...")
                 while robot.do_localise:
                     sleep(0.1)
-                print("Robot localised at: (", robot.pose.x, robot.pose.y, ")")
+                print("Robot localised at: (", round(robot.pose.x, 2), round(robot.pose.y, 2), ")")
 
                 # End all the threads to prepare for scanning
                 robot.end_all_threads = True
