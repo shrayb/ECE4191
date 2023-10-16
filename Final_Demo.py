@@ -27,7 +27,7 @@ package_sonic = Ultrasonic(echo_pin=package_sonic_echo, trig_pin=package_sonic_t
 conveyor_motor = Motor(motor_conveyor_enable, motor_conveyor_positive, motor_conveyor_negative)
 
 # Create robot class and instantiate component classes
-pose = Pose(0.15, 0.15, 0)
+pose = Pose(0.9, 0.15, 0)
 robot = Robot(pose)
 robot.left_motor = left_motor
 robot.right_motor = right_motor
