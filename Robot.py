@@ -654,15 +654,17 @@ class Robot:
                 return False
 
             # Loop through each bracket
-            for index, bracket in enumerate(self.distance_brackets):
+            for jindex, bracket in enumerate(self.distance_brackets):
                 # If a reading matches a bracket add the id to the list
                 upper_bound = bracket[0]
                 lower_bound = bracket[1]
 
                 if upper_bound > reading >= lower_bound:
-                    similarity_check_list.append(index)
-                else:
-                    similarity_check_list.append(3)
+                    similarity_check_list.append(jindex)
+
+            # If the value wasn't in any bracket add a 3
+            if len(similarity_check_list) - 1 != reading_index:
+                similarity_check_list.append(3)
 
         # Check to see if they are all the same
         first_value = similarity_check_list[0]
