@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 from time import sleep, time
 from multiprocessing import Process, Value, Manager
 import math
+import numpy as np
 
 def calculate_distance_between_points(point_1=None, point_2=None):
     return math.sqrt((point_1.x - point_2.x) ** 2 + (point_1.y - point_2.y) ** 2)
@@ -406,8 +407,5 @@ class LimitSwitch:
 
 
 if __name__ == "__main__":
-    siwtch = LimitSwitch(0.1, switch_pin=10)
-    print("Not corrupt")
-    while True:
-        siwtch.detect()
-        sleep(0.1)
+    previous_readings = np.zeros([200, 1]).tolist()
+    print(previous_readings)
