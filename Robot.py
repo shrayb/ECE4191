@@ -3,6 +3,7 @@ from threading import Thread
 from BaseClasses import *
 from copy import deepcopy
 from client import *
+from time import time, sleep
 
 class Robot:
     def __init__(self, pose=None):
