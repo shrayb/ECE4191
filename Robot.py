@@ -619,9 +619,8 @@ class Robot:
 
     def scan_package_ultrasonic(self):
         # Array for previous readings
-        previous_readings = np.zeros([200, 1]).tolist()
+        previous_readings = [0] * self.package_scanning_count
         print(previous_readings)
-
         count = 0
         while True:
             # Sleep for while loop
