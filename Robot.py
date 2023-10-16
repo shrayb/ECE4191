@@ -24,7 +24,7 @@ class Robot:
         self.angle_error = 3  # Degrees accurate
         self.map_size = (1.2, 1.2)  # Map size in xy metres, used to determine if an ultrasonic reading is a wall
         self.return_destination = Pose(0.9, 0.30)  # Place to return to before calibrating
-        self.package_scanning_count = 40  # Number of similar package reading distances required to decide the package is correct
+        self.package_scanning_count = 73  # Number of similar package reading distances required to decide the package is correct
         self.distance_brackets = [[0.2, 0.12], [0.12, 0.07], [0.07, 0.005]]  # ABC
 
         # Robot component classes
