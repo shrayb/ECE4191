@@ -211,7 +211,7 @@ class Package:
         if self.ID == 1:
             self.destination_pose = Pose(x=0.6, y=0.95, theta=math.pi/2)
         if self.ID == 2:
-            self.destination_pose = Pose(x=0.90, y=0.95, theta=math.pi/2)
+            self.destination_pose = Pose(x=0.92, y=0.95, theta=math.pi/2)
 
 class Motor:
     def __init__(self, enable_pin=None, input_a=None, input_b=None, encoder_a=None, speed=30):
