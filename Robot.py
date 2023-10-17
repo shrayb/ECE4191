@@ -66,7 +66,7 @@ class Robot:
         self.stopping_time = None  # Saves the current time when the robot starts waiting 5 seconds
 
         # Network Client Class
-        self.client = Client()
+        # self.client = Client()
         self.client_timestart = None
 
     """THREADS"""
@@ -138,14 +138,14 @@ class Robot:
             if self.end_all_threads or self.end_ultrasonic_thread:
                 break
 
-            # Send communication data
-            if time() > self.client_timestart + 0.2:
-                try:
-                    json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi]}
-                    self.client.send_message(json_pose)
-                except Exception:
-                    print("Timeout")
-                self.client_timestart = time()
+            # # Send communication data
+            # if time() > self.client_timestart + 0.2:
+            #     try:
+            #         json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi]}
+            #         self.client.send_message(json_pose)
+            #     except Exception:
+            #         print("Timeout")
+            #     self.client_timestart = time()
 
             # Update limit switch reading
             self.limit_switch.detect()
