@@ -274,7 +274,7 @@ class Robot:
 
         # Drive forward slowly until limit switch is triggered
         self.max_tick_factor = 1.0
-        self.do_drive(1, max_speed=self.slow_speed)
+        self.do_drive(0.5, max_speed=self.slow_speed)
 
         # Set y pose
         self.pose.y = 1.2 - self.limit_switch.distance
