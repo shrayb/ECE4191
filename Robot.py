@@ -117,6 +117,7 @@ class Robot:
                         if self.reversing_counter >= 4:
                             # Drive to top right corner, then drive to localisation spot, then localise
                             self.ignore_except_switch = True
+                            self.is_impending_collision = False
                             self.drive_to_coordinate(Pose(self.map_size[0] - 0.30, self.map_size[1] - 0.30))
                             self.drive_to_coordinate(self.return_destination)
 
