@@ -82,6 +82,7 @@ class Robot:
             if self.do_localise:
                 # Localise the robot
                 self.re_localise()
+                self.send_pose_and_goal()
                 self.do_localise = False
 
             # Check if there is an impending collision
@@ -140,11 +141,7 @@ class Robot:
 
             # Send communication data
             if time() > self.client_timestart + 0.2:
-                try:
-                    json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi]}
-                    self.client.send_message(json_pose)
-                except Exception:
-                    print("Timeout")
+                self.send_pose_and_goal()
                 self.client_timestart = time()
 
             # Update limit switch reading
@@ -174,6 +171,13 @@ class Robot:
             right_mot.update_encoder()
 
     """FUNCTIONS"""
+
+    def send_pose_and_goal(self):
+        try:
+            json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi], "goal": [self.current_goal]}
+            self.client.send_message(json_pose)
+        except Exception:
+            print("Timeout")
 
     def get_current_goal(self):
         if self.package is not None:
@@ -211,6 +215,10 @@ class Robot:
         # Drive backwards 10 cm
         self.max_tick_factor = 1.0
         self.do_drive(-0.12)
+
+        # Send goal and pose
+        self.send_pose_and_goal()
+
         # Turn towards the close wall
         if self.pose.x < 0.6:
             new_pose = Pose(self.pose.x, self.pose.y, math.pi)
@@ -255,6 +263,9 @@ class Robot:
         return False
 
     def deposit_package(self):
+        # Send pose and goal
+        self.send_pose_and_goal()
+
         # Start ultrasonic and limit switch thread
         self.end_ultrasonic_thread = False
         ultrasonic_thread = Thread(target=self.ultrasonic_thread)
@@ -323,6 +334,9 @@ class Robot:
         # Drive backwards to clear wall
         self.max_tick_factor = 1.0
         self.do_drive(-0.2)
+
+        # Send goal and pose
+        self.send_pose_and_goal()
 
         # Start drive thread
         drive_thread = Thread(target=self.drive_thread)
