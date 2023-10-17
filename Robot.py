@@ -140,7 +140,6 @@ class Robot:
 
             # Send communication data
             if time() > self.client_timestart + 0.2:
-                print("Send message...")
                 self.send_pose_and_goal()
                 self.client_timestart = time()
 
@@ -263,6 +262,9 @@ class Robot:
         return False
 
     def deposit_package(self):
+        # Send goal and pose
+        self.send_pose_and_goal()
+
         # Start ultrasonic and limit switch thread
         self.end_ultrasonic_thread = False
         ultrasonic_thread = Thread(target=self.ultrasonic_thread)
@@ -329,6 +331,8 @@ class Robot:
         # Drive backwards to clear wall
         self.max_tick_factor = 1.0
         self.do_drive(-0.2)
+
+        self.send_pose_and_goal()
 
         # Start drive thread
         drive_thread = Thread(target=self.drive_thread)
