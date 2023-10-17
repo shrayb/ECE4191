@@ -216,9 +216,6 @@ class Robot:
         self.max_tick_factor = 1.0
         self.do_drive(-0.12)
 
-        # Send goal and pose
-        self.send_pose_and_goal()
-
         # Turn towards the close wall
         if self.pose.x < 0.6:
             new_pose = Pose(self.pose.x, self.pose.y, math.pi)
@@ -263,9 +260,6 @@ class Robot:
         return False
 
     def deposit_package(self):
-        # Send pose and goal
-        self.send_pose_and_goal()
-
         # Start ultrasonic and limit switch thread
         self.end_ultrasonic_thread = False
         ultrasonic_thread = Thread(target=self.ultrasonic_thread)
@@ -293,7 +287,6 @@ class Robot:
         self.end_all_threads = True
 
         # Continuously scan until ID change
-        start_time = time()
         while True:
             sleep(0.001)
             new_package_id = self.scan_package_ultrasonic()
@@ -305,7 +298,6 @@ class Robot:
                     self.package = Package(new_package_id)
                     print("Package scanned:", new_package_id)
                 break
-        end_time = time()
         # Turn conveyor off
         self.conveyor_motor.stop()
         print("\tPackage delivered.")
@@ -334,9 +326,6 @@ class Robot:
         # Drive backwards to clear wall
         self.max_tick_factor = 1.0
         self.do_drive(-0.2)
-
-        # Send goal and pose
-        self.send_pose_and_goal()
 
         # Start drive thread
         drive_thread = Thread(target=self.drive_thread)
