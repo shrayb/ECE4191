@@ -657,7 +657,7 @@ class Robot:
                 continue
             else:
                 # If no more packages detected go again until counter reached
-                if counter < 2 and package_id == 3:
+                if counter < 1 and package_id == 3:
                     previous_readings = [None] * self.package_scanning_count
                     counter += 1
                     continue
