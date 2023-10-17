@@ -9,15 +9,20 @@ class Client():
         # Client Socket
         # Host Address
         # Port
+        self.connection_success = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         host_address = '172.20.10.9'  # Replace this with Server IP address
         port = 12346  # Replace with server suitable port
-        self.client_socket.connect((host_address, port))
-        print("CONNECTED TO SERVER")
-        # Receive private key
-        key = self.client_socket.recv(1024)
-        print("RECEIVED KEY")
-        self.cipher_suite = Fernet(key)
+        try:
+            self.client_socket.connect((host_address, port))
+            print("CONNECTED TO SERVER")
+            # Receive private key
+            key = self.client_socket.recv(1024)
+            print("RECEIVED KEY")
+            self.connection_success = True
+            self.cipher_suite = Fernet(key)
+        except Exception:
+            print("CONNECTION FAILED")
 
     def send_message(self, JSON_object):
         # stringify JSON_object
