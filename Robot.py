@@ -714,7 +714,7 @@ class Robot:
             self.do_drive(1.0)
             self.ignore_except_switch = False
             self.safe_reversing = True
-            self.do_drive(-0.25)
+            self.do_drive(-0.15)
             self.safe_reversing = False
 
     def establish_connection_to_send(self):
