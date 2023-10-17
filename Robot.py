@@ -53,6 +53,7 @@ class Robot:
         self.package = None  # Package class that was currently scanned
         self.delivering = False  # Flag for if the robot is currently driving to deliver a package
         self.depositing = False  # Flag for when the conveyor motor is depositing a package
+        self.reversing_counter = 0  # Counter for how many times the robot has reversed before reaching the goal
 
         # Ultrasonic variables and flags
         self.sensor_readings = set_default_sensor_readings()  # 5 Sensors by 6 columns
@@ -112,8 +113,23 @@ class Robot:
                     distance_to_reverse = 0.25  # Metres
                     end_pose = create_point(self.pose, -distance_to_reverse, self.pose.theta)
                     if 0.25 <= end_pose.x <= self.map_size[0] - 0.25 and 0.25 <= end_pose.y <= self.map_size[1] - 0.25:
+                        # If the robot reverses 4 times before reaching the current goal
+                        if self.reversing_counter >= 4:
+                            # Drive to top right corner, then drive to localisation spot, then localise
+                            self.ignore_except_switch = True
+                            self.drive_to_coordinate(Pose(self.map_size[0] - 0.30, self.map_size[1] - 0.30))
+                            self.drive_to_coordinate(self.return_destination)
+
+                            # Reset all flags
+                            self.delivering = False
+                            self.current_goal = None
+                            self.is_impending_collision = False
+                            self.do_localise = True
+                            continue
+
                         self.safe_reversing = True
                         self.max_tick_factor = 1.0
+                        self.reversing_counter += 1
                         self.do_drive(-distance_to_reverse)  # Drive backwards 25 cm
                         self.safe_reversing = False
                         continue
@@ -589,10 +605,9 @@ class Robot:
         # If drive was successful check error from waypoint
         waypoint_error_distance = calculate_distance_between_points(self.pose, coordinate)
         waypoint_error_angle = calculate_angle_difference(angle1=self.pose.theta, angle2=coordinate.theta)
-        # print("Drive error:", waypoint_error_distance * 100, "cm")
-        # print("Angle error:", waypoint_error_angle * 180 / math.pi, "degrees")
         if waypoint_error_distance < self.distance_error and waypoint_error_angle < (self.angle_error * math.pi / 180) and not self.is_impending_collision:  # 3 cm accuracy and 5 degree accuracy
             self.current_goal = None
+            self.reversing_counter = 0
 
     def detect_impending_collision(self, ultrasonic_unit):
         # Get a reading
