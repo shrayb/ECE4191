@@ -624,6 +624,7 @@ class Robot:
     def scan_package_ultrasonic(self):
         # Array for previous readings
         previous_readings = [None] * self.package_scanning_count
+        counter = 0
         count = 0
         while True:
             # Sleep for while loop
@@ -645,6 +646,11 @@ class Robot:
                 count += 1
                 continue
             else:
+                # If no more packages detected go again until counter reached
+                if counter < 3 and package_id == 3:
+                    previous_readings = [None] * self.package_scanning_count
+                    counter += 1
+                    continue
                 # If so, create the new package
                 return package_id
 
