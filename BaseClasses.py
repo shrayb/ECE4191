@@ -214,7 +214,7 @@ class Package:
             self.destination_pose = Pose(x=0.95, y=0.95, theta=math.pi/2)
 
 class Motor:
-    def __init__(self, enable_pin=None, input_a=None, input_b=None, encoder_a=None, speed=20):
+    def __init__(self, enable_pin=None, input_a=None, input_b=None, encoder_a=None, speed=40):
         self.enable_pin = enable_pin
         self.input_a = input_a
         self.input_b = input_b
