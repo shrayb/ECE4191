@@ -173,7 +173,7 @@ class Robot:
 
     def send_pose_and_goal(self):
         try:
-            json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi], "goal": [self.current_goal]}
+            json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi], "goal": self.current_goal}
             self.client.send_message(json_pose)
         except Exception:
             print("Communication Timeout")
