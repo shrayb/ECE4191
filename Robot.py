@@ -273,8 +273,10 @@ class Robot:
         ultrasonic_thread.start()
 
         # Drive forward slowly until limit switch is triggered
+        self.depositing = True
         self.max_tick_factor = 1.0
-        self.do_drive(0.25, max_speed=self.slow_speed)
+        self.do_drive(0.5, max_speed=self.slow_speed)
+        self.depositing = False
 
         # Set y pose
         self.pose.y = 1.2 - self.limit_switch.distance
@@ -382,9 +384,13 @@ class Robot:
             if time() > start_time + 10:
                 break
 
+            # In the case of aligning for depositing and the switch isnt hit, wait for 2 seconds then break to start depositing
+            if self.depositing and time() > start_time + 2:
+                break
+
             # Every two ticks slow down the leading motor by 1 speed
             if left_tick_advantage > 0:
-                left_motor_speed = max(max_speed - math.floor(left_tick_advantage / (2 / PID_GAIN)), 0)
+                left_motor_speed = max(max_speed - math.floor(left_tick_advantage / (2 / PID_GAIN)), 0)  # Decrease the left motor speed depending on how many ticks ahead the left motor is
                 right_motor_speed = max_speed
             elif left_tick_advantage < 0:
                 left_motor_speed = max_speed
