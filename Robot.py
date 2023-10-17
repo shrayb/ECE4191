@@ -83,7 +83,6 @@ class Robot:
             if self.do_localise:
                 # Localise the robot
                 self.re_localise()
-                self.send_pose_and_goal()
                 self.do_localise = False
 
             # Check if there is an impending collision
@@ -290,9 +289,6 @@ class Robot:
         return False
 
     def deposit_package(self):
-        # Send goal and pose
-        self.send_pose_and_goal()
-
         # Start ultrasonic and limit switch thread
         self.end_ultrasonic_thread = False
         ultrasonic_thread = Thread(target=self.ultrasonic_thread)
@@ -361,8 +357,6 @@ class Robot:
         # Drive backwards to clear wall
         self.max_tick_factor = 1.0
         self.do_drive(-0.2)
-
-        self.send_pose_and_goal()
 
         # Start drive thread
         drive_thread = Thread(target=self.drive_thread)
