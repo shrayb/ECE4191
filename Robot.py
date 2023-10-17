@@ -139,7 +139,7 @@ class Robot:
                 break
 
             # Send communication data
-            if time() > self.client_timestart + 0.4:
+            if time() > self.client_timestart + 0.2:
                 self.send_pose_and_goal()
                 self.client_timestart = time()
 
