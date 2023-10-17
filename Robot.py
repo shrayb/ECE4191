@@ -140,7 +140,7 @@ class Robot:
                 break
 
             # Send communication data
-            if time() > self.client_timestart + 0.2:
+            if time() > self.client_timestart + 0.4:
                 self.send_pose_and_goal()
                 self.client_timestart = time()
 
@@ -177,7 +177,7 @@ class Robot:
             json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi], "goal": [self.current_goal]}
             self.client.send_message(json_pose)
         except Exception:
-            print("Timeout")
+            print("Communication Timeout")
 
     def get_current_goal(self):
         if self.package is not None:
