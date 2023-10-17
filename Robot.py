@@ -82,6 +82,7 @@ class Robot:
             if self.do_localise:
                 # Localise the robot
                 self.re_localise()
+                self.send_pose_and_goal()
                 self.do_localise = False
 
             # Check if there is an impending collision
