@@ -172,9 +172,11 @@ class Robot:
     """FUNCTIONS"""
 
     def send_pose_and_goal(self):
-        json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi, self.current_goal]}
-        self.client.send_message(json_pose)
-        # print("Communication Timeout")
+        try:
+            json_pose = {"pose": [self.pose.x * 1000, self.pose.y * 1000, self.pose.theta * 180 / math.pi], "goal": [self.current_goal.x * 1000, self.current_goal.y * 1000]}
+            self.client.send_message(json_pose)
+        except Exception as e:
+            print(f"Communication Timeout {e}")
 
     def get_current_goal(self):
         if self.package is not None:
