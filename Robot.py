@@ -383,14 +383,15 @@ class Robot:
         while tick_sum < max_ticks:
             sleep(0.01)
             # Check if there will be a collision
-            if not self.safe_reversing and (not self.do_localise and self.is_impending_collision):
-                break
+            if not self.ignore_except_switch:
+                if not self.safe_reversing and (not self.do_localise and self.is_impending_collision):
+                    break
 
-            if not self.safe_reversing and (self.do_localise and self.limit_switch.triggered):
-                break
+                if not self.safe_reversing and (self.do_localise and self.limit_switch.triggered):
+                    break
 
-            if not self.safe_reversing and (not self.do_localise and self.limit_switch.triggered):
-                break
+                if not self.safe_reversing and (not self.do_localise and self.limit_switch.triggered):
+                    break
 
             # Mum im scared pick me up
             if self.ignore_except_switch and self.limit_switch.triggered:
