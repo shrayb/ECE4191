@@ -571,7 +571,7 @@ class Robot:
             self.max_tick_factor = 0.8
             for index in range(4):
                 # If there is a collision skip the rest of drive to coord function
-                if self.is_impending_collision:
+                if not self.ignore_except_switch and self.is_impending_collision:
                     return None
 
                 # Find distance to drive
