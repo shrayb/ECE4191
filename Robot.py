@@ -140,6 +140,7 @@ class Robot:
 
             # Send communication data
             if time() > self.client_timestart + 0.2:
+                print("Send message...")
                 self.send_pose_and_goal()
                 self.client_timestart = time()
 
