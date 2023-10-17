@@ -199,6 +199,10 @@ class Robot:
                 self.client.send_message(json_pose)
             except Exception as e:
                 print(f"Communication Timeout: {e}")
+                try:
+                    self.client = Client()
+                except Exception:
+                    print("Can't reconnect to server...")
         else:
             try:
                 self.client = Client()
