@@ -375,6 +375,11 @@ class Robot:
 
         tick_sum = self.left_motor.ticks.value + self.right_motor.ticks.value
         start_time = time()
+        print("Safe reverse:", self.safe_reversing)
+        print("do localise:", self.do_localise)
+        print("is impending:", self.is_impending_collision)
+        print("ignore except switch:", self.ignore_except_switch)
+        print("limit swithc:", self.limit_switch.triggered)
         while tick_sum < max_ticks:
             sleep(0.01)
             # Check if there will be a collision
