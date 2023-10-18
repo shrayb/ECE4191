@@ -20,8 +20,8 @@ class Robot:
         self.slow_speed = 99  # Upper percentage for slower speed
         self.PID_gain = 1  # Raise to make the PID more sensitive, lower to make the PID less sensitive
         self.PID_turning = 1  # Gain for turning PID
-        self.distance_error = 0.01  # Metres accurate
-        self.angle_error = 1  # Degrees accurate
+        self.distance_error = 0.02  # Metres accurate
+        self.angle_error = 3  # Degrees accurate
         self.map_size = (1.2, 1.2)  # Map size in xy metres, used to determine if an ultrasonic reading is a wall
         self.return_destination = Pose(0.8, 0.30)  # Place to return to before calibrating
         self.package_scanning_count = 50  # Number of similar package reading distances required to decide the package is correct
